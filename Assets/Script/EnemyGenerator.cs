@@ -8,6 +8,7 @@ public class EnemyGenerator : MonoBehaviour
     private int generaterNumber;
     [SerializeField] private int minGenerateNum;
     [SerializeField] private int maxGenerateNum;
+    [SerializeField] private int generateRange;
     void Start()
     {
         //生成する数を決める
@@ -21,7 +22,7 @@ public class EnemyGenerator : MonoBehaviour
 
     private Vector3 generatePosition()
     {
-        return new Vector3(Random.Range(-140,140),0,Random.Range(-140,140));
+        return new Vector3(Random.Range(0,generateRange),2,Random.Range(0,generateRange));
     }
 
 }
