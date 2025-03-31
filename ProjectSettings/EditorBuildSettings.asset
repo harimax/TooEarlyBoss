@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/SelectScene.unity
+    guid: 760f6f16af442734da54f0caf0f819d1
+  - enabled: 1
+    path: Assets/Scenes/DunegonScene.unity
+    guid: b9ba18257f4f0e94bb442a0e07b59cf7
   m_configObjects: {}
