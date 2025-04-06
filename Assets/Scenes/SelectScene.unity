@@ -1716,7 +1716,7 @@ GameObject:
   - component: {fileID: 970011765}
   - component: {fileID: 970011764}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Turn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1761,7 +1761,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u6B8B\u308A\u4F55\u30BF\u30FC\u30F3\n"
+  m_text: '0
+
+'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 865b02bc807f6814ea6710fe43a1b871, type: 2}
   m_sharedMaterial: {fileID: 1247770523683795722, guid: 865b02bc807f6814ea6710fe43a1b871, type: 2}
@@ -1824,7 +1826,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: -36.329292, w: 0}
+  m_margin: {x: 0, y: 0, z: -121.60601, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -2300,10 +2302,12 @@ MonoBehaviour:
   PlayerHealth: 1
   PlayerStamina: 1
   PlayerLucky: 1
+  turnNumber: 10
   attackText: {fileID: 397417357}
   healthText: {fileID: 1472830137}
   staminaText: {fileID: 822532382}
   luckyText: {fileID: 1787737580}
+  turn: {fileID: 970011764}
 --- !u!224 &1472830136 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3326432490889502837, guid: da148d47f40bd9f4091ede3b20dc6def, type: 3}

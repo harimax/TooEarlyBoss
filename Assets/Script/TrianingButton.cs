@@ -9,10 +9,12 @@ public class TrianingButton : MonoBehaviour
     public float PlayerHealth = 1f;
     public float PlayerStamina = 1f;
     public float PlayerLucky = 1f;
+    public int turnNumber=0;
     [SerializeField] private TextMeshProUGUI attackText;
     [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private TextMeshProUGUI staminaText;
     [SerializeField] private TextMeshProUGUI luckyText;
+    [SerializeField] private TextMeshProUGUI turn;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,12 +30,14 @@ public class TrianingButton : MonoBehaviour
     public void TrainingAttack()
     {
         PlayerPower += increaceParameter(1, 5);
+        turnNumber--;
         UpdateUI();
     }
     //体力ボタンを押下して体力がアップ
     public void TrainingHealth()
     {
         PlayerHealth += increaceParameter(1, 5);
+        turnNumber--;
         UpdateUI();
     }
 
@@ -41,12 +45,14 @@ public class TrianingButton : MonoBehaviour
     public void TrainingStamina()
     {
         PlayerStamina += increaceParameter(1, 5);
+        turnNumber--;
         UpdateUI();
     }
     //ラッキーボタンを押下してラッキーがアップ
     public void TrainingLucky()
     {
         PlayerLucky += increaceParameter(1, 5);
+        turnNumber--;
         UpdateUI();
     }
 
@@ -62,5 +68,6 @@ public class TrianingButton : MonoBehaviour
         healthText.text = PlayerHealth.ToString();
         staminaText.text = PlayerStamina.ToString();
         luckyText.text = PlayerLucky.ToString();
+        turn.text=$"残り: {turnNumber}ターン";
     }
 }
