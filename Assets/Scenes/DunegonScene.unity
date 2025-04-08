@@ -871,8 +871,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u59CB\u3081\u308B\n"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: cd3fdb8d1a518d84d80c20d773651bc2, type: 2}
-  m_sharedMaterial: {fileID: 1247770523683795722, guid: cd3fdb8d1a518d84d80c20d773651bc2, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 865b02bc807f6814ea6710fe43a1b871, type: 2}
+  m_sharedMaterial: {fileID: 1247770523683795722, guid: 865b02bc807f6814ea6710fe43a1b871, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -970,7 +970,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 743559559}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4836fb1f87197fe44ab75f23c62cdf86, type: 3}
   m_Name: 
@@ -1341,8 +1341,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u30B9\u30C6\u30FC\u30B8\u30AF\u30EA\u30A2\n"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: cd3fdb8d1a518d84d80c20d773651bc2, type: 2}
-  m_sharedMaterial: {fileID: 1247770523683795722, guid: cd3fdb8d1a518d84d80c20d773651bc2, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 865b02bc807f6814ea6710fe43a1b871, type: 2}
+  m_sharedMaterial: {fileID: 1247770523683795722, guid: 865b02bc807f6814ea6710fe43a1b871, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1834,6 +1834,18 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2677985911095664543, guid: d61b5d6f4a7613741a0c969abe278ab6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.030000687
+      objectReference: {fileID: 0}
+    - target: {fileID: 2677985911095664543, guid: d61b5d6f4a7613741a0c969abe278ab6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.8800004
+      objectReference: {fileID: 0}
+    - target: {fileID: 2677985911095664543, guid: d61b5d6f4a7613741a0c969abe278ab6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
     - target: {fileID: 5380840039169295580, guid: d61b5d6f4a7613741a0c969abe278ab6, type: 3}
       propertyPath: m_Name
       value: AttackPlayer
@@ -1846,9 +1858,49 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7399928807165041634, guid: d61b5d6f4a7613741a0c969abe278ab6, type: 3}
+      propertyPath: indexList
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7399928807165041634, guid: d61b5d6f4a7613741a0c969abe278ab6, type: 3}
+      propertyPath: showGizmos
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7399928807165041634, guid: d61b5d6f4a7613741a0c969abe278ab6, type: 3}
+      propertyPath: startSmooth
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7399928807165041634, guid: d61b5d6f4a7613741a0c969abe278ab6, type: 3}
+      propertyPath: autoBehindTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8102456175283528103, guid: d61b5d6f4a7613741a0c969abe278ab6, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8940379840373477936, guid: d61b5d6f4a7613741a0c969abe278ab6, type: 3}
+      propertyPath: _maxHealth
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8940379840373477936, guid: d61b5d6f4a7613741a0c969abe278ab6, type: 3}
+      propertyPath: _rollSpeed
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8940379840373477936, guid: d61b5d6f4a7613741a0c969abe278ab6, type: 3}
+      propertyPath: _currentHealth
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8940379840373477936, guid: d61b5d6f4a7613741a0c969abe278ab6, type: 3}
+      propertyPath: selectedToolbar
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8940379840373477936, guid: d61b5d6f4a7613741a0c969abe278ab6, type: 3}
+      propertyPath: freeSpeed.crouchSpeed
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8940379840373477936, guid: d61b5d6f4a7613741a0c969abe278ab6, type: 3}
+      propertyPath: strafeSpeed.crouchSpeed
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
