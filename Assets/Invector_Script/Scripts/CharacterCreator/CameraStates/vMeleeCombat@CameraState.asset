@@ -27,8 +27,8 @@ MonoBehaviour:
     yMouseSensitivity: 3
     yMinLimit: -10
     yMaxLimit: 20
-    xMinLimit: -90
-    xMaxLimit: 90
+    xMinLimit: -360
+    xMaxLimit: 360
     rotationOffSet: {x: 8, y: 0, z: 0}
     cullingHeight: 1.8
     cullingMinDist: 0.01

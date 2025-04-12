@@ -3653,8 +3653,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 734521822452639313}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.13668478, y: -6.365717e-19, z: -0.000000016294093, w: 0.9906146}
-  m_LocalPosition: {x: 0.03, y: 2.88, z: -3.75}
+  m_LocalRotation: {x: 0.13668478, y: -0, z: -0.000000016294093, w: 0.9906146}
+  m_LocalPosition: {x: 0.030000687, y: 2.8800004, z: -3.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3684,7 +3684,7 @@ MonoBehaviour:
     m_Bits: 1
   clipPlaneMargin: 0
   checkHeightRadius: 0
-  showGizmos: 0
+  showGizmos: 1
   startUsingTargetRotation: 1
   startSmooth: 0
   startSmoothFactor: 1
@@ -41775,6 +41775,9 @@ GameObject:
   - component: {fileID: 4285825843927907992}
   - component: {fileID: 6355074275512278344}
   - component: {fileID: 6975441327873387089}
+  - component: {fileID: 6372965699971557178}
+  - component: {fileID: 7391098689985007521}
+  - component: {fileID: 2188390699398818105}
   m_Layer: 8
   m_Name: AttackPlayer
   m_TagString: Player
@@ -41884,12 +41887,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCloseEvents: 0
   openCloseWindow: 1
-  selectedToolbar: 5
+  selectedToolbar: 7
   _isDead: 1
-  _currentHealth: 1
+  _currentHealth: 100
   isImmortal: 0
   fillHealthOnStart: 0
-  _maxHealth: 200
+  _maxHealth: 100
   _healthRecovery: 0
   _healthRecoveryDelay: 0
   checkHealthEvents: []
@@ -41984,7 +41987,7 @@ MonoBehaviour:
     walkSpeed: 9
     runningSpeed: 11
     sprintSpeed: 11
-    crouchSpeed: 2
+    crouchSpeed: 8
   strafeSpeed:
     movementSmooth: 6
     animationSmooth: 0.2
@@ -41994,7 +41997,7 @@ MonoBehaviour:
     walkSpeed: 9
     runningSpeed: 11
     sprintSpeed: 11
-    crouchSpeed: 2
+    crouchSpeed: 8
   disableAnimations: 0
   useRootMotion: 0
   useLeanMovementAnim: 1
@@ -42023,7 +42026,7 @@ MonoBehaviour:
   capsuleHeightReductionRolling: 0.5
   capsuleRadiusReductionRolling: 0
   rollControl: 1
-  _rollSpeed: 0
+  _rollSpeed: 2.5
   _rollRotationSpeed: 20
   _rollUseGravityTime: 0
   _timeToRollAgain: 0.75
@@ -42284,9 +42287,9 @@ MonoBehaviour:
     isUnityInput: 0
     keyboard: Mouse0
     keyboardAxis: 0
-    joystick: RB
+    joystick: A
     joystickAxis: 0
-    mobile: RB
+    mobile: A
     mobileAxis: 0
     joystickAxisInvert: 0
     keyboardAxisInvert: 0
@@ -42311,7 +42314,7 @@ MonoBehaviour:
     lastTimeTheButtonWasPressed: 0
     inButtomTimer: 0
   blockInput:
-    useInput: 1
+    useInput: 0
     isAxisInUse: 0
     isUnityInput: 0
     keyboard: Mouse1
@@ -43091,6 +43094,52 @@ MonoBehaviour:
   onLoadItems:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6372965699971557178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5380840039169295580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a56c46f6aeec1d43b1244e4b89cefbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &7391098689985007521
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5380840039169295580}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.41, y: 0.22, z: 0.39}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2188390699398818105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5380840039169295580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bad5e387dd0feca48b485836d3e96b82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bounceForce: 10
 --- !u!1 &5389854620033783287
 GameObject:
   m_ObjectHideFlags: 0
@@ -60178,7 +60227,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6032026944547662638
 RectTransform:
   m_ObjectHideFlags: 0
