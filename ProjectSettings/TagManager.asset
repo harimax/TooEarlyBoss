@@ -33,6 +33,7 @@ TagManager:
   - KURIBO
   - BOMBKURIBO
   - RedSphere
+  - OUTBarrer
   layers:
   - Default
   - TransparentFX
@@ -59,7 +60,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - Barrier
   - 
   - 
   - 
