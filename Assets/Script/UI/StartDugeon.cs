@@ -4,6 +4,7 @@ using UnityEngine;
 using Invector;
 using Unity.VisualScripting;
 using Cinemachine;
+using UnityEngine.UIElements;
 namespace Invector.vCharacterController
 {
     public class StartDugeon : MonoBehaviour
@@ -15,8 +16,16 @@ namespace Invector.vCharacterController
         private static StartDugeon _instance;
         private CinemachineVirtualCamera mainCameraVirtual;
         private CinemachineBrain brain;
+        private vThirdPersonController vPersonController;
         private bool IsGameUI;
         private bool IstrainingUI;
+        private GameObject player;
+        private GameObject gameManager;
+        private TrianingButton trianingButton;
+        private float tempPlayerPower = 1f;
+        private float tempPlayerHealth = 1f;
+        private float tempPlayerStamina = 1f;
+        private float tempPlayerSpecial = 1f;
 
         public bool CanMove { get; private set; } = false;  // 読み取り専用にしておくと安全 
 
@@ -32,35 +41,46 @@ namespace Invector.vCharacterController
                 _instance = this;
             }
             mainCameraVirtual = MainCamera.GetComponent<CinemachineVirtualCamera>();
-            brain=brainCamera.GetComponent<CinemachineBrain>();
+            brain = brainCamera.GetComponent<CinemachineBrain>();
+            player = GameObject.FindWithTag("Player"); // プレイヤーにTagがあると便利！
+            // Debug.Log(player);
+            vPersonController = player.GetComponent<vThirdPersonController>();
+            gameManager = GameObject.Find("GameManager"); // オブジェクト名に合わせて
+            trianingButton = gameManager.GetComponent<TrianingButton>();
+
 
         }
         //戦闘モードに移動
         public void StartDungeonMode()
         {
-            Debug.Log("戦闘移行");
+            // Debug.Log("戦闘移行");
             mainCameraVirtual.Priority = 20;
-            setFalseUI();  
-            IsGameUI=true;
-            IstrainingUI=false;
-
+            tempPlayerStamina=trianingButton.PlayerStamina;
+            Debug.Log(tempPlayerStamina);
+            setFalseUI();
+            IsGameUI = true;
+            IstrainingUI = false;
             StartCoroutine(WaitForCameraTransition());
         }
         //始めるボタン
         public void StartMissionButton()
         {
-            Debug.Log("ダンジョンスタート");
+            Debug.Log(vPersonController);
+            vPersonController.AddMaxStamina(tempPlayerStamina);
+            // Debug.Log("ダンジョンスタート");
             CanMove = true;
             setFalseUI();
+
+            //修行したパラメータを加算させる
         }
         //戻るボタン
         public void ReturntTrainingButton()
         {
-            Debug.Log("修行に戻る");
+            // Debug.Log("修行に戻る");
             mainCameraVirtual.Priority = 5;
             setFalseUI();
-            IsGameUI=false;
-            IstrainingUI=true;
+            IsGameUI = false;
+            IstrainingUI = true;
 
             StartCoroutine(WaitForCameraTransition());
         }
@@ -86,7 +106,7 @@ namespace Invector.vCharacterController
         private void setFalseUI()
         {
             trainingUI.SetActive(false);
-            gameUI.SetActive(false);  
+            gameUI.SetActive(false);
         }
         //StartDugeonクラスを受け取る
         public static StartDugeon GetInstance()
