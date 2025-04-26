@@ -2276,5 +2276,12 @@ namespace Invector.vCharacterController
         }
 
         #endregion
+
+        public void AddMaxStamina(float amount)
+        {
+            _maxStamina+=amount;
+            Debug.Log(_maxStamina);
+        }
+
     }
 }

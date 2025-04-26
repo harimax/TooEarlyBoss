@@ -34,6 +34,7 @@ TagManager:
   - BOMBKURIBO
   - RedSphere
   - OUTBarrer
+  - Target
   layers:
   - Default
   - TransparentFX

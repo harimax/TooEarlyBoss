@@ -23683,7 +23683,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4152959849516933080}
   m_Layer: 0
-  m_Name: KURIBOExplorotion
+  m_Name: KURIBOExplorotion 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

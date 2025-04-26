@@ -146,7 +146,7 @@ namespace Invector.vCamera
                     _lookAtTarget.position = mainTarget.position;
                     // ゲーム開始時のプレイヤーY座標を記録（または初期化タイミングで）
                     fixedTargetY = _lookAtTarget.position.y;
-                    Debug.Log(fixedTargetY);
+                    // Debug.Log(fixedTargetY);
                 }
                 return _lookAtTarget;
             }

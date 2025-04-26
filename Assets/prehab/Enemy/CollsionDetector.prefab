@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8861224010459726448}
   - component: {fileID: 3701688984633602809}
-  - component: {fileID: 6297467542645202691}
+  - component: {fileID: 8276287099265078363}
   m_Layer: 9
   m_Name: CollsionDetector
   m_TagString: Untagged
@@ -56,7 +56,7 @@ CapsuleCollider:
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6297467542645202691
+--- !u!114 &8276287099265078363
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -65,7 +65,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2137105810950063101}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c3e2eb94c18d404eb89f0f9f4af89f3, type: 3}
+  m_Script: {fileID: 11500000, guid: 9b40cb05ce9394045bbc2ca0c8d74eea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   onTriggerEnter:
@@ -73,16 +73,7 @@ MonoBehaviour:
       m_Calls: []
   onTriggerStay:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MobEnemy, Assembly-CSharp
-        m_MethodName: OnDetectObject
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
+  onTriggerExit:
+    m_PersistentCalls:
+      m_Calls: []
