@@ -2276,12 +2276,20 @@ namespace Invector.vCharacterController
         }
 
         #endregion
-
+        //スタミナが追加されるスクリプト
         public void AddMaxStamina(float amount)
         {
             _maxStamina+=amount;
-            Debug.Log(_maxStamina);
+            Debug.Log("スタミナ:"+_maxStamina);
         }
+        //体力が追加されるスクリプト
+        public void AddMaxHealth(int amount)
+        {
+            _maxHealth+=amount;
+            currentHealth=_maxHealth;
+            Debug.Log("HP:"+_maxHealth);
+        }
+
 
     }
 }
