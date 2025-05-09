@@ -48,6 +48,7 @@ namespace Invector.vMelee
         protected virtual void Start()
         {
             Init();
+            Debug.Log(defaultDamage.damageValue);
         }
 
         /// <summary>
@@ -427,7 +428,7 @@ namespace Invector.vMelee
         public virtual void SetRightWeapon(vMeleeWeapon weapon)
         {
             if (weapon)
-            {               
+            {
                 rightWeapon = weapon;
                 rightWeapon.IsEquipped = true;
                 rightWeapon.meleeManager = this;
