@@ -341,7 +341,7 @@ namespace Invector.vCharacterController
         public vAnimatorStateInfos _animatorStateInfos;
         public vAnimatorStateInfos animatorStateInfos { get => _animatorStateInfos; protected set => _animatorStateInfos = value; }
 
-
+        
         #endregion
 
         #region Actions
@@ -2278,18 +2278,19 @@ namespace Invector.vCharacterController
         #endregion
         //スタミナが追加されるスクリプト
         public void AddMaxStamina(float amount)
-        {
+        {   
+            _maxStamina=100f;
             _maxStamina+=amount;
+            currentStamina=_maxStamina;
             Debug.Log("スタミナ:"+_maxStamina);
         }
         //体力が追加されるスクリプト
         public void AddMaxHealth(int amount)
         {
+            _maxHealth=100;
             _maxHealth+=amount;
             currentHealth=_maxHealth;
             Debug.Log("HP:"+_maxHealth);
         }
-
-
     }
 }
