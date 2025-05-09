@@ -6,20 +6,20 @@ public class EnemyGenerator : MonoBehaviour
 {
     [SerializeField] private GameObject MobEnemy;
     [SerializeField] private List<ForbiddenVolume> forbiddenVolumes;
-
     [SerializeField] private int minGenerateNum;
     [SerializeField] private int maxGenerateNum;
-    [SerializeField] private int generateRange;
+    [SerializeField] private int generateRange_X;
+    [SerializeField] private int generateRange_Y;
     private int generaterNumber;
-    void Start()
+    
+    //敵を生成するメソッド
+    public void GenerateEnemy()
     {
-        //生成する数を決める
         generaterNumber = Random.Range(minGenerateNum, maxGenerateNum);
         for (int i = 0; i < generaterNumber; i++)
         {
             Instantiate(MobEnemy, generatePosition(), gameObject.transform.rotation);
         }
-
     }
     //敵の生成位置を決めるメソッド
     private Vector3 generatePosition()
@@ -29,9 +29,9 @@ public class EnemyGenerator : MonoBehaviour
     for (int attempt = 0; attempt < maxAttempts; attempt++)
     {
         Vector3 pos = new Vector3(
-            Random.Range(0, generateRange),
+            Random.Range(0, generateRange_X),
             2,
-            Random.Range(0, generateRange)
+            Random.Range(0, generateRange_Y)
         );
 
         if (!IsInForbiddenArea(pos))
