@@ -62,17 +62,15 @@ namespace Invector.vCharacterController
 
         protected override void LateUpdate()
         {
-            if (StartDugeon.GetInstance().CanMove == true)
-            {
                 UpdateMeleeAnimations();
                 base.LateUpdate();
-            }
+
 
         }
 
         protected override void FixedUpdate()
         {
-            if (StartDugeon.GetInstance().CanMove == true)
+            if (StartMission.GetInstance().CanMove == true)
             {
                 base.FixedUpdate();
             }
@@ -89,7 +87,7 @@ namespace Invector.vCharacterController
 
             if (MeleeAttackConditions() && !lockMeleeInput)
             {
-                if (StartDugeon.GetInstance().CanMove == true)
+                if (StartMission.GetInstance().CanMove == true)
                 {
                     MeleeWeakAttackInput();
                     MeleeStrongAttackInput();
@@ -98,7 +96,7 @@ namespace Invector.vCharacterController
             }
             else
             {
-                if (StartDugeon.GetInstance().CanMove == true)
+                if (StartMission.GetInstance().CanMove == true)
                 {
                     ResetAttackTriggers();
                     isBlocking = false;
