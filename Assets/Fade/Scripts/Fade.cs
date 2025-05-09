@@ -27,10 +27,16 @@ using UnityEngine.Assertions;
 public class Fade : MonoBehaviour
 {
 	IFade fade;
+	[SerializeField] bool startFade;
+
 
 	void Start ()
 	{
 		Init ();
+		if(startFade==true)
+		{
+			cutoutRange=1;
+		}
 		fade.Range = cutoutRange;
 	}
 
@@ -44,6 +50,10 @@ public class Fade : MonoBehaviour
 	void OnValidate ()
 	{
 		Init ();
+		if(startFade==true)
+		{
+			cutoutRange=1;
+		}
 		fade.Range = cutoutRange;
 	}
 
