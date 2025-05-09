@@ -90,10 +90,11 @@ public class ChaseEnemy : MobEnemy
             {
                 patrolCoroutine =default;
             }
-            State = StateEnum.Chase;
+           
             // プレイヤーのタグを追跡する
             if (collider.CompareTag("Player"))
             {
+                 State = StateEnum.Chase;
                 // Debug.Log("プレイヤー発見！追跡開始");
                 _agent.isStopped = false;
                 _agent.destination = collider.transform.position;

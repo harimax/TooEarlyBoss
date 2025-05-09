@@ -35,7 +35,6 @@ Transform:
   m_LocalScale: {x: 2, y: 2.2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8646617318310917384}
   - {fileID: 2931166241920346562}
   - {fileID: 9206270888056360952}
   - {fileID: 168092723666415489}
@@ -179,7 +178,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 573312ac48ed0dc4e90f7b58622af5cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 0
   AttackRangecollider: {fileID: 7669039611540377659}
   Damagecollider: {fileID: 3075366601224034939}
   Damagecooldown: 2
@@ -837,43 +835,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2522d684a3b72e94b9e010e7817500c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GANObj: {fileID: 613529343851704891, guid: 471c84ae54c3364428e6602c4e2214dd, type: 3}
+  GANObj: {fileID: 4128855872640944038, guid: 734661271f1c1074885c8a4239966237, type: 3}
   Preliminary_Effect: {fileID: 8432097813939360708, guid: 91f0801553ea4f8428ee3ebed7183eb0, type: 3}
   shotSpeed: 15
   attackcooldown: 2
   ParentObj: {fileID: 44260241681488976}
   targetTag: Target
---- !u!1 &8481775012683629749
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8646617318310917384}
-  m_Layer: 0
-  m_Name: 'FireBall (Missing Prefab with guid: a990e3ac1318b834488c784d851f42a9)'
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8646617318310917384
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8481775012683629749}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.692, z: -0.025}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 545182434002618049}
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &8594473431373787384
 GameObject:
   m_ObjectHideFlags: 0

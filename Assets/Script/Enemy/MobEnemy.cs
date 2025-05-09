@@ -31,6 +31,7 @@ public class MobEnemy : MonoBehaviour
 
         State = StateEnum.Die;
         animator.SetTrigger("Dead");
+        FindObjectOfType<MissionManager>().OnEnemyDefeated(); // ミッションに通知
 
     }
     //攻撃判断処理

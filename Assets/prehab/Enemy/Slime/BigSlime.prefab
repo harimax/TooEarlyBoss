@@ -396,7 +396,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9aa8785ec24f1b84880486e86c9178d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 0
   AttackRangecollider: {fileID: 2913132974989261889}
   Damagecollider: {fileID: 3835925239588814466}
   chasecollider: {fileID: 610350043078506472}
@@ -405,6 +404,7 @@ MonoBehaviour:
   raycastLayerMask:
     serializedVersion: 2
     m_Bits: 0
+  patrolRadius: 10
 --- !u!114 &2672471122720854649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -434,9 +434,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6ac4e571361afc48a3b5afd49eec5af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 8756191124874427445}
-  attackcollider: {fileID: 3835925239588814466}
-  dic: 0
+  attackCollider: {fileID: 3835925239588814466}
 --- !u!1 &4778377122817102190
 GameObject:
   m_ObjectHideFlags: 0

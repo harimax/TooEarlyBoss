@@ -276,9 +276,9 @@ MonoBehaviour:
   openCloseWindow: 1
   selectedToolbar: 0
   _isDead: 0
-  _currentHealth: 50
+  _currentHealth: 1
   isImmortal: 0
-  fillHealthOnStart: 1
+  fillHealthOnStart: 0
   _maxHealth: 100
   _healthRecovery: 0
   _healthRecoveryDelay: 0
@@ -322,7 +322,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9aa8785ec24f1b84880486e86c9178d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 0
   AttackRangecollider: {fileID: 2739826308408965615}
   Damagecollider: {fileID: 7406448653018128936}
   chasecollider: {fileID: 7811144331315477356}
@@ -331,6 +330,7 @@ MonoBehaviour:
   raycastLayerMask:
     serializedVersion: 2
     m_Bits: 0
+  patrolRadius: 10
 --- !u!114 &8654053934296956113
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -360,9 +360,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6ac4e571361afc48a3b5afd49eec5af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 716041599936298294}
-  attackcollider: {fileID: 7406448653018128936}
-  dic: 0
+  attackCollider: {fileID: 7406448653018128936}
 --- !u!1 &4889458828947941201
 GameObject:
   m_ObjectHideFlags: 0
