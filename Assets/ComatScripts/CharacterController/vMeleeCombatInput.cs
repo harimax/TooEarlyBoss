@@ -62,10 +62,8 @@ namespace Invector.vCharacterController
 
         protected override void LateUpdate()
         {
-                UpdateMeleeAnimations();
-                base.LateUpdate();
-
-
+            UpdateMeleeAnimations();
+            base.LateUpdate();
         }
 
         protected override void FixedUpdate()
@@ -326,6 +324,8 @@ namespace Invector.vCharacterController
 
         public virtual void OnReceiveAttack(vDamage damage, vIMeleeFighter attacker)
         {
+            // スキルによるダメージ変更フック
+            // onBeforeTakeDamage?.Invoke(ref damage); // ← ★ここでイベント発火！
             // character is blocking
             if (!damage.ignoreDefense && isBlocking && meleeManager != null && meleeManager.CanBlockAttack(damage.sender.position))
             {
@@ -345,8 +345,21 @@ namespace Invector.vCharacterController
                 cc.currentStamina -= damage.staminaBlockCost;
             }
             // apply damage
+            //ダメージ無効状態のときの処理
+            if (DamageNegateTwice.noDamage == true)
+            {
+                Debug.Log("ダメージ無効！！！！");
+                damage.damageValue = 0;
+                DamageNegateTwice.remainingBlocks--;
+            }
             damage.hitReaction = !isBlocking || damage.ignoreDefense;
+            Debug.Log(DamageNegateTwice.remainingBlocks);
             cc.TakeDamage(damage);
+            //ダメージ無効の回数が0になればスキルは切れる
+            if (DamageNegateTwice.remainingBlocks <= 0)
+            {
+                DamageNegateTwice.noDamage = false;
+            }
         }
 
         public virtual vICharacter character
