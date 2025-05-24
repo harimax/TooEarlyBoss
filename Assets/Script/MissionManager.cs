@@ -17,6 +17,7 @@ public class MissionManager : MonoBehaviour
     private Vector3 firstPos;
     private StartMission startDugeon;
     private TrianingButton trianingButton;
+    private SkillAcquirer skillAcquirer;
 
     /// <summary>
     /// ゲーム開始時に呼ばれるメソッド　初期設定
@@ -29,6 +30,7 @@ public class MissionManager : MonoBehaviour
         GameObject gameManager = GameObject.Find("GameManager");
         startDugeon = gameManager.GetComponent<StartMission>();
         trianingButton = gameManager.GetComponent<TrianingButton>();
+        skillAcquirer=gameManager.GetComponent<SkillAcquirer>();
     }
 
     void Update()
@@ -57,7 +59,7 @@ public class MissionManager : MonoBehaviour
         Debug.Log("敵撃破！残り: " + enemyCount);
     }
     /// <summary>
-    /// 
+    /// ミッションが終わった際の処理
     /// </summary>
     /// <param name="isSuccess"></param>
     public void EndMission(bool isSuccess)
@@ -89,7 +91,7 @@ public class MissionManager : MonoBehaviour
 
         TrianingButton.turnNumber--;//ターンが経過される
         player.transform.position = firstPos;
-
+        skillAcquirer.OnAcquireButtonPressed();
         startDugeon.ReturntTrainingButton();
         trianingButton.SetButtonsInteractable();
     }
