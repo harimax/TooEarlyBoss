@@ -38,16 +38,16 @@ namespace Invector.vMelee
 
         #endregion
 
-        protected virtual void OnSceneGUI()
-        {
-            var renderers = manager.GetComponentsInChildren<SkinnedMeshRenderer>();
-            foreach (SkinnedMeshRenderer renderer in renderers)
-            {
-                EditorUtility.SetSelectedRenderState(renderer, EditorSelectedRenderState.Hidden);
-            }
+        // protected virtual void OnSceneGUI()
+        // {
+        //     var renderers = manager.GetComponentsInChildren<SkinnedMeshRenderer>();
+        //     foreach (SkinnedMeshRenderer renderer in renderers)
+        //     {
+        //         EditorUtility.SetSelectedRenderState(renderer, EditorSelectedRenderState.Hidden);
+        //     }
 
-            DrawRecoilRange();
-        }
+        //     DrawRecoilRange();
+        // }
 
         protected override void OnEnable()
         {
