@@ -202,6 +202,7 @@ namespace Invector
         {
             if (damage != null)
             {
+
                 onStartReceiveDamage.Invoke(damage);
                 currentHealthRecoveryDelay = currentHealth <= 0 ? 0 : healthRecoveryDelay;
 

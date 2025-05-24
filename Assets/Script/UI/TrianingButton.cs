@@ -81,7 +81,7 @@ public class TrianingButton : MonoBehaviour
     // ターン数に応じてボタンを有効/無効にするメソッド
     public void SetButtonsInteractable()
     {
-        bool canTrain = (turnNumber % 5 != 0) && (turnNumber > 0);
+        bool canTrain = (turnNumber % 5 != 0) && (turnNumber >= 0);
 
         foreach (var button in trainingButtons)
         {
