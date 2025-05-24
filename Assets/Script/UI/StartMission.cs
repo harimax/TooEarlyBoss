@@ -23,10 +23,10 @@ public class StartMission : MonoBehaviour
     private bool IsGameUI;
     private bool IstrainingUI;
     private GameObject player;
-    private GameObject gameManager;
     private TrianingButton trainingButton;
     private vMeleeManager _vMeleeManager;
     private EnemyGenerator enemyGenerator;
+    private SkillManager skillManager;
 
     // プレイヤーの修行値
     private float tempPlayerPower = 1f;
@@ -46,7 +46,6 @@ public class StartMission : MonoBehaviour
         _instance = this;
 
         player = GameObject.FindWithTag("Player"); // プレイヤーにTagがあると便利！
-        gameManager = GameObject.Find("GameManager"); // オブジェクト名に合わせて
 
         mainCameraVirtual = MainCameraObject.GetComponent<CinemachineVirtualCamera>();
         brain = brainCameraObject.GetComponent<CinemachineBrain>();
@@ -54,12 +53,14 @@ public class StartMission : MonoBehaviour
         enemyGenerator = GameObject.Find("EnemyGenerator").GetComponent<EnemyGenerator>();
         vPersonController = player.GetComponent<vThirdPersonController>();
         _vMeleeManager = player.GetComponent<vMeleeManager>();
-        trainingButton = gameManager.GetComponent<TrianingButton>();
+        skillManager= player.GetComponent<SkillManager>();
+
+        trainingButton = this.gameObject.GetComponent<TrianingButton>();
     }
     /// <summary>
     /// 戦闘準備モードへ移行する
     /// </summary>
-    public void StartDungeonMode()
+    public void PrepareMissionButton()
     {
         // Debug.Log("戦闘移行");
         mainCameraVirtual.Priority = 20;
@@ -89,6 +90,8 @@ public class StartMission : MonoBehaviour
         enemyGenerator.GenerateEnemy();
         //ミッション開始メソッドが呼ばれる
         missionManager.StartMission();
+        //スキルを発動させる
+        skillManager.ActivePassiveSkill();
     }
 
     /// <summary>
@@ -109,7 +112,7 @@ public class StartMission : MonoBehaviour
     {
         yield return new WaitForEndOfFrame(); // カメラの優先度変更反映待ち
         yield return new WaitUntil(() => !brain.IsBlending); // 遷移完了待ち
-                                                             //戦闘シーンの際はGameUIを起動
+        //戦闘シーンの際はGameUIを起動
         if (IsGameUI)
         {
             gameUI.SetActive(true);
