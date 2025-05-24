@@ -2282,7 +2282,7 @@ namespace Invector.vCharacterController
             _maxStamina=100f;
             _maxStamina+=amount;
             currentStamina=_maxStamina;
-            Debug.Log("スタミナ:"+_maxStamina);
+            // Debug.Log("スタミナ:"+_maxStamina);
         }
         //体力が追加されるスクリプト
         public void AddMaxHealth(int amount)
@@ -2290,7 +2290,7 @@ namespace Invector.vCharacterController
             _maxHealth=100;
             _maxHealth+=amount;
             currentHealth=_maxHealth;
-            Debug.Log("HP:"+_maxHealth);
+            // Debug.Log("HP:"+_maxHealth);
         }
     }
 }
