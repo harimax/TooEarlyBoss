@@ -70,11 +70,18 @@ public class MissionManager : MonoBehaviour
         isMissionActive = false;
         DisableMovePlayer();
 
+        Rigidbody rb = player.GetComponent<Rigidbody>();
+        vThirdPersonController vPersonController = player.GetComponent<vThirdPersonController>();
+
+        rb.velocity = Vector3.zero;
+        vPersonController.enabled = false;
+        vPersonController.enabled = true;
+
         ClearText.text = "クリア";
         SelectSkillCard();//元の位置に戻る
     }
     /// <summary>
-    /// ミッションが失敗したとき
+    /// ミッションが失敗したときこれはDeadイベントで呼び出される
     /// </summary>
     public void FailedMission()
     {
@@ -86,7 +93,7 @@ public class MissionManager : MonoBehaviour
         {
             Destroy(enemy);
         }
-        ReturnPlayerToInitialPosition();//元の位置に戻る
+        StartCoroutine(WaitForAnimationEnd()); // アニメーション終了後に実行
     }
     //ミッションクリア後にスキルカードを表示させる処理
     public void SelectSkillCard()
@@ -104,7 +111,6 @@ public class MissionManager : MonoBehaviour
 
         trianingButton.DecreaseTurn();//ターンが経過される
         player.transform.position = InitPosition;
-        skillAcquirer.OnAcquireButtonPressed();
         startMission.ReturntTrainingButton();
         trianingButton.SetButtonsInteractable();
 
@@ -118,11 +124,11 @@ public class MissionManager : MonoBehaviour
     public void DisableMovePlayer()
     {
         global::IsPlayerMove.GetInstance().CanMove = false;
-        Rigidbody rb = player.GetComponent<Rigidbody>();
-        vThirdPersonController vPersonController = player.GetComponent<vThirdPersonController>();
 
-        rb.velocity = Vector3.zero;
-        vPersonController.enabled = false;
-        vPersonController.enabled = true;
+    }
+    IEnumerator WaitForAnimationEnd()
+    {
+        yield return new WaitForSeconds(2.5f);
+        ReturnPlayerToInitialPosition();
     }
 }
