@@ -68,7 +68,7 @@ namespace Invector.vCharacterController
 
         protected override void FixedUpdate()
         {
-            if (StartMission.GetInstance().CanMove == true)
+            if (IsPlayerMove.GetInstance().CanMove == true)
             {
                 base.FixedUpdate();
             }
@@ -85,7 +85,7 @@ namespace Invector.vCharacterController
 
             if (MeleeAttackConditions() && !lockMeleeInput)
             {
-                if (StartMission.GetInstance().CanMove == true)
+                if (IsPlayerMove.GetInstance().CanMove == true)
                 {
                     MeleeWeakAttackInput();
                     MeleeStrongAttackInput();
@@ -94,7 +94,7 @@ namespace Invector.vCharacterController
             }
             else
             {
-                if (StartMission.GetInstance().CanMove == true)
+                if (IsPlayerMove.GetInstance().CanMove == true)
                 {
                     ResetAttackTriggers();
                     isBlocking = false;
