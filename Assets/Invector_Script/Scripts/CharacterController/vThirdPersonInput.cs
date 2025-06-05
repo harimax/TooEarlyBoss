@@ -131,7 +131,7 @@ namespace Invector.vCharacterController
                 cc.Init();
             }
 
-            cc.onDead.AddListener((GameObject _gameObject) => { cc.ResetInputAnimatorParameters(); SetLockAllInput(true); cc.StopCharacter(); });
+            // cc.onDead.AddListener((GameObject _gameObject) => { cc.ResetInputAnimatorParameters(); SetLockAllInput(true); cc.StopCharacter(); });
             StartCoroutine(CharacterInit());
 
             ShowCursor(showCursorOnStart);

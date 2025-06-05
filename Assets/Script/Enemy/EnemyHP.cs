@@ -17,7 +17,7 @@ public class EnemyHP : MonoBehaviour
         hpSlider.maxValue = vHealthController.maxHealth;
         hpSlider.value = vHealthController.currentHealth;
         
-        Debug.Log(hpSlider.value);
+        // Debug.Log(hpSlider.value);
     }
     //HPを更新する処理
     public void UpdateEnemyHP()
