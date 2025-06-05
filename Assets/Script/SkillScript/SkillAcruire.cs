@@ -13,7 +13,7 @@ public class SkillAcquirer : MonoBehaviour
         if (manager != null && skillToAcquire != null)
         {
             manager.AcquireSkill(skillToAcquire);
-            Debug.Log($"スキル {skillToAcquire.skillName} を獲得しました！");
+            // Debug.Log($"スキル {skillToAcquire.skillName} を獲得しました！");
         }
     }
 }

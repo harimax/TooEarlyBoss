@@ -16,7 +16,7 @@ public class SkillManager : MonoBehaviour
             skill.ApplyEffect(gameObject);
         }
     }
-
+    //ゲーム中に条件を満たすと発動する
     void Update()
     {
         foreach (var skill in acquiredSkills)
@@ -24,11 +24,13 @@ public class SkillManager : MonoBehaviour
             skill.UpdateConditional(gameObject);
         }
     }
+    //スキルを獲得する処理
     public void AcquireSkill(SkillBase newSkill)
     {
         if (!acquiredSkills.Contains(newSkill))
         {
             acquiredSkills.Add(newSkill);
+            Debug.Log(newSkill.skillName + "を獲得しました");
         }
     }
 }
