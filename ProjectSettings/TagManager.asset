@@ -35,6 +35,7 @@ TagManager:
   - RedSphere
   - OUTBarrer
   - Target
+  - StartPoint
   layers:
   - Default
   - TransparentFX
