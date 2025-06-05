@@ -36,14 +36,14 @@ public class TrianingButton : MonoBehaviour
     public void TrainingAttack()
     {
         PlayerPower += increaceParameter(minIncrease, maxIncrease);
-        turnNumber--;
+        DecreaseTurn();
         UpdateUI();
     }
     //体力ボタンを押下して体力がアップ
     public void TrainingHealth()
     {
         PlayerHealth += increaceParameter(minIncrease, maxIncrease);
-        turnNumber--;
+        DecreaseTurn();
         UpdateUI();
     }
 
@@ -51,14 +51,14 @@ public class TrianingButton : MonoBehaviour
     public void TrainingStamina()
     {
         PlayerStamina += increaceParameter(minIncrease, maxIncrease);
-        turnNumber--;
+        DecreaseTurn();
         UpdateUI();
     }
     //ラッキーボタンを押下してラッキーがアップ
     public void TrainingSpcial()
     {
         PlayerSpecial += increaceParameter(minIncrease, maxIncrease);
-        turnNumber--;
+        DecreaseTurn();
         UpdateUI();
     }
 
@@ -88,4 +88,10 @@ public class TrianingButton : MonoBehaviour
             button.interactable = canTrain;
         }
     }
+    //ターンを減少させるメソッド
+    public void DecreaseTurn()
+    {
+        turnNumber--;
+    }
+    
 }

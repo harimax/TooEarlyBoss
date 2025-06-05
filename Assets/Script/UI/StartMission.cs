@@ -22,19 +22,13 @@ public class StartMission : MonoBehaviour
     private vThirdPersonController vPersonController;
     private bool IsGameUI;
     private bool IstrainingUI;
-    private GameObject player;
     private TrianingButton trainingButton;
     private vMeleeManager _vMeleeManager;
     private EnemyGenerator enemyGenerator;
     private SkillManager skillManager;
 
     // プレイヤーの修行値
-    private float tempPlayerPower = 1f;
-    private int tempPlayerHealth = 1;
-    private float tempPlayerStamina = 1f;
-    private float tempPlayerSpecial = 1f;
-
-    public bool CanMove { get; set; } = false;  // 読み取り専用にしておくと安全 
+    public float tempPlayerSpecial = 1f;
     private bool isMissionActive = false; // ミッションが進行中かどうか
     private void Awake()
     {
@@ -45,16 +39,17 @@ public class StartMission : MonoBehaviour
         }
         _instance = this;
 
-        player = GameObject.FindWithTag("Player"); // プレイヤーにTagがあると便利！
-
-        mainCameraVirtual = MainCameraObject.GetComponent<CinemachineVirtualCamera>();
-        brain = brainCameraObject.GetComponent<CinemachineBrain>();
-
-        enemyGenerator = GameObject.Find("EnemyGenerator").GetComponent<EnemyGenerator>();
+        // プレイヤー参照
+        var player = GameObject.FindWithTag("Player");
         vPersonController = player.GetComponent<vThirdPersonController>();
         _vMeleeManager = player.GetComponent<vMeleeManager>();
-        skillManager= player.GetComponent<SkillManager>();
+        skillManager = player.GetComponent<SkillManager>();
 
+        // カメラ関連
+        mainCameraVirtual = MainCameraObject.GetComponent<CinemachineVirtualCamera>();
+        brain = brainCameraObject.GetComponent<CinemachineBrain>();
+        // ゲームオブジェクト参照
+        enemyGenerator = GameObject.Find("EnemyGenerator").GetComponent<EnemyGenerator>();
         trainingButton = this.gameObject.GetComponent<TrianingButton>();
     }
     /// <summary>
@@ -64,15 +59,10 @@ public class StartMission : MonoBehaviour
     {
         // Debug.Log("戦闘移行");
         mainCameraVirtual.Priority = 20;
-
-        tempPlayerStamina = trainingButton.PlayerStamina;
-        tempPlayerHealth = trainingButton.PlayerHealth;
-        tempPlayerPower = trainingButton.PlayerPower;
-
-        setAllFalseUI();
+        SetAllUIInactive();
         IsGameUI = true;
         IstrainingUI = false;
-        StartCoroutine(WaitForCameraTransition());
+        StartCoroutine(SwitchCamera());
     }
     /// <summary>
     /// ミッション開始ボタン
@@ -80,18 +70,18 @@ public class StartMission : MonoBehaviour
     public void StartMissionButton()
     {
         //修行したパラメータを加算させる
-        vPersonController.AddMaxStamina(tempPlayerStamina);
-        vPersonController.AddMaxHealth(tempPlayerHealth);
-        _vMeleeManager.defaultDamage = new vDamage(Mathf.RoundToInt(tempPlayerPower) + 10);
+        vPersonController.AddMaxStamina(trainingButton.PlayerStamina);
+        vPersonController.AddMaxHealth(trainingButton.PlayerHealth);
+        _vMeleeManager.defaultDamage = new vDamage(Mathf.RoundToInt(trainingButton.PlayerPower) + 10);
         _vMeleeManager.Init();
+
+        // 戦闘開始準備
         // Debug.Log("ダンジョンスタート");
-        CanMove = true;
-        setAllFalseUI();
+        IsPlayerMove.GetInstance().CanMove = true;
+        SetAllUIInactive();
         enemyGenerator.GenerateEnemy();
-        //ミッション開始メソッドが呼ばれる
-        missionManager.StartMission();
-        //スキルを発動させる
-        skillManager.ActivePassiveSkill();
+        missionManager.StartMission();//ミッション開始メソッドが呼ばれる
+        skillManager.ActivePassiveSkill();//スキルを発動させる
     }
 
     /// <summary>
@@ -101,14 +91,14 @@ public class StartMission : MonoBehaviour
     {
         // Debug.Log("修行に戻る");
         mainCameraVirtual.Priority = 5;
-        setAllFalseUI();
+        SetAllUIInactive();
         IsGameUI = false;
         IstrainingUI = true;
 
-        StartCoroutine(WaitForCameraTransition());
+        StartCoroutine(SwitchCamera());
     }
     // カメラ遷移完了まで待ってからUIとCanMoveを切り替える
-    private IEnumerator WaitForCameraTransition()
+    private IEnumerator SwitchCamera()
     {
         yield return new WaitForEndOfFrame(); // カメラの優先度変更反映待ち
         yield return new WaitUntil(() => !brain.IsBlending); // 遷移完了待ち
@@ -129,12 +119,12 @@ public class StartMission : MonoBehaviour
     /// <summary>
     /// UIをすべて非表示にする
     /// </summary>
-    private void setAllFalseUI()
+    private void SetAllUIInactive()
     {
         trainingUI.SetActive(false);
         gameUI.SetActive(false);
     }
-    //StartDugeonクラスを受け取る
+    //StartMissionクラスを受け取る
     public static StartMission GetInstance()
     {
         return _instance;
