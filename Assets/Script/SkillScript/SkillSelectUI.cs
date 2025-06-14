@@ -19,6 +19,9 @@ public class SkillSelectUI : MonoBehaviour
     //ミッションクリア後にスキルカードを表示するメソッド
     public void ShowRandomSkillChoices()
     {
+
+        skillChosen = false; // ←★ ここで毎回リセット！
+
         //既に獲得しているスキルは表示対象外にする
         var unacquiredSkills = allSkills
         .Where(skill => !skillManager.acquiredSkills.Contains(skill)).ToList();
@@ -44,9 +47,10 @@ public class SkillSelectUI : MonoBehaviour
             //setUpメソッド(ボタン押下時)に初期値に戻る処理とプレイヤーにスキルをセットする処理、スキルカードUIをクリアする処理を追加させる
             skillSet.Setup(capturedSkill, () =>
             {
+                Debug.Log("スキル選択ボタンにリスナー登録");
                 if (skillChosen) return;
                 skillChosen = true;
-
+                
                 skillManager.AcquireSkill(capturedSkill);
                 missionManager.ReturnPlayerToInitialPosition(); // ← ここで呼び出す！
                 ClearCardUI();

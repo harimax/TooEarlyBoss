@@ -353,7 +353,7 @@ namespace Invector.vCharacterController
                 DamageNegateTwice.remainingBlocks--;
             }
             damage.hitReaction = !isBlocking || damage.ignoreDefense;
-            Debug.Log(DamageNegateTwice.remainingBlocks);
+            // Debug.Log(DamageNegateTwice.remainingBlocks);
             cc.TakeDamage(damage);
             //ダメージ無効の回数が0になればスキルは切れる
             if (DamageNegateTwice.remainingBlocks <= 0)
