@@ -30,7 +30,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 44260241681488976}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.1000004, y: 0.5, z: -7.6000004}
   m_LocalScale: {x: 2, y: 2.2, z: 2}
   m_ConstrainProportionsScale: 0
@@ -102,11 +102,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCloseEvents: 0
   openCloseWindow: 1
-  selectedToolbar: 1
+  selectedToolbar: 0
   _isDead: 0
   _currentHealth: 50
   isImmortal: 0
   fillHealthOnStart: 1
+  reciveDamage: 0
   _maxHealth: 100
   _healthRecovery: 0
   _healthRecoveryDelay: 0
@@ -836,7 +837,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GANObj: {fileID: 4128855872640944038, guid: 734661271f1c1074885c8a4239966237, type: 3}
-  Preliminary_Effect: {fileID: 8432097813939360708, guid: 91f0801553ea4f8428ee3ebed7183eb0, type: 3}
+  Preliminary_Effect: {fileID: 1028617267160588541, guid: 7b8351bb6159a5443924518092556ac4, type: 3}
   shotSpeed: 15
   attackcooldown: 2
   ParentObj: {fileID: 44260241681488976}

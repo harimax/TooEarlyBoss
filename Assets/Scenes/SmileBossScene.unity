@@ -3693,6 +3693,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: AttackPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 5641189050255702292, guid: d61b5d6f4a7613741a0c969abe278ab6, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -15.000122
+      objectReference: {fileID: 0}
     - target: {fileID: 7188537018396012455, guid: d61b5d6f4a7613741a0c969abe278ab6, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -5336,7 +5340,7 @@ MonoBehaviour:
   laser: {fileID: 1465662547807798706}
   rockPrefab: {fileID: 5038779788857181603, guid: c42dfee16b11b3d418e9ff2b3d94cbe2, type: 3}
   rockCount: 3
-  spawnRadius: 30
+  spawnRadius: 10
   spawnHeight: 30
   ObjectSpawnPoint: {fileID: 1064649584}
   attackInterval: 5
