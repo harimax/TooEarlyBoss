@@ -9,8 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31386ec33abb1e34d8c87873c79a159a, type: 3}
-  m_Name: New Damage Negate Twice
+  m_Script: {fileID: 11500000, guid: 8cb107bbb529f804dac238200d1a41f5, type: 3}
+  m_Name: Stamina_up_small
   m_EditorClassIdentifier: 
-  skillName: "2\u56DE\u30C0\u30E1\u30FC\u30B8\u7121\u52B9"
-  description: "\uFF12\u56DE\u30C0\u30E1\u30FC\u30B8\u7121\u52B9\u306B\u3059\u308B"
+  skillName: "\u30B9\u30BF\u30DF\u30CA\u4E0A\u6607\u5C0F"
+  description: "\u30B9\u30BF\u30DF\u30CA15\u4E0A\u6607"
+  Up_Stamina: 15

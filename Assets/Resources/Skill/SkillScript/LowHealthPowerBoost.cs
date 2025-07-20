@@ -13,6 +13,10 @@ public class LowHealthPowerBoost : SkillBase
     public override void ApplyEffect(GameObject player)
     {
 
+        
+    }
+    public override void UpdateConditional(GameObject player)
+    {
         var hp = player.GetComponent<vThirdPersonController>();
         var attack = player.GetComponent<vMeleeManager>();
 
@@ -36,5 +40,6 @@ public class LowHealthPowerBoost : SkillBase
                 isEffectApplied = false;
             }
         }
+
     }
 }

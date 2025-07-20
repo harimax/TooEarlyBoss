@@ -15,7 +15,7 @@ public class RecoveryStaminaSpeedUp : SkillBase
         //既に発動中なら起きないようにする
         if (isApplied) return;
 
-        Debug.Log("スタミナ消費減少スキル発動");
+        Debug.Log("スタミナ回復スピードアップ発動");
         var hp = player.GetComponent<vThirdPersonController>();
         hp.staminaRecovery+=addRecoveryStamina;
         isApplied=true;

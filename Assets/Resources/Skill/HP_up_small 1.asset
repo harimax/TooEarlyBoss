@@ -9,10 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f17f675d9422a6a40b762296587344b2, type: 3}
-  m_Name: New Low Health Power Boost
+  m_Script: {fileID: 11500000, guid: 0eb220db7259f054293228040fbf277e, type: 3}
+  m_Name: HP_up_small 1
   m_EditorClassIdentifier: 
-  skillName: "\u706B\u4E8B\u5834\u306E\u529B\u5411\u4E0A"
-  description: "\u4F53\u529B\u304C\u534A\u5206\u4EE5\u4E0B\u3067\u653B\u6483+10"
-  thresholdPercent: 0.5
-  bonusAttack: 10
+  skillName: "\u4F53\u529BHP\u5C0F"
+  description: "\u4F53\u529B\u304C20\u4E0A\u6607"
+  Up_HP: 20
