@@ -30,6 +30,9 @@ namespace Invector.vCharacterController
         public GenericInput strafeInput = new GenericInput("Tab", "RightStickClick", "RightStickClick");
         public GenericInput jumpInput = new GenericInput("Space", "X", "X");
         public GenericInput rollInput = new GenericInput("Q", "B", "B");
+        public GenericInput Skill1Input = new GenericInput("K", "Y", "Y");
+        public GenericInput Skill2Input = new GenericInput("L", "Y", "Y");
+
 
         protected bool _lockInput = false;
         [HideInInspector] public virtual bool lockInput { get { return _lockInput; } set { _lockInput = value; } }

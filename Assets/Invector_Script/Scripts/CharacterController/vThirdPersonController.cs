@@ -260,6 +260,9 @@ namespace Invector.vCharacterController
             }
         }
 
+        //Yボタン時の特殊スキル発動処理
+        
+
         /// <summary>
         /// Set the isStrafing bool
         /// </summary>

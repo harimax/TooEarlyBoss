@@ -16,7 +16,7 @@ namespace Invector
         public bool isImmortal = false;
         [vHelpBox("If you want to start with different value, uncheck this and make sure that the current health has a value greater zero")]
         public bool fillHealthOnStart = true;
-        public float reciveDamage=0; //UIに渡す用の変数
+        public float reciveDamage = 0; //UIに渡す用の変数
         [SerializeField] protected int _maxHealth = 100;
         public virtual int maxHealth { get { return _maxHealth; } set { _maxHealth = value; } }
 
@@ -62,7 +62,7 @@ namespace Invector
         public virtual bool isDead
         {
             get
-            {               
+            {
                 return _isDead;
             }
             set
@@ -209,7 +209,7 @@ namespace Invector
 
                 if (currentHealth > 0 && !isImmortal)
                 {
-                    reciveDamage= damage.damageValue;
+                    reciveDamage = damage.damageValue;
                     currentHealth -= damage.damageValue;
                 }
 
@@ -255,6 +255,10 @@ namespace Invector
         public class ValueChangedEvent : UnityEvent<float>
         {
 
+        }
+        public void SetOnDead(OnDead value)
+        {
+            _onDead = value; // 内部変数に直接アクセス
         }
     }
 }
