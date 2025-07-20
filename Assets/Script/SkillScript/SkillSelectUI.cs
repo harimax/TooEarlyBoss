@@ -11,10 +11,23 @@ public class SkillSelectUI : MonoBehaviour
     [SerializeField] private Transform cardParent;  // 配置先のUI（GridLayoutGroup推奨）
 
     [Header("Game References")]
-    [SerializeField] private List<SkillBase> allSkills;  // 全スキル（ScriptableObject）
+    [SerializeField] private List<SkillBase> allSkills ;  // 全スキル（ScriptableObject）
     [SerializeField] private SkillManager skillManager;  // プレイヤーのSkillManager参照
     [SerializeField] private MissionManager missionManager; // ←インスペクタで設定
     bool skillChosen = false;
+    private void Awake()
+    {
+        LoadAllSkills();
+    }
+
+    private void LoadAllSkills()
+    {
+        // Resources/SkillsフォルダからSkillBaseをすべてロード
+        SkillBase[] loadedSkills = Resources.LoadAll<SkillBase>("Skill");
+        allSkills = new List<SkillBase>(loadedSkills);
+
+        Debug.Log($"スキルを {allSkills.Count} 個ロードしました。");
+    }
 
     //ミッションクリア後にスキルカードを表示するメソッド
     public void ShowRandomSkillChoices()
@@ -27,9 +40,9 @@ public class SkillSelectUI : MonoBehaviour
         .Where(skill => !skillManager.acquiredSkills.Contains(skill)).ToList();
 
         // 選択数の制限（2つ）
-        int choiceCount = Mathf.Min(2, unacquiredSkills.Count); // ← 修正ポイント
+        int choiceCount = Mathf.Min(4, unacquiredSkills.Count); // ← 修正ポイント
 
-        //まだ獲得していないスキルからランダムに2つ選ぶ
+        //まだ獲得していないスキルからランダムに4つ選ぶ
         var selectedSkills = unacquiredSkills.OrderBy(x => Random.value).Take(choiceCount).ToList();
 
         // 表示をクリア
@@ -44,13 +57,14 @@ public class SkillSelectUI : MonoBehaviour
             var capturedSkill = skill; // ループの中でコピーを作る
             GameObject card = Instantiate(skillCardPrefab, cardParent);
             SkillSet skillSet = card.GetComponent<SkillSet>();
+            card.SetActive(true);
             //setUpメソッド(ボタン押下時)に初期値に戻る処理とプレイヤーにスキルをセットする処理、スキルカードUIをクリアする処理を追加させる
             skillSet.Setup(capturedSkill, () =>
             {
                 Debug.Log("スキル選択ボタンにリスナー登録");
                 if (skillChosen) return;
                 skillChosen = true;
-                
+
                 skillManager.AcquireSkill(capturedSkill);
                 missionManager.ReturnPlayerToInitialPosition(); // ← ここで呼び出す！
                 ClearCardUI();

@@ -9,6 +9,12 @@ public class SkillAcquirer : MonoBehaviour
     //スキルを獲得する処理
     public void OnAcquireButtonPressed()
     {
+        // プレイヤーオブジェクトを探してアタッチする
+        if (player == null)
+        {
+            player = GameObject.FindWithTag("Player"); // "Player" タグを利用
+        }
+
         var manager = player.GetComponent<SkillManager>();
         if (manager != null && skillToAcquire != null)
         {

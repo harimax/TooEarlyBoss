@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Invector.vCharacterController;
+using Invector.PlayerController;
 using TMPro;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
@@ -49,9 +50,21 @@ public class MissionManager : MonoBehaviour
     /// </summary>
     public void StartMission()
     {
+        // プレイヤーオブジェクトを探してアタッチする
+        if (player == null)
+        {
+            player = GameObject.FindWithTag("Player"); // "Player" タグを利用
+        }
+
         enemyCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
         Debug.Log("敵の数" + enemyCount);
         isMissionActive = true;
+        ProcessManager.Instance.IncreaseEnemyCount();
+        TrianingButton.Instance.DecreaseTurn();
+
+        //OnDeadのイベントを再度登録しておく
+        vThirdPersonController vPersonController = player.GetComponent<vThirdPersonController>();
+        vPersonController.onDead.AddListener((gameObject) => { FailedMission(); });
     }
     /// <summary>
     /// 敵を倒した際に呼び出されるメソッド mobEnemyのonDieをから呼び出される
@@ -118,6 +131,7 @@ public class MissionManager : MonoBehaviour
         vPersonController._currentHealth = vPersonController.maxHealth;
         vPersonController.isDead = false;
         DisableMovePlayer();
+
 
     }
     //プレイヤーを動けなくする

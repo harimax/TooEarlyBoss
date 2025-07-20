@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SkillManager : MonoBehaviour
-{   
+{
     //得たスキルを格納する
     public List<SkillBase> acquiredSkills = new List<SkillBase>();
-    
+
     //ミッション開始時に常時発動するスキルを適応させる
     public void ActivePassiveSkill()
     {
@@ -19,6 +19,7 @@ public class SkillManager : MonoBehaviour
     //ゲーム中に条件を満たすと発動する
     void Update()
     {
+        Debug.Log("スキル確認中");
         foreach (var skill in acquiredSkills)
         {
             skill.UpdateConditional(gameObject);

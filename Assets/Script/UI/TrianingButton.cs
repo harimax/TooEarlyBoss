@@ -5,6 +5,7 @@ using TMPro;
 
 public class TrianingButton : MonoBehaviour
 {
+    public static TrianingButton Instance { get; private set; }
     public float PlayerPower = 1f;
     public int PlayerHealth = 1;
     public float PlayerStamina = 1f;
@@ -19,9 +20,14 @@ public class TrianingButton : MonoBehaviour
     [SerializeField] private int maxIncrease = 5;
     [SerializeField] private List<UnityEngine.UI.Button> trainingButtons;
     // Start is called before the first frame update
+
+    void Awake()
+    {
+        Instance = this;
+    }
     void Start()
     {
-        turnNumber = 19;
+        turnNumber = ProcessManager.Instance.totalTurns;
         // 最初はボタンを有効化
         UpdateUI();
     }

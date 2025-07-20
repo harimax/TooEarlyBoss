@@ -32,25 +32,9 @@ public class StartMission : MonoBehaviour
     private bool isMissionActive = false; // ミッションが進行中かどうか
     private void Awake()
     {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
         _instance = this;
 
-        // プレイヤー参照
-        var player = GameObject.FindWithTag("Player");
-        vPersonController = player.GetComponent<vThirdPersonController>();
-        _vMeleeManager = player.GetComponent<vMeleeManager>();
-        skillManager = player.GetComponent<SkillManager>();
-
-        // カメラ関連
-        mainCameraVirtual = MainCameraObject.GetComponent<CinemachineVirtualCamera>();
-        brain = brainCameraObject.GetComponent<CinemachineBrain>();
-        // ゲームオブジェクト参照
-        enemyGenerator = GameObject.Find("EnemyGenerator").GetComponent<EnemyGenerator>();
-        trainingButton = this.gameObject.GetComponent<TrianingButton>();
+        AttachPlayerCameraData();
     }
     /// <summary>
     /// 戦闘準備モードへ移行する
@@ -62,6 +46,7 @@ public class StartMission : MonoBehaviour
         SetAllUIInactive();
         IsGameUI = true;
         IstrainingUI = false;
+        AttachPlayerCameraData();
         StartCoroutine(SwitchCamera());
     }
     /// <summary>
@@ -72,7 +57,7 @@ public class StartMission : MonoBehaviour
         //修行したパラメータを加算させる
         vPersonController.AddMaxStamina(trainingButton.PlayerStamina);
         vPersonController.AddMaxHealth(trainingButton.PlayerHealth);
-        _vMeleeManager.defaultDamage = new vDamage(Mathf.RoundToInt(trainingButton.PlayerPower) + 10);
+        _vMeleeManager.defaultDamage.damageValue = Mathf.RoundToInt(trainingButton.PlayerPower) + 10;
         _vMeleeManager.Init();
 
         // 戦闘開始準備
@@ -128,5 +113,22 @@ public class StartMission : MonoBehaviour
     public static StartMission GetInstance()
     {
         return _instance;
+    }
+
+    public void AttachPlayerCameraData()
+    {
+                // プレイヤー参照
+        var player = GameObject.FindWithTag("Player");
+        vPersonController = player.GetComponent<vThirdPersonController>();
+        _vMeleeManager = player.GetComponent<vMeleeManager>();
+        skillManager = player.GetComponent<SkillManager>();
+
+        // カメラ関連
+        var MainCameraObject = GameObject.FindWithTag("MainCamera");
+        mainCameraVirtual = MainCameraObject.GetComponent<CinemachineVirtualCamera>();
+        brain = brainCameraObject.GetComponent<CinemachineBrain>();
+        // ゲームオブジェクト参照
+        enemyGenerator = GameObject.Find("EnemyGenerator").GetComponent<EnemyGenerator>();
+        trainingButton = this.gameObject.GetComponent<TrianingButton>();
     }
 }

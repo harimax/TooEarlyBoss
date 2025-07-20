@@ -129,7 +129,7 @@ public class SmileBossControll : MonoBehaviour
 
     public void OnRockFallEvent()
     {
-        Vector3 center = gameObject.transform.position;
+        Vector3 center = player.transform.position;
         for (int i = 0; i < rockCount; i++)
         {
             // ランダムなXZ位置に落とす
