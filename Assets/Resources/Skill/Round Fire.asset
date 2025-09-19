@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Round Fire
   m_EditorClassIdentifier: 
   skillName: "\u708E\u306E\u3046\u305A"
-  description: "\u307E\u308F\u308A\u306B\u708E\u309210\u79D2\u9593\u751F\u6210\u3057\u307E\u3059"
+  description: "\u5468\u308A\u306B\u708E\u309210\u79D2\u9593\u751F\u6210"
+  SpcialSkill: 1
   effectObjectName: fire
   duration: 10

@@ -9,10 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f25ccc62ca1224f489d6df9d45253502, type: 3}
-  m_Name: Move Speed Up
+  m_Script: {fileID: 11500000, guid: 73e1d65f2ab285a46b5fe9745a97cb34, type: 3}
+  m_Name: Attack Dron
   m_EditorClassIdentifier: 
-  skillName: "\u79FB\u52D5\u901F\u5EA6\u4E0A\u6607"
-  description: "\u52D5\u304D\u304C\u8EFD\u5FEB\u306B\u306A\u308B"
+  skillName: "\u30C9\u30ED\u30FC\u30F3\u53EC\u559A"
+  description: "30\u79D2\u9593\u81EA\u52D5\u653B\u6483\u3059\u308B\u30C9\u30ED\u30FC\u30F3\u3092\u53EC\u559A"
   SpcialSkill: 1
-  duration: 20
+  effectObjectName: Dron
+  duration: 30

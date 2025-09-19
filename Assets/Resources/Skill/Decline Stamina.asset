@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 828b72cf1a90ae94ebde9592931af604, type: 3}
   m_Name: Decline Stamina
   m_EditorClassIdentifier: 
-  skillName: 
-  description: 
+  skillName: "\u30B9\u30BF\u30DF\u30CA\u91CF\u6E1B\u5C11"
+  description: "\u4F7F\u3046\u30B9\u30BF\u30DF\u30CA\u304C\u6E1B\u5C11"

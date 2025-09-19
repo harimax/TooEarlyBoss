@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Shot Dark Ball
   m_EditorClassIdentifier: 
   skillName: "\u30C0\u30FC\u30AF\u30DC\u30FC\u30EB"
-  description: "\u653B\u6483\u6642\u30C0\u30FC\u30AF\u30DC\u30FC\u30EB\u767A\u5C04"
+  description: "\u5F31\u653B\u6483\u6642\u30C0\u30FC\u30AF\u30DC\u30FC\u30EB\u767A\u5C04"
+  SpcialSkill: 0

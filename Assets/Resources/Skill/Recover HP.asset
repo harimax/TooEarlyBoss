@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skillName: "\u4F53\u529B\u56DE\u5FA9\u30B9\u30AD\u30EB"
   description: "10\u79D2\u9593\u4F53\u529B\u304C\u56DE\u5FA9"
+  SpcialSkill: 1
   RecoverHealthValue: 2
   duration: 10

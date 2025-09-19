@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31386ec33abb1e34d8c87873c79a159a, type: 3}
   m_Name: Damage Negate Twice
   m_EditorClassIdentifier: 
-  skillName: "2\u56DE\u30C0\u30E1\u30FC\u30B8\u7121\u52B9"
-  description: "\uFF12\u56DE\u30C0\u30E1\u30FC\u30B8\u7121\u52B9\u306B\u3059\u308B"
+  skillName: "\u30C0\u30E1\u30FC\u30B8\u30D0\u30EA\u30A2"
+  description: "\u6700\u521D\u306E\uFF12\u56DE\u30C0\u30E1\u30FC\u30B8\u7121\u52B9"
+  SpcialSkill: 0
