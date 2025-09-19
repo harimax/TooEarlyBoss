@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using Cysharp.Threading.Tasks;
+using Invector.vCharacterController;
 
 [CreateAssetMenu(menuName = "Skill/RoundFire")]
 public class RoundFire : SkillBase
@@ -16,26 +19,30 @@ public class RoundFire : SkillBase
     // 条件付きスキルの毎フレーム監視処理（SkillManagerから呼ばれる）
     public override void UpdateConditional(GameObject player)
     {
+         var vInput=player.GetComponent<vThirdPersonInput>();
         // 発動キーが押されたら
-        if (Input.GetKeyDown(KeyCode.F))
+        // if (Input.GetKeyDown(KeyCode.F))
+        if(vInput.skill1Input.GetButtonDown())
         {
+            Debug.Log("スキル発動");
             // すでにエフェクトが存在しない場合のみ発動
             if (activeEffect.activeSelf == false)
             {
-                ActiveEffect(player);
+                HandleActiveEffectAsync(player).Forget();
             }
         }
     }
-    //エフェクトを生成して配置するスクリプト
-    private void ActiveEffect(GameObject player)
+    // UniTask によるエフェクトの生成＆終了処理
+    private async UniTaskVoid HandleActiveEffectAsync(GameObject player)
     {
+        // エフェクトを表示
         activeEffect.SetActive(true);
-        player.GetComponent<MonoBehaviour>().StartCoroutine(DestoryEffectAfterTime(duration));
-    }
-    // 指定時間後にエフェクトを削除するコルーチン
-    private System.Collections.IEnumerator DestoryEffectAfterTime(float time)
-    {
-        yield return new WaitForSeconds(time);
+
+        // duration 秒待ってからエフェクトを非表示に
+        // GameObject が破棄されたら自動キャンセルされるトークンを使う
+        await UniTask.Delay(TimeSpan.FromSeconds(duration),
+                            cancellationToken: player.GetCancellationTokenOnDestroy());
+
         activeEffect.SetActive(false);
     }
 }

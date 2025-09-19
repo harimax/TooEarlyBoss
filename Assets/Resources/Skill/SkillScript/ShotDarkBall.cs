@@ -11,6 +11,6 @@ public class ShotDarkBall : SkillBase
 
     public override void ApplyEffect(GameObject player)
     {
-        player.GetComponent<ShotFire>().hasFireballSkill = true;
+        player.GetComponent<ShotFire>().hasSkill = true;
     }
 }
