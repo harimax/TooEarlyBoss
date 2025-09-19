@@ -244,8 +244,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 181329840}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 11.3, z: -95.8}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 11.299942, z: -95.80004}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -828,6 +828,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   StartButton: {fileID: 2095244406}
   ClearText: {fileID: 1153262010}
+  Boss: {fileID: 0}
+  BossCamera: {fileID: 0}
+  ClearButton: {fileID: 0}
 --- !u!4 &776178341
 Transform:
   m_ObjectHideFlags: 0
@@ -2268,6 +2271,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FadeCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 141186, guid: 53c22e1773be7f84aad8ed8b7b58fa6e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 11486218, guid: 53c22e1773be7f84aad8ed8b7b58fa6e, type: 3}
       propertyPath: m_Color.b
       value: 0.7075472
@@ -3064,6 +3071,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 181329843}
+  - {fileID: 1203788820}
   - {fileID: 942128044}
   - {fileID: 172029255}
   - {fileID: 1733637336}
@@ -3072,4 +3080,3 @@ SceneRoots:
   - {fileID: 862859519}
   - {fileID: 308148839}
   - {fileID: 587575969}
-  - {fileID: 1203788820}
