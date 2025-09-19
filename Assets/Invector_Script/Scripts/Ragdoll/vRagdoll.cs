@@ -295,7 +295,7 @@ namespace Invector.vCharacterController
                 return;
             }
 
-            if (!updateBehaviour && animator.updateMode == AnimatorUpdateMode.AnimatePhysics)
+            if (!updateBehaviour && animator.updateMode == AnimatorUpdateMode.Fixed)
             {
                 return;
             }
@@ -478,7 +478,7 @@ namespace Invector.vCharacterController
             {
                 if (animator != null && !animator.isActiveAndEnabled)
                 {
-                    rdStabilize = characterChest.GetComponent<Rigidbody>().velocity.magnitude;
+                    rdStabilize = characterChest.GetComponent<Rigidbody>().linearVelocity.magnitude;
 
                 }
                 else
@@ -600,8 +600,8 @@ namespace Invector.vCharacterController
                         bp.rigidbody.isKinematic = newValue;
                         if (newValue == false)
                         {
-                            var v = new Vector3(_parentRigb.velocity.x * horizontalMultiplier, _parentRigb.velocity.y * verticalMultiplier, _parentRigb.velocity.z * horizontalMultiplier);
-                            bp.rigidbody.velocity = v;
+                            var v = new Vector3(_parentRigb.linearVelocity.x * horizontalMultiplier, _parentRigb.linearVelocity.y * verticalMultiplier, _parentRigb.linearVelocity.z * horizontalMultiplier);
+                            bp.rigidbody.linearVelocity = v;
                         }
                     }
                 }

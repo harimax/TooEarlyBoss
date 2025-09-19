@@ -4,7 +4,7 @@ using UnityEngine;
 public class vChangeAnimatorUpdateMode : MonoBehaviour
 {
     public Animator animator;
-    private readonly AnimatorUpdateMode initialState = AnimatorUpdateMode.AnimatePhysics;
+    private readonly AnimatorUpdateMode initialState = AnimatorUpdateMode.Fixed;
 
     public void Reset()
     {
@@ -28,7 +28,7 @@ public class vChangeAnimatorUpdateMode : MonoBehaviour
 
     public void ChangeToAnimatePhysics()
     {
-        animator.updateMode = AnimatorUpdateMode.AnimatePhysics;
+        animator.updateMode = AnimatorUpdateMode.Fixed;
         vTime.useUnscaledTime = false;
     }
 

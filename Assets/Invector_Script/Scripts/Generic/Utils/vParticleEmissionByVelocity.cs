@@ -20,7 +20,7 @@ public class vParticleEmissionByVelocity : MonoBehaviour
     // Start is called before the first frame update
     private void FixedUpdate()
     {
-        var velocity = rigidbodyReference.velocity;
+        var velocity = rigidbodyReference.linearVelocity;
         velocity.y = 0;
         float magnitude = velocity.magnitude;
 

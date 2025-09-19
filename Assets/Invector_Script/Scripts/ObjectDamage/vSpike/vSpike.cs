@@ -31,7 +31,7 @@ namespace Invector
                     {
                         if (!body.isKinematic)
                         {
-                            body.velocity = Vector3.zero;
+                            body.linearVelocity = Vector3.zero;
                         }
                     }
                     var damageReceiver = collision.collider.GetComponent<vCharacterController.vDamageReceiver>();

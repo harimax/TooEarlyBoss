@@ -30,8 +30,8 @@ namespace Invector.vCharacterController
         public GenericInput strafeInput = new GenericInput("Tab", "RightStickClick", "RightStickClick");
         public GenericInput jumpInput = new GenericInput("Space", "X", "X");
         public GenericInput rollInput = new GenericInput("Q", "B", "B");
-        public GenericInput Skill1Input = new GenericInput("K", "Y", "Y");
-        public GenericInput Skill2Input = new GenericInput("L", "Y", "Y");
+        public GenericInput skill1Input = new GenericInput("K", "Y", "Y");
+        public GenericInput skill2Input = new GenericInput("L", "Y", "Y");
 
 
         protected bool _lockInput = false;
@@ -448,6 +448,7 @@ namespace Invector.vCharacterController
             StrafeInput();
             JumpInput();
             RollInput();
+            // Skill1Input();
         }
 
         public virtual void MoveInput()
@@ -555,10 +556,21 @@ namespace Invector.vCharacterController
                 cc.Roll();
             }
         }
+        /// <summary>
+        /// Conditions to trigger the Skill1 animation & behavior
+        /// </summary>
+        // public virtual void Skill1Input()
+        // {
+        //     if (skill1Input.GetButtonDown())
+        //     {
+        //         Debug.Log("スキル発動");
+                
+        //     }
+        // }
 
-        #endregion       
+        #endregion
 
-        #region Camera Methods
+            #region Camera Methods
 
         public virtual void CameraInput()
         {

@@ -844,7 +844,7 @@ namespace Invector.vCharacterController.vActions
 
                 tpInput.cc._rigidbody.useGravity = false;
                 if (!tpInput.cc._rigidbody.isKinematic)
-                    tpInput.cc._rigidbody.velocity = Vector3.zero;
+                    tpInput.cc._rigidbody.linearVelocity = Vector3.zero;
                 tpInput.cc._rigidbody.isKinematic = true;
             }
             if (triggerAction && triggerAction.disableCollision)

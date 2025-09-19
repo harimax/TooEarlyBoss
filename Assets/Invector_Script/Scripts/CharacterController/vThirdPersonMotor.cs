@@ -57,9 +57,9 @@ namespace Invector.vCharacterController
 
         #region Character Variables   
         [vEditorToolbar("Physics Material")]
-        public PhysicMaterial idleMaterial;
-        public PhysicMaterial movingMaterial;
-        public PhysicMaterial airborneMaterial;
+        public PhysicsMaterial idleMaterial;
+        public PhysicsMaterial movingMaterial;
+        public PhysicsMaterial airborneMaterial;
         [vEditorToolbar("Locomotion", order = 0)]
 
         [vSeparator("Movement Settings")]
@@ -341,7 +341,7 @@ namespace Invector.vCharacterController
         public vAnimatorStateInfos _animatorStateInfos;
         public vAnimatorStateInfos animatorStateInfos { get => _animatorStateInfos; protected set => _animatorStateInfos = value; }
 
-        
+
         #endregion
 
         #region Actions
@@ -431,11 +431,11 @@ namespace Invector.vCharacterController
 
         internal Rigidbody _rigidbody;                                                      // access the Rigidbody component
         internal float changeMaterialPhysics = 0;
-        internal virtual PhysicMaterial MovingPhysicsMaterial => movingMaterial;
-        internal virtual PhysicMaterial IdlePhysicsMaterial => idleMaterial;
-        internal virtual PhysicMaterial AirbornePhysicsMaterial => airborneMaterial;         // create PhysicMaterial for the Rigidbody
+        internal virtual PhysicsMaterial MovingPhysicsMaterial => movingMaterial;
+        internal virtual PhysicsMaterial IdlePhysicsMaterial => idleMaterial;
+        internal virtual PhysicsMaterial AirbornePhysicsMaterial => airborneMaterial;         // create PhysicMaterial for the Rigidbody
         internal CapsuleCollider _capsuleCollider;                                          // access CapsuleCollider information
-        public PhysicMaterial currentMaterialPhysics { get; protected set; }
+        public PhysicsMaterial currentMaterialPhysics { get; protected set; }
 
         #endregion
 
@@ -563,7 +563,7 @@ namespace Invector.vCharacterController
         {
             base.Init();
 
-            animator.updateMode = AnimatorUpdateMode.AnimatePhysics;
+            animator.updateMode = AnimatorUpdateMode.Fixed;
             // rigidbody info
             _rigidbody = GetComponent<Rigidbody>();
 
@@ -921,7 +921,7 @@ namespace Invector.vCharacterController
             {
                 if (isJumping || isInAirborne || disableSnapToGround)
                 {
-                    targetVelocity.y = _rigidbody.velocity.y;
+                    targetVelocity.y = _rigidbody.linearVelocity.y;
                 }
                 else
                 {
@@ -934,7 +934,7 @@ namespace Invector.vCharacterController
                     ApplyGroundMargin(ref targetVelocity);
                 }
 
-                _rigidbody.velocity = targetVelocity;
+                _rigidbody.linearVelocity = targetVelocity;
             }
         }
 
@@ -1121,7 +1121,7 @@ namespace Invector.vCharacterController
             input = Vector3.Lerp(input, Vector3.zero, 2f * Time.fixedDeltaTime);
             inputSmooth = Vector3.Lerp(inputSmooth, Vector3.zero, 2f * Time.fixedDeltaTime);
             if (!_rigidbody.isKinematic)
-                _rigidbody.velocity = Vector3.Lerp(_rigidbody.velocity, Vector3.zero, 4f * Time.fixedDeltaTime);
+                _rigidbody.linearVelocity = Vector3.Lerp(_rigidbody.linearVelocity, Vector3.zero, 4f * Time.fixedDeltaTime);
             inputMagnitude = Mathf.Lerp(inputMagnitude, 0f, 2f * Time.fixedDeltaTime);
             moveSpeed = Mathf.Lerp(moveSpeed, 0f, 2f * Time.fixedDeltaTime);
             animator.SetFloat(vAnimatorParameters.InputMagnitude, 0f, 0.2f, Time.fixedDeltaTime);
@@ -1144,7 +1144,7 @@ namespace Invector.vCharacterController
             input = Vector3.zero;
             inputSmooth = Vector3.zero;
             if (!_rigidbody.isKinematic)
-                _rigidbody.velocity = Vector3.zero;
+                _rigidbody.linearVelocity = Vector3.zero;
             inputMagnitude = 0f;
             moveSpeed = 0f;
             animator.SetFloat(vAnimatorParameters.InputMagnitude, 0f, 0.25f, Time.fixedDeltaTime);
@@ -1319,7 +1319,7 @@ namespace Invector.vCharacterController
             if (isInAirborne)
             {
                 // check vertical velocity
-                verticalVelocity = _rigidbody.velocity.y;
+                verticalVelocity = _rigidbody.linearVelocity.y;
                 // apply extra gravity when falling
                 if (!applyingStepOffset && !isJumping && extraGravity != 0)
                 {
@@ -1349,9 +1349,9 @@ namespace Invector.vCharacterController
                 isJumping = false;
             }
             // apply extra force to the jump height   
-            var vel = _rigidbody.velocity;
+            var vel = _rigidbody.linearVelocity;
             vel.y = jumpHeight * jumpMultiplier;
-            _rigidbody.velocity = vel;
+            _rigidbody.linearVelocity = vel;
         }
 
         /// <summary>
@@ -1436,8 +1436,8 @@ namespace Invector.vCharacterController
             Vector3 targetPosition = _rigidbody.position + moveDirection * airSpeed * Time.fixedDeltaTime;
             Vector3 targetVelocity = (targetPosition - transform.position) / Time.fixedDeltaTime;
 
-            targetVelocity.y = _rigidbody.velocity.y;
-            _rigidbody.velocity = Vector3.Lerp(_rigidbody.velocity, targetVelocity, airSmooth * Time.fixedDeltaTime);
+            targetVelocity.y = _rigidbody.linearVelocity.y;
+            _rigidbody.linearVelocity = Vector3.Lerp(_rigidbody.linearVelocity, targetVelocity, airSmooth * Time.fixedDeltaTime);
         }
 
         /// <summary>
@@ -1562,7 +1562,7 @@ namespace Invector.vCharacterController
             }
             else
             {
-                v.y = _rigidbody.velocity.y;
+                v.y = _rigidbody.linearVelocity.y;
 
                 // add roll extra gravity
                 if (rollExtraGravity != 0)
@@ -1837,7 +1837,7 @@ namespace Invector.vCharacterController
                 Debug.DrawRay(transform.position, dir * slideDownVelocity);
             }
 
-            _rigidbody.velocity = Vector3.Lerp(_rigidbody.velocity, dir * slideDownVelocity, slideDownSmooth * Time.fixedDeltaTime);
+            _rigidbody.linearVelocity = Vector3.Lerp(_rigidbody.linearVelocity, dir * slideDownVelocity, slideDownSmooth * Time.fixedDeltaTime);
             dir.y = 0f;
 
             if (_rotateSlopeEnterTime <= 0f)
@@ -2278,19 +2278,28 @@ namespace Invector.vCharacterController
         #endregion
         //スタミナが追加されるスクリプト
         public void AddMaxStamina(float amount)
-        {   
-            _maxStamina=100f;
-            _maxStamina+=amount;
-            currentStamina=_maxStamina;
+        {
+            _maxStamina += amount;
+            currentStamina = _maxStamina;
             // Debug.Log("スタミナ:"+_maxStamina);
         }
         //体力が追加されるスクリプト
         public void AddMaxHealth(int amount)
         {
-            _maxHealth=100;
-            _maxHealth+=amount;
-            currentHealth=_maxHealth;
+            _maxHealth += amount;
+            currentHealth = _maxHealth;
             // Debug.Log("HP:"+_maxHealth);
         }
+        public void ResetMaxHealth()
+        {
+            _maxHealth = 100;
+            currentHealth = _maxHealth;
+        }
+        public void ResetMaxStamina()
+        {
+            _maxStamina = 100;
+            currentStamina = _maxStamina;
+        }
+
     }
 }
