@@ -946,6 +946,8 @@ GameObject:
   - component: {fileID: 1294333434376463239}
   - component: {fileID: 7977083304262880301}
   - component: {fileID: 8943239151613174967}
+  - component: {fileID: 4255441033963385408}
+  - component: {fileID: 7762853346461059316}
   m_Layer: 9
   m_Name: Lizard
   m_TagString: Enemy
@@ -963,7 +965,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 25.9, y: 0, z: 31.7}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9088666913871695295}
@@ -1054,7 +1056,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9aa8785ec24f1b84880486e86c9178d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 0
   AttackRangecollider: {fileID: 3004273193060528199}
   Damagecollider: {fileID: 7475299717831278068}
   chasecollider: {fileID: 2271298669501302156}
@@ -1063,6 +1064,7 @@ MonoBehaviour:
   raycastLayerMask:
     serializedVersion: 2
     m_Bits: 0
+  patrolRadius: 10
 --- !u!195 &1294333434376463239
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1073,7 +1075,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 2
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -1097,9 +1099,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6ac4e571361afc48a3b5afd49eec5af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemy: {fileID: 586837095830388524}
-  attackcollider: {fileID: 7475299717831278068}
-  dic: 0
+  attackCollider: {fileID: 7475299717831278068}
 --- !u!114 &8943239151613174967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1116,10 +1116,11 @@ MonoBehaviour:
   openCloseWindow: 1
   selectedToolbar: 0
   _isDead: 1
-  _currentHealth: 0
+  _currentHealth: 400
   isImmortal: 0
   fillHealthOnStart: 1
-  _maxHealth: 100
+  reciveDamage: 0
+  _maxHealth: 400
   _healthRecovery: 0
   _healthRecoveryDelay: 0
   checkHealthEvents: []
@@ -1131,13 +1132,73 @@ MonoBehaviour:
       m_Calls: []
   _onDead:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 586837095830388524}
+        m_TargetAssemblyTypeName: ChaseEnemy, Assembly-CSharp
+        m_MethodName: EnemyDestory
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 7762853346461059316}
+        m_TargetAssemblyTypeName: EnemyExprosion, Assembly-CSharp
+        m_MethodName: DeadExplosion
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onChangeHealth:
     m_PersistentCalls:
       m_Calls: []
   onResetHealth:
     m_PersistentCalls:
       m_Calls: []
+--- !u!136 &4255441033963385408
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5552618123446780101}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.59
+  m_Height: 3.21
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.03, z: 0}
+--- !u!114 &7762853346461059316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5552618123446780101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffb6a4bbbd7ee8c40b17dbacdc26b0d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ExplosionObj: {fileID: 8432097813939360708, guid: 01b210efe20a2f84691e67ed9fbcef8d, type: 3}
 --- !u!1 &5631067771918055835
 GameObject:
   m_ObjectHideFlags: 0

@@ -132,7 +132,7 @@ MonoBehaviour:
   openCloseWindow: 1
   selectedToolbar: 0
   damage:
-    damageValue: 100
+    damageValue: 25
     staminaBlockCost: 5
     staminaRecoveryDelay: 1
     ignoreDefense: 0
@@ -351,13 +351,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCloseEvents: 0
   openCloseWindow: 1
-  selectedToolbar: 1
+  selectedToolbar: 0
   _isDead: 0
-  _currentHealth: 100
+  _currentHealth: 500
   isImmortal: 0
   fillHealthOnStart: 1
   reciveDamage: 0
-  _maxHealth: 100
+  _maxHealth: 500
   _healthRecovery: 0
   _healthRecoveryDelay: 0
   checkHealthEvents: []
@@ -428,7 +428,7 @@ MonoBehaviour:
   Damagecollider: {fileID: 3835925239588814466}
   chasecollider: {fileID: 610350043078506472}
   Damagecooldown: 2
-  Reaction_Pro: 0.5
+  Reaction_Pro: 0
   raycastLayerMask:
     serializedVersion: 2
     m_Bits: 0
@@ -448,7 +448,8 @@ MonoBehaviour:
   openCloseEvents: 0
   openCloseWindow: 1
   selectedToolbar: 0
-  defaultDamageEffects: []
+  defaultDamageEffects:
+  - {fileID: 7450026286034035301, guid: c642937febca0bd4bb89968a84551601, type: 3}
   customDamageEffects: []
 --- !u!114 &9147704314406864804
 MonoBehaviour:
@@ -803,6 +804,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6402620168148145686}
     m_Modifications:
+    - target: {fileID: 1861934050257639345, guid: 34abf880b86ea064eaab936c882bc16e, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2039235642068537428, guid: 34abf880b86ea064eaab936c882bc16e, type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
@@ -910,6 +915,10 @@ PrefabInstance:
     - target: {fileID: 6710582155491214474, guid: 34abf880b86ea064eaab936c882bc16e, type: 3}
       propertyPath: m_Name
       value: EnemyHPUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 6710582155491214474, guid: 34abf880b86ea064eaab936c882bc16e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1039,7 +1048,19 @@ MonoBehaviour:
         m_CallState: 2
   onTriggerExit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8756191124874427445}
+        m_TargetAssemblyTypeName: MobEnemy, Assembly-CSharp
+        m_MethodName: ReturnToNormal
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!4 &4746240868858726241 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8861224010459726448, guid: 876eebcae014a9a44bece86b09473fa3, type: 3}

@@ -277,13 +277,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCloseEvents: 0
   openCloseWindow: 1
-  selectedToolbar: 1
+  selectedToolbar: 0
   _isDead: 0
-  _currentHealth: 100
+  _currentHealth: 200
   isImmortal: 0
-  fillHealthOnStart: 0
+  fillHealthOnStart: 1
   reciveDamage: 0
-  _maxHealth: 100
+  _maxHealth: 200
   _healthRecovery: 0
   _healthRecoveryDelay: 0
   checkHealthEvents: []
@@ -354,7 +354,7 @@ MonoBehaviour:
   Damagecollider: {fileID: 7406448653018128936}
   chasecollider: {fileID: 7811144331315477356}
   Damagecooldown: 2
-  Reaction_Pro: 0.5
+  Reaction_Pro: 0
   raycastLayerMask:
     serializedVersion: 2
     m_Bits: 0
@@ -374,7 +374,8 @@ MonoBehaviour:
   openCloseEvents: 0
   openCloseWindow: 1
   selectedToolbar: 0
-  defaultDamageEffects: []
+  defaultDamageEffects:
+  - {fileID: 7450026286034035301, guid: c642937febca0bd4bb89968a84551601, type: 3}
   customDamageEffects: []
 --- !u!114 &5399271647814494163
 MonoBehaviour:
@@ -1154,7 +1155,19 @@ MonoBehaviour:
         m_CallState: 2
   onTriggerExit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 716041599936298294}
+        m_TargetAssemblyTypeName: ChaseEnemy, Assembly-CSharp
+        m_MethodName: OnDetectObjectChase
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Collider, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!136 &7811144331315477356 stripped
 CapsuleCollider:
   m_CorrespondingSourceObject: {fileID: 3701688984633602809, guid: 876eebcae014a9a44bece86b09473fa3, type: 3}

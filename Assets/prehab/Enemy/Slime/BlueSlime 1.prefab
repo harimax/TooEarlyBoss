@@ -31,8 +31,8 @@ Transform:
   m_GameObject: {fileID: 44260241681488976}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.1000004, y: 0.5, z: -7.6000004}
-  m_LocalScale: {x: 2, y: 2.2, z: 2}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2931166241920346562}
@@ -102,9 +102,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCloseEvents: 0
   openCloseWindow: 1
-  selectedToolbar: 0
+  selectedToolbar: 1
   _isDead: 0
-  _currentHealth: 50
+  _currentHealth: 100
   isImmortal: 0
   fillHealthOnStart: 1
   reciveDamage: 0
@@ -117,7 +117,19 @@ MonoBehaviour:
       m_Calls: []
   _onReceiveDamage:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8187610690803872013}
+        m_TargetAssemblyTypeName: StopEnemy, Assembly-CSharp
+        m_MethodName: DamageReaction
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _onDead:
     m_PersistentCalls:
       m_Calls: []
@@ -165,7 +177,8 @@ MonoBehaviour:
   openCloseEvents: 0
   openCloseWindow: 1
   selectedToolbar: 0
-  defaultDamageEffects: []
+  defaultDamageEffects:
+  - {fileID: 7450026286034035301, guid: c642937febca0bd4bb89968a84551601, type: 3}
   customDamageEffects: []
 --- !u!114 &8187610690803872013
 MonoBehaviour:

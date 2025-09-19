@@ -185,7 +185,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   tags:
-    tags: []
+    tags:
+    - Player
   continuousDamage: 0
   damageFrequency: 0.5
   onHit:
