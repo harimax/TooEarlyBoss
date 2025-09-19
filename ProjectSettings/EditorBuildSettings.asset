@@ -6,8 +6,14 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Title.unity
+    guid: d9b402720f1776a4288ff5ec93364925
+  - enabled: 1
     path: Assets/Scenes/DunegonScene.unity
     guid: b9ba18257f4f0e94bb442a0e07b59cf7
+  - enabled: 1
+    path: Assets/Scenes/SmileBossScene.unity
+    guid: 0d12b9662bebe69459427bf71abae72a
   - enabled: 1
     path: Assets/Scenes/BossScene.unity
     guid: 471de20beef85a9419722366e23aa522
