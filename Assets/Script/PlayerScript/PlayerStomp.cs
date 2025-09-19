@@ -20,10 +20,10 @@ public class PlayerStomp : MonoBehaviour
             KURIBO enemy =other.GetComponent<KURIBO>();
             
             //敵が存在しており、落下中に踏みつけると
-            if(enemy!=null && rb.velocity.y<0)
+            if(enemy!=null && rb.linearVelocity.y<0)
             {
                 enemy.Die();//敵が死ぬ
-                rb.velocity=new Vector3(rb.velocity.x,bounceForce,rb.velocity.z);//上方向に跳ね返る
+                rb.linearVelocity=new Vector3(rb.linearVelocity.x,bounceForce,rb.linearVelocity.z);//上方向に跳ね返る
             }
         }
     }

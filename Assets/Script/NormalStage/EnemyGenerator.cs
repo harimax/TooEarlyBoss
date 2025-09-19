@@ -15,7 +15,7 @@ public class EnemyGenerator : MonoBehaviour
     public void GenerateEnemy()
     {
         generaterNumber = ProcessManager.Instance.GetEnemyCountForCurrentBattle();
-        for (int i = 0; i < generaterNumber; i++)
+        for (int i = 0; i < 1; i++)
         {
             var selectedEnemy = MobEnemy[Random.Range(0, MobEnemy.Length)];
             Instantiate(selectedEnemy, generatePosition(), gameObject.transform.rotation);
@@ -30,7 +30,7 @@ public class EnemyGenerator : MonoBehaviour
         {
             Vector3 pos = new Vector3(
                 Random.Range(0, generateRange_X),
-                2,
+                0,
                 Random.Range(0, generateRange_Y)
             );
 

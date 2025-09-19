@@ -14,7 +14,7 @@ public class LoadGameScene : MonoBehaviour
 {
     [SerializeField] Fade fade;
     [SerializeField] private RectTransform buttonTransform;
-    private const string mainSceneTitle = "BossScene";
+    private const string BossSceneTitle = "SmileBossScene";
     private TrianingButton trainingButton;
     private vThirdPersonController vPersonController;
     private vMeleeManager meleeManager;
@@ -35,7 +35,7 @@ public class LoadGameScene : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         // フェード後にシーン遷移
-        fade.FadeIn(1f, () => SceneManager.LoadScene(mainSceneTitle));
+        fade.FadeIn(1f, () => SceneManager.LoadScene(BossSceneTitle));
     }
     /// <summary>
     /// ボタンのアニメーション（DOTween）
@@ -50,6 +50,9 @@ public class LoadGameScene : MonoBehaviour
     /// </summary>
     private void ApplyPlayerTrainingStats()
     {
+        vPersonController.ResetMaxHealth();
+        vPersonController.ResetMaxStamina();
+        //修了したパラメータを加算させる
         vPersonController.AddMaxStamina(trainingButton.PlayerStamina);
         vPersonController.AddMaxHealth(trainingButton.PlayerHealth);
         meleeManager.defaultDamage = new vDamage(Mathf.RoundToInt(trainingButton.PlayerPower) + 10);

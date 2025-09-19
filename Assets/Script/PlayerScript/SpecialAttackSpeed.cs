@@ -18,4 +18,8 @@ public class SpecialAttackSpeed : MonoBehaviour
     {
         animator.speed = 2.0f;
     }
+    void FinishAttack()
+    {
+        animator.speed = 1.0f;
+    }
 }

@@ -10,7 +10,7 @@ public class TrianingButton : MonoBehaviour
     public int PlayerHealth = 1;
     public float PlayerStamina = 1f;
     public float PlayerSpecial = 1f;
-    public static int turnNumber = 0;
+    private int turnNumber;
     [SerializeField] private TextMeshProUGUI attackText;
     [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private TextMeshProUGUI staminaText;
@@ -18,16 +18,19 @@ public class TrianingButton : MonoBehaviour
     [SerializeField] private TextMeshProUGUI turn;
     [SerializeField] private int minIncrease = 1;
     [SerializeField] private int maxIncrease = 5;
+    [SerializeField] private List<UnityEngine.UI.Button> BattleButtons;
     [SerializeField] private List<UnityEngine.UI.Button> trainingButtons;
     // Start is called before the first frame update
 
     void Awake()
     {
         Instance = this;
+        turnNumber = ProcessManager.Instance.totalTurns;
     }
     void Start()
     {
-        turnNumber = ProcessManager.Instance.totalTurns;
+        
+        Debug.Log(turnNumber);
         // 最初はボタンを有効化
         UpdateUI();
     }
@@ -76,10 +79,22 @@ public class TrianingButton : MonoBehaviour
     //UIの更新
     public void UpdateUI()
     {
-        attackText.text = PlayerPower.ToString();
-        healthText.text = PlayerHealth.ToString();
-        staminaText.text = PlayerStamina.ToString();
-        specialText.text = PlayerSpecial.ToString();
+        if (attackText != null)
+        {
+            attackText.text = PlayerPower.ToString();
+        }
+        if (healthText != null)
+        {
+            healthText.text = PlayerHealth.ToString();
+        }
+        if (staminaText != null)
+        {
+            staminaText.text = PlayerStamina.ToString();
+        }
+        if (specialText != null)
+        {
+            specialText.text = PlayerSpecial.ToString();    
+        }
         turn.text = $"残り: {turnNumber}ターン";
 
         SetButtonsInteractable();
@@ -92,6 +107,11 @@ public class TrianingButton : MonoBehaviour
         foreach (var button in trainingButtons)
         {
             button.interactable = canTrain;
+        }
+        if (turnNumber == 0)
+        {
+            BattleButtons[0].interactable = false;
+            BattleButtons[1].interactable = true;
         }
     }
     //ターンを減少させるメソッド

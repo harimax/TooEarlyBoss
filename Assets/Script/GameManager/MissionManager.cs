@@ -16,12 +16,13 @@ public class MissionManager : MonoBehaviour
     [SerializeField] Fade fade;
     [SerializeField] private GameObject tempButton;
     [SerializeField] private SkillSelectUI MissionUI;
-    private int enemyCount;
-    private bool isMissionActive = false;
     private Vector3 InitPosition;
     private StartMission startMission;
     private TrianingButton trianingButton;
-    private SkillAcquirer skillAcquirer;
+    // private SkillAcquirer skillAcquirer;
+    private int enemyCount;
+    private bool isMissionActive = false;
+    vThirdPersonController vPersonController;
 
     /// <summary>
     /// ゲーム開始時に呼ばれるメソッド　初期設定
@@ -34,7 +35,8 @@ public class MissionManager : MonoBehaviour
         GameObject gameManager = GameObject.Find("GameManager");
         startMission = gameManager.GetComponent<StartMission>();
         trianingButton = gameManager.GetComponent<TrianingButton>();
-        skillAcquirer = gameManager.GetComponent<SkillAcquirer>();
+        // skillAcquirer = gameManager.GetComponent<SkillAcquirer>();
+        vPersonController = player.GetComponent<vThirdPersonController>();
     }
 
     void Update()
@@ -54,6 +56,7 @@ public class MissionManager : MonoBehaviour
         if (player == null)
         {
             player = GameObject.FindWithTag("Player"); // "Player" タグを利用
+            vPersonController = player.GetComponent<vThirdPersonController>();
         }
 
         enemyCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
@@ -61,9 +64,10 @@ public class MissionManager : MonoBehaviour
         isMissionActive = true;
         ProcessManager.Instance.IncreaseEnemyCount();
         TrianingButton.Instance.DecreaseTurn();
+        TrianingButton.Instance.UpdateUI();
+
 
         //OnDeadのイベントを再度登録しておく
-        vThirdPersonController vPersonController = player.GetComponent<vThirdPersonController>();
         vPersonController.onDead.AddListener((gameObject) => { FailedMission(); });
     }
     /// <summary>
@@ -80,15 +84,12 @@ public class MissionManager : MonoBehaviour
     /// <param name="isSuccess"></param>
     public void ClearMission(bool isSuccess)
     {
+        // Debug.Log("戦闘クリア");
+        if (!isMissionActive) return;
+
         isMissionActive = false;
         DisableMovePlayer();
-
-        Rigidbody rb = player.GetComponent<Rigidbody>();
-        vThirdPersonController vPersonController = player.GetComponent<vThirdPersonController>();
-
-        rb.velocity = Vector3.zero;
-        vPersonController.enabled = false;
-        vPersonController.enabled = true;
+        ResetPlayerRigidbody();
 
         ClearText.text = "クリア";
         SelectSkillCard();//元の位置に戻る
@@ -122,7 +123,6 @@ public class MissionManager : MonoBehaviour
         tempButton.SetActive(false);
         ClearText.text = "";
 
-        trianingButton.DecreaseTurn();//ターンが経過される
         player.transform.position = InitPosition;
         startMission.ReturntTrainingButton();
         trianingButton.SetButtonsInteractable();
@@ -133,6 +133,15 @@ public class MissionManager : MonoBehaviour
         DisableMovePlayer();
 
 
+    }
+    //プレイヤーのRigidBodyで移動を止める
+    private void ResetPlayerRigidbody()
+    {
+        var rb = player.GetComponent<Rigidbody>();
+        rb.linearVelocity = Vector3.zero;
+
+        vPersonController.enabled = false;
+        vPersonController.enabled = true;
     }
     //プレイヤーを動けなくする
     public void DisableMovePlayer()

@@ -54,15 +54,18 @@ public class StartMission : MonoBehaviour
     /// </summary>
     public void StartMissionButton()
     {
+        vPersonController.ResetMaxHealth();
+        vPersonController.ResetMaxStamina();
         //修行したパラメータを加算させる
         vPersonController.AddMaxStamina(trainingButton.PlayerStamina);
         vPersonController.AddMaxHealth(trainingButton.PlayerHealth);
         _vMeleeManager.defaultDamage.damageValue = Mathf.RoundToInt(trainingButton.PlayerPower) + 10;
         _vMeleeManager.Init();
 
-        // 戦闘開始準備
-        // Debug.Log("ダンジョンスタート");
+        // 行動可能状態に
         IsPlayerMove.GetInstance().CanMove = true;
+
+        // UI非表示、敵出現、スキル発動、ミッション開始
         SetAllUIInactive();
         enemyGenerator.GenerateEnemy();
         missionManager.StartMission();//ミッション開始メソッドが呼ばれる
@@ -79,7 +82,6 @@ public class StartMission : MonoBehaviour
         SetAllUIInactive();
         IsGameUI = false;
         IstrainingUI = true;
-
         StartCoroutine(SwitchCamera());
     }
     // カメラ遷移完了まで待ってからUIとCanMoveを切り替える

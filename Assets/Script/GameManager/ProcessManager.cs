@@ -9,13 +9,14 @@ public class ProcessManager : MonoBehaviour
     private Fade fade;
     public static ProcessManager Instance { get; private set; }
     private const string mainSceneTitle = "DunegonScene";
-    [SerializeField] private int currentCycle = 1;
-    [SerializeField] private int maxCycle = 5;
-    public int currentBattleIndex = 1;
-    public int totalTurns = 14;
+    [SerializeField] private int currentCycle = 1;// 現在のサイクル数
+    [SerializeField] private int maxCycle = 5;// 現在のサイクル数
+    public int currentBattleIndex = 1;// サイクル内の戦闘インデックス
+    public int totalTurns = 14; // 各サイクルの総ターン数（初期値）
 
     void Awake()
     {
+        // シングルトン処理
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -25,10 +26,12 @@ public class ProcessManager : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
 
     }
+    //現在の出現する敵の数を返す関数
     public int GetEnemyCountForCurrentBattle()
     {
         return currentCycle + currentBattleIndex; // 例：サイクル1→1,2,3体
     }
+    //ボスを倒したときに次のサイクルに移る関数
     public void GoToNextCycle()
     {
         fade = FindObjectOfType<Fade>();
@@ -51,12 +54,12 @@ public class ProcessManager : MonoBehaviour
             fade.FadeIn(1f, () => SceneManager.LoadScene(mainSceneTitle));
         }
     }
-
+    //敵の出現数を加算するメソッド
     public void IncreaseEnemyCount()
     {
         currentBattleIndex++;
     }
-
+    //修行・戦闘シーンに移る時のメソッド
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         // プレイヤーとスタート地点を探す
@@ -71,6 +74,4 @@ public class ProcessManager : MonoBehaviour
         // イベント登録解除（多重呼び出し防止）
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
-
-
 }

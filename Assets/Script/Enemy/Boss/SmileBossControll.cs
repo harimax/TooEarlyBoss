@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 
-public class SmileBossControll : MonoBehaviour
+public class SmileBossControll : MonoBehaviour,IBossController
 {
-    public enum BossState { Idle, BallShot, Laser, RockFall }
+    public enum BossState { Idle, BallShot, Laser, RockFall, ShotSmile, Dead }
     private BossState currentState;
     private Transform player;
     private Animator animator;
+    private bool _isPaused = false;
     [SerializeField] private GameObject ballPrefab;
     [SerializeField] private GameObject laser;
     [SerializeField] private GameObject rockPrefab;
@@ -29,19 +31,23 @@ public class SmileBossControll : MonoBehaviour
         animator = this.gameObject.GetComponent<Animator>();
     }
 
-    private void Update()
+    private async Task Update()
     {
         //一定時間ごとに攻撃してくる
         timer -= Time.deltaTime;
-        if (timer <= 0f)
+        if (currentState == BossState.Idle)
         {
-            // ChooseAttack();
+            LookAtPlayerXZ();
+        }
+        if (timer <= 0f && currentState == BossState.Idle)
+        {
+            await ChooseAttack();
             timer = attackInterval;
         }
     }
     private async UniTask ChooseAttack()
     {
-        int choice = Random.Range(0, 3);
+        int choice = Random.Range(0, 4);
         switch (choice)
         {
             case 0:
@@ -53,6 +59,9 @@ public class SmileBossControll : MonoBehaviour
             case 2:
                 await RockFallAsync();
                 break;
+            case 3:
+                await ShotSmileAsync();
+                break;
         }
     }
     private async UniTask BallShotAsync()
@@ -60,7 +69,7 @@ public class SmileBossControll : MonoBehaviour
         Debug.Log("弾攻撃");
         currentState = BossState.BallShot;
         animator.SetTrigger("ballAttack");
-        await UniTask.Delay(3000); // 1.5秒待機
+        await UniTask.Delay(5000); // 5秒待機
 
         currentState = BossState.Idle;
 
@@ -69,11 +78,9 @@ public class SmileBossControll : MonoBehaviour
     {
         Debug.Log("レーザー攻撃");
         currentState = BossState.Laser;
-        animator.SetTrigger("LaserAttack");
+        animator.SetTrigger("laserAttack");
 
-        await UniTask.Delay(3000); // 1.5秒待機
-
-        currentState = BossState.Idle;
+        await UniTask.Delay(10000); // 7秒待機
 
     }
 
@@ -83,7 +90,17 @@ public class SmileBossControll : MonoBehaviour
         currentState = BossState.RockFall;
         animator.SetTrigger("RockAttack");
 
-        await UniTask.Delay(3000); // 1.5秒待機
+        await UniTask.Delay(3000); // 3秒待機
+        currentState = BossState.Idle;
+
+    }
+    private async UniTask ShotSmileAsync()
+    {
+        Debug.Log("突進攻撃");
+        currentState = BossState.ShotSmile;
+        animator.SetTrigger("DashAttack");
+
+        await UniTask.Delay(3000); // 5秒待機
 
         currentState = BossState.Idle;
     }
@@ -103,13 +120,14 @@ public class SmileBossControll : MonoBehaviour
             Vector3 dir = rotation * baseForward;
 
             GameObject ball = Instantiate(ballPrefab, ObjectSpawnPoint.position, Quaternion.identity);
-            ball.GetComponent<Rigidbody>().velocity = dir.normalized * 10f;
+            ball.GetComponent<Rigidbody>().linearVelocity = dir.normalized * 10f;
         }
     }
 
     public async UniTaskVoid OnLaserEvent()
     {
         laser.SetActive(true);
+        currentState = BossState.Laser;
         float duration = 5f;
         float elapsed = 0f;
 
@@ -139,5 +157,48 @@ public class SmileBossControll : MonoBehaviour
             Instantiate(rockPrefab, spawnPos, Quaternion.identity);
         }
     }
+    private void LookAtPlayerXZ()
+    {
+        if (player == null) return;
+
+        Vector3 direction = player.position - transform.position;
+        direction.y = 0f; // Y方向無視してXZ平面で回転
+
+        if (direction.sqrMagnitude > 0.001f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
+        }
+    }
+    public void DeadTrigger()
+    {
+        currentState = BossState.Dead;
+        animator.SetTrigger("Dead");
+    }
+    /// <summary>
+    /// ボスを完全に止める
+    /// </summary>
+    public void PauseBoss()
+    {
+        // Update 系を止める
+        _isPaused = true;
+        // MonoBehaviour の Update を無効化する場合はこちらを使ってもよい
+        // enabled = false;
+        // アニメータを止めたいなら：
+        // if (animator != null) animator.enabled = false;
+    }
+
+    /// <summary>
+    /// ボスの動きを再開する
+    /// </summary>
+    public void ResumeBoss()
+    {
+        _isPaused = false;
+        // enabled = true;
+        if (animator != null) animator.enabled = true;
+        // タイマー初期化
+        timer = attackInterval;
+    }
+
 
 }

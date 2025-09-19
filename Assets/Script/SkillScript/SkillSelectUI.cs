@@ -3,21 +3,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using System;
 
 public class SkillSelectUI : MonoBehaviour
 {
+    public static SkillSelectUI Instance { get; private set; }
     [Header("UI References")]
     [SerializeField] private GameObject skillCardPrefab;
     [SerializeField] private Transform cardParent;  // 配置先のUI（GridLayoutGroup推奨）
 
     [Header("Game References")]
-    [SerializeField] private List<SkillBase> allSkills ;  // 全スキル（ScriptableObject）
+    [SerializeField] private List<SkillBase> allSkills;  // 全スキル（ScriptableObject）
     [SerializeField] private SkillManager skillManager;  // プレイヤーのSkillManager参照
     [SerializeField] private MissionManager missionManager; // ←インスペクタで設定
+    [SerializeField] private GameObject discardDialogPrefab;
     bool skillChosen = false;
     private void Awake()
     {
+        // シングルトン初期化
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
         LoadAllSkills();
+
     }
 
     private void LoadAllSkills()
@@ -26,7 +40,7 @@ public class SkillSelectUI : MonoBehaviour
         SkillBase[] loadedSkills = Resources.LoadAll<SkillBase>("Skill");
         allSkills = new List<SkillBase>(loadedSkills);
 
-        Debug.Log($"スキルを {allSkills.Count} 個ロードしました。");
+        // Debug.Log($"スキルを {allSkills.Count} 個ロードしました。");
     }
 
     //ミッションクリア後にスキルカードを表示するメソッド
@@ -43,7 +57,7 @@ public class SkillSelectUI : MonoBehaviour
         int choiceCount = Mathf.Min(4, unacquiredSkills.Count); // ← 修正ポイント
 
         //まだ獲得していないスキルからランダムに4つ選ぶ
-        var selectedSkills = unacquiredSkills.OrderBy(x => Random.value).Take(choiceCount).ToList();
+        var selectedSkills = unacquiredSkills.OrderBy(x => UnityEngine.Random.value).Take(choiceCount).ToList();
 
         // 表示をクリア
         foreach (Transform child in cardParent)
@@ -65,9 +79,17 @@ public class SkillSelectUI : MonoBehaviour
                 if (skillChosen) return;
                 skillChosen = true;
 
-                skillManager.AcquireSkill(capturedSkill);
-                missionManager.ReturnPlayerToInitialPosition(); // ← ここで呼び出す！
-                ClearCardUI();
+                // AcquireSkill の onAcquired コールバックに後処理を渡す
+                skillManager.AcquireSkill(
+                    capturedSkill,
+                    // このラムダは「真に取得したとき」にだけ呼ばれる
+                    () =>
+                    {
+                        Debug.Log("【DEBUG】 onAcquired コールバック発火");
+                        missionManager.ReturnPlayerToInitialPosition();
+                        ClearCardUI();
+                    }
+                );
             });
         }
     }
@@ -80,5 +102,16 @@ public class SkillSelectUI : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+    }
+    /// <summary>
+    /// 破棄候補をリストで受け取り、ユーザーに選ばせるポップアップを表示
+    /// </summary>
+    public void ShowDiscardDialog(
+        List<SkillBase> candidates,
+        Action<SkillBase> onDiscarded)
+    {
+        var dialog = Instantiate(discardDialogPrefab, transform);
+        dialog.GetComponent<SkillDiscardDialog>()
+              .Initialize(candidates, onDiscarded);
     }
 }
