@@ -53,7 +53,7 @@ public class Enemy_Ataack_GAN : MonoBehaviour
         yield return new WaitForSeconds(attackcooldown);
         var direction=(Targetpos()-gameObject.transform.position).normalized;
         var shot=Instantiate(GANObj.gameObject,this.gameObject.transform.position,this.gameObject.transform.rotation);
-        shot.GetComponent<Rigidbody>().velocity = direction* shotSpeed;
+        shot.GetComponent<Rigidbody>().linearVelocity = direction* shotSpeed;
         //オーディオリスナーが格納されているなら音を鳴らす
         if(BulletSound!=null)
         {

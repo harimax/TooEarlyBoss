@@ -15,7 +15,7 @@ public class EnemyHP : MonoBehaviour
     {
         vHealthController = gameObject.GetComponent<vHealthController>();
         hpSlider.maxValue = vHealthController.maxHealth;
-        hpSlider.value = vHealthController.currentHealth;
+        hpSlider.value = vHealthController.maxHealth;
         
         // Debug.Log(hpSlider.value);
     }

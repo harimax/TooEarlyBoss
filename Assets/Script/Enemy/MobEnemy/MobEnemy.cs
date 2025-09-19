@@ -42,7 +42,7 @@ public class MobEnemy : MonoBehaviour
             State = StateEnum.Attack;
             canAttack = false;  // 攻撃中は再度攻撃できないようにする
             animator.SetTrigger("Attack");
-            // Debug.Log("攻撃開始");
+            Debug.Log("攻撃開始");
         }
     }
     // 通常状態に戻る処理（攻撃後やダメージ後）
@@ -53,7 +53,7 @@ public class MobEnemy : MonoBehaviour
 
         State = StateEnum.Patrol;
         canAttack = true;
-        // Debug.Log("IDLEに戻ります");
+        Debug.Log("IDLEに戻ります");
     }
     //ダメージリアクション処理
     public virtual void DamageReaction()

@@ -60,6 +60,10 @@ public class Enemy_Attack : MonoBehaviour
 
         // async void は例外処理が難しいので本当は避けたいが、
         // イベントハンドラ的に「終わったらすぐ待機」する場合は許容される
-        await chaseEnemy.Cooldown();
+        if (chaseEnemy != null)
+        {
+            await chaseEnemy.Cooldown();
+        }
+
     }
 }

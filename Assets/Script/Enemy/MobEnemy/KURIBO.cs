@@ -159,7 +159,7 @@ public class KURIBO : MonoBehaviour
             rb.MovePosition(targetPosition);  // 最終位置を確定
 
             await UniTask.Delay(800); // 硬直時間
-            rb.velocity = Vector3.zero;  // ノックバック後に速度をゼロにする（滑り防止）
+            rb.linearVelocity = Vector3.zero;  // ノックバック後に速度をゼロにする（滑り防止）
             _agent.enabled = true;  // NavMeshAgentを再有効化
             _agent.isStopped = false;
             KURIBOstate = KURIBOStatus.Chase;
