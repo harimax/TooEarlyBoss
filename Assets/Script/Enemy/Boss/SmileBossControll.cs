@@ -31,8 +31,12 @@ public class SmileBossControll : MonoBehaviour,IBossController
         animator = this.gameObject.GetComponent<Animator>();
     }
 
-    private async Task Update()
+    private async void Update()
     {
+        if (_isPaused)
+        {
+            return;
+        }
         //一定時間ごとに攻撃してくる
         timer -= Time.deltaTime;
         if (currentState == BossState.Idle)

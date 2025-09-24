@@ -6,48 +6,76 @@ using System.Threading.Tasks;
 using System.Threading;
 using UnityEngine.AI;
 using Invector;
+using DG.Tweening;
 
 public class TreeBossController : MonoBehaviour, IBossController
 {
+    // ボスの状態
+    private enum BossState
+    {
+        Idle,       // 待機
+        Shooting,   // 弾発射
+        ChargeShoot // チャージレーザー
+    };
+    private BossState currentState;
+
+    [SerializeField] private GameObject bulletShooters;
+    [SerializeField] private GameObject chargeLaser;
+    [SerializeField] private Transform UpperBody;
+    [SerializeField] private GameObject Floor;
+    [SerializeField] private Transform target; // 移動先
+    private Vector3 FloorInitPos;
+    [SerializeField] private float duration = 10f; // 移動にかける時間
+    private float baseY; // 初期のY角度（今回は180°）
+    public static TreeBossController treeBossController;
     private Animator animator;
     private bool _isPaused = false;
     private Transform player;
-    [SerializeField] private GameObject ballPrefab;
-    [SerializeField] private Transform[] firePoints;
-    // ===== 攻撃まわり =====
-    [Header("Attack Settings")]
-    [SerializeField] private float attackInterval = 5f;   // 攻撃間隔（秒）
-    [SerializeField] private float projectileSpeed = 12f; // 弾速
-    [SerializeField] private float fireAngleLimit = 75f;  // 左右制限角度
-    [SerializeField] private float fireDelayBetweenMuzzles = 0.3f; // 発射口ごとの間隔
     [Header("Patrol Settings")]
     [SerializeField] private Transform[] waypoints; // 巡回ポイント
     [SerializeField] private float waypointThreshold = 0.5f; // 到達判定距離
     private int currentWaypoint = 0;
     private bool isWalking = false;
     private NavMeshAgent agent;
+    // ----- 押し出し系 ----------------
+    [SerializeField] private GameObject Barrier;
+    private SphereCollider ejectCollider;
+    [SerializeField] private float expandDuration = 1f;
+    [SerializeField] private float holdDuration = 1f;
+    [SerializeField] private float shrinkDuration = 1f;
+    [SerializeField] private float minRadius = 0.1f;
+    [SerializeField] private float maxRadius = 12f;
     // ===== 体力監視（子のモグラ） =====
     private vHealthController moleHealth; // 子に付いている vHealthController
     private float startWalkThreshold;     // 1/3 しきい値
+    private float thTwoThird;   // 2/3 の閾値
+    private float thOneThird;   // 1/3 の閾値
+    private bool firedTwoThird; // 2/3イベントを発火済みか
+    private bool firedOneThird; // 1/3イベントを発火済みか
     private bool walkTriggered = false;   // 多重起動防止
-
-
-    private float timer;
-    private bool _isFiring = false;                              // 多重起動ガード
     private CancellationToken _ct;
+    private CancellationTokenSource cts; // 状態ループのキャンセル用
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         animator = this.gameObject.GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        timer = attackInterval;
         _ct = this.GetCancellationTokenOnDestroy();
         agent = GetComponent<NavMeshAgent>();
+        ejectCollider = Barrier.GetComponent<SphereCollider>();
+        treeBossController = this;
+        ChangeState(BossState.Shooting);
         if (agent != null)
         {
             agent.isStopped = true; // 最初は止まっている
         }
+        baseY = UpperBody.localEulerAngles.y;
+        FloorInitPos = Floor.transform.position;
+        Debug.Log("floorInit:" + FloorInitPos);
+
+        // Unityは360°表記になるので正規化
+        if (baseY > 180f) baseY -= 360f;
         // 子オブジェクトからモグラの vHealthController を取得して監視
         moleHealth = GetComponentInChildren<vHealthController>(includeInactive: true);
         if (moleHealth != null)
@@ -55,6 +83,10 @@ public class TreeBossController : MonoBehaviour, IBossController
             Debug.Log("TreeBossController: 子に vHealthController(モグラ)が見つかりました。");
             // Max の 1/3 をしきい値として計算（Maxは公開プロパティで参照可）
             startWalkThreshold = moleHealth.maxHealth / 3f;
+            // しきい値：Max の 2/3・1/3
+            thTwoThird = moleHealth.maxHealth * (2f / 3f);
+            thOneThird = moleHealth.maxHealth * (1f / 3f);
+
             // 体力変化イベントに登録（現在値→変更のたびに呼ばれる）
             moleHealth.onChangeHealth.AddListener(OnMoleHealthChanged); // 値は現在HP(float)
         }
@@ -67,16 +99,13 @@ public class TreeBossController : MonoBehaviour, IBossController
     // Update is called once per frame
     void Update()
     {
-        timer -= Time.deltaTime;
-
-        if (timer <= 0f)
-        {
-            BallShotAsync().Forget();
-            timer = attackInterval; // クールダウン後に再セット
-        }
-
+        RotateUpperBody();
+        // if (currentState == BossState.Shooting)
+        // {
+        //     RotateUpperBody();
+        // }
         // 巡回処理（HPが1/3以下になったら）
-        if (isWalking && agent != null && !agent.pathPending)
+        if (isWalking && agent != null)
         {
             if (agent.remainingDistance <= waypointThreshold)
             {
@@ -86,70 +115,33 @@ public class TreeBossController : MonoBehaviour, IBossController
     }
 
     //=== HP監視コールバック ===
-    private void OnMoleHealthChanged(float current)
+    private async void OnMoleHealthChanged(float current)
     {
         if (walkTriggered) return; // もう開始済み
+        // 2/3 閾値：未発火 かつ 現在HPが 2/3 以下に落ちた瞬間
+        if (!firedTwoThird && current <= thTwoThird)
+        {
+            firedTwoThird = true;
+            Debug.Log("[BossEvent] HPが2/3以下：吹き飛ばし①予約");
+            await UniTask.Delay(1000); // 1秒遅延
+            await OnActiveBarriar();
+
+        }
+
+        // 1/3 閾値：未発火 かつ 現在HPが 1/3 以下に落ちた瞬間
+        if (!firedOneThird && current <= thOneThird)
+        {
+            firedOneThird = true;
+            Debug.Log("[BossEvent] HPが1/3以下：吹き飛ばし②予約");
+            await UniTask.Delay(1000); // 1秒遅延
+            await OnActiveBarriar();
+
+        }
+
         if (current <= startWalkThreshold)
         {
             walkTriggered = true;
             StartWalking();
-        }
-    }
-    //------------------------------------------------------------------------------------------------
-    /// <summary>
-    /// 弾を発射する
-    /// </summary>
-    private async UniTask BallShotAsync()
-    {
-        _isFiring = true;
-
-        Debug.Log("弾発射");
-        // すべての発射口から発射を試みる
-        foreach (var muzzle in firePoints)
-        {
-            FireAtPlayer(muzzle);
-        }
-
-        // 発射後ちょっと待つ（演出やディレイ用）
-        // 最低限 1 フレームだけ待ってガード解除（同フレーム連打防止）
-        await UniTask.Yield(PlayerLoopTiming.Update, _ct);
-        _isFiring = false;
-    }
-    /// <summary>
-    /// プレイヤーが範囲内なら弾を発射
-    /// </summary>
-    private void FireAtPlayer(Transform muzzle)
-    {
-        if (player == null || ballPrefab == null || firePoints == null) return;
-
-        // プレイヤー方向（XZ平面のみ）
-        Vector3 direction = player.position - muzzle.position;
-        var checkDirection = direction;
-        checkDirection.y = 0f;
-        direction.Normalize();
-        checkDirection.Normalize();
-
-        // 正面ベクトル（XZ平面のみ）
-        Vector3 forward = muzzle.forward;
-        forward.y = 0f;
-        forward.Normalize();
-
-        // 水平角度を
-        float angle = Vector3.SignedAngle(forward, checkDirection, Vector3.up);
-        //プレイヤーが範囲内にいるかチェックする
-        if (Mathf.Abs(angle) <= fireAngleLimit)
-        {
-            // 発射
-            GameObject ball = Instantiate(ballPrefab, muzzle.position, Quaternion.identity);
-            if (ball.TryGetComponent<Rigidbody>(out var rb))
-            {
-                rb.linearVelocity = direction * projectileSpeed;
-            }
-            // Debug.Log($"弾を発射！（角度:{angle:F1}°）");
-        }
-        else
-        {
-            // Debug.Log($"プレイヤーは発射範囲外（角度:{angle:F1}°）");
         }
     }
     //------------------------------------------------------------------------------------------------
@@ -163,6 +155,7 @@ public class TreeBossController : MonoBehaviour, IBossController
         currentWaypoint = 0;
         agent.SetDestination(waypoints[currentWaypoint].position);
         Debug.Log("Boss started walking!");
+        animator.SetBool("Walking", true);
     }
 
     private void GoToNextWaypoint()
@@ -170,12 +163,39 @@ public class TreeBossController : MonoBehaviour, IBossController
         if (waypoints.Length == 0) return;
 
         currentWaypoint = (currentWaypoint + 1) % waypoints.Length;
+        Debug.Log("現在のポイント:" + currentWaypoint);
         agent.SetDestination(waypoints[currentWaypoint].position);
     }
 
 
     //-----------------------------------------------------------------------------------------------------
+    //吹き飛ばし処理
+    public async UniTask OnActiveBarriar()
+    {
+        await AnimateRadius(minRadius, maxRadius, expandDuration);
 
+        // ② 待機
+        await UniTask.Delay((int)(holdDuration * 1000));
+
+        // ③ 縮小
+        await AnimateRadius(maxRadius, minRadius, shrinkDuration);
+        //アイドルに移動する
+        ChangeState(BossState.Idle);
+        ResetFloor();
+    }
+
+    private async UniTask AnimateRadius(float from, float to, float duration)
+    {
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.fixedDeltaTime;
+            float u = Mathf.Clamp01(t / duration);
+            ejectCollider.radius = Mathf.Lerp(from, to, u);
+            await UniTask.WaitForFixedUpdate();
+        }
+        ejectCollider.radius = to;
+    }
     //------------------------------------------------------------------------------------------------
     public void PauseBoss()
     {
@@ -195,6 +215,126 @@ public class TreeBossController : MonoBehaviour, IBossController
         // enabled = true;
         if (animator != null) animator.enabled = true;
         // タイマー初期化
-        timer = attackInterval;
+    }
+
+    //------------------------------------------------------------------------------------------------
+    /// <summary>
+    /// 状態を切り替える共通関数
+    /// </summary>
+    private void ChangeState(BossState newState)
+    {
+        // 進行中の状態処理を止める
+        cts?.Cancel();
+        cts = new CancellationTokenSource();
+
+        currentState = newState;
+
+        // 状態ごとに処理開始
+        switch (newState)
+        {
+            case BossState.Idle:
+                IdleState(cts.Token).Forget();
+                break;
+            case BossState.Shooting:
+                ShootingState(cts.Token).Forget();
+                break;
+            case BossState.ChargeShoot:
+                ChargeShootState(cts.Token).Forget();
+                break;
+        }
+    }
+    /// <summary>
+    /// Idle状態：5秒待機して Shooting へ
+    /// </summary>
+    private async UniTaskVoid IdleState(CancellationToken token)
+    {
+        bulletShooters.SetActive(false);
+        chargeLaser.SetActive(false);
+
+        Debug.Log("Idle 開始");
+        await UniTask.Delay(5000, cancellationToken: token); // 5秒待機
+        Debug.Log("Idle 終了 → Shootingへ");
+        if (!token.IsCancellationRequested)
+            ChangeState(BossState.Shooting);
+    }
+    /// <summary>
+    /// Shooting状態：弾発射オブジェクトON → 7秒後に ChargeShoot
+    /// </summary>
+    private async UniTaskVoid ShootingState(CancellationToken token)
+    {
+        bulletShooters.SetActive(true);
+        chargeLaser.SetActive(false);
+
+        Debug.Log("Shooting 開始");
+        await UniTask.Delay(7000, cancellationToken: token); // 7秒後に遷移
+        Debug.Log("Shooting 終了 → ChargeShootへ");
+        if (!token.IsCancellationRequested)
+            ChangeState(BossState.ChargeShoot);
+    }
+    /// <summary>
+    /// ChargeShoot状態：5秒後にレーザー発射 → Shootingへ
+    /// </summary>
+    private async UniTaskVoid ChargeShootState(CancellationToken token)
+    {
+        bulletShooters.SetActive(false);
+        chargeLaser.SetActive(false);
+
+        UpFloor();
+        Debug.Log("ChargeShoot 溜め開始");
+        await UniTask.Delay(5000, cancellationToken: token); // 溜め時間
+        if (token.IsCancellationRequested) return;
+
+        // レーザー発射
+        chargeLaser.SetActive(true);
+        Debug.Log("レーザー発射！");
+
+        await UniTask.Delay(3000, cancellationToken: token); // レーザー表示時間（任意）
+        chargeLaser.SetActive(false);
+
+        Debug.Log("ChargeShoot 終了 → Shootingへ");
+        if (!token.IsCancellationRequested)
+            ChangeState(BossState.Shooting);
+    }
+    //----------------------------------------------------------------------------------------
+
+    //Shootingの時に上半身を回転させる処理
+    private void RotateUpperBody()
+    {
+        if (player == null) return;
+        UpperBody.LookAt(player);
+        // 現在の回転角を取得
+        Vector3 euler = UpperBody.localEulerAngles;
+
+        // Z軸は固定（傾きをなくす）
+        euler.z = 0f;
+        euler.y = 180f;
+
+        // 反映
+        UpperBody.localEulerAngles = euler;
+    }
+
+    public static TreeBossController GetInstance()
+    {
+        return treeBossController;
+    }
+    //足場を上場させる処理
+    private void UpFloor()
+    {
+        if (player.transform.position.y < target.position.y / 2)
+        {
+            Debug.Log(player.transform.position.y);
+            ResetFloor();
+        }
+        Floor.transform.DOMove(target.position, duration).SetEase(Ease.Linear);
+    }
+    //足場の位置をリセットする処理
+    private void ResetFloor()
+    {
+        Debug.Log("位置リセット");
+        // Floor と子の Tween を全部停止
+        DOTween.Kill(Floor.transform);
+        foreach (var t in Floor.GetComponentsInChildren<Transform>(true))
+            DOTween.Kill(t);
+        Floor.transform.position = FloorInitPos;
     }
 }

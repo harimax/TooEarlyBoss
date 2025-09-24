@@ -19,10 +19,50 @@ public class MissionManager : MonoBehaviour
     private Vector3 InitPosition;
     private StartMission startMission;
     private TrianingButton trianingButton;
-    // private SkillAcquirer skillAcquirer;
+    private bool isPlayerDeathListenerRegistered = false;
     private int enemyCount;
     private bool isMissionActive = false;
     vThirdPersonController vPersonController;
+
+    /// <summary>
+    /// プレイヤーの死亡イベントを受け取ったときの処理
+    /// </summary>
+    /// <param name="deadObject">死亡したプレイヤー</param>
+    private void HandlePlayerDead(GameObject deadObject)
+    {
+        // 現状は引数を使用しないが、イベントシグネチャに合わせて受け取っておく
+        FailedMission();
+    }
+
+    /// <summary>
+    /// プレイヤーの死亡イベントへ安全に登録する
+    /// </summary>
+    private void SubscribePlayerDeathEvent()
+    {
+        if (vPersonController == null || isPlayerDeathListenerRegistered)
+        {
+            return;
+        }
+
+        // 念のため同じリスナーを削除してから再登録する
+        vPersonController.onDead.RemoveListener(HandlePlayerDead);
+        vPersonController.onDead.AddListener(HandlePlayerDead);
+        isPlayerDeathListenerRegistered = true;
+    }
+
+    /// <summary>
+    /// プレイヤーの死亡イベントからリスナーを解除する
+    /// </summary>
+    private void UnsubscribePlayerDeathEvent()
+    {
+        if (vPersonController == null || !isPlayerDeathListenerRegistered)
+        {
+            return;
+        }
+
+        vPersonController.onDead.RemoveListener(HandlePlayerDead);
+        isPlayerDeathListenerRegistered = false;
+    }
 
     /// <summary>
     /// ゲーム開始時に呼ばれるメソッド　初期設定
@@ -67,8 +107,8 @@ public class MissionManager : MonoBehaviour
         TrianingButton.Instance.UpdateUI();
 
 
-        //OnDeadのイベントを再度登録しておく
-        vPersonController.onDead.AddListener((gameObject) => { FailedMission(); });
+        // OnDead イベントの重複登録を防ぎつつ監視を開始する
+        SubscribePlayerDeathEvent();
     }
     /// <summary>
     /// 敵を倒した際に呼び出されるメソッド mobEnemyのonDieをから呼び出される
@@ -88,6 +128,7 @@ public class MissionManager : MonoBehaviour
         if (!isMissionActive) return;
 
         isMissionActive = false;
+        UnsubscribePlayerDeathEvent();
         DisableMovePlayer();
         ResetPlayerRigidbody();
 
@@ -100,6 +141,7 @@ public class MissionManager : MonoBehaviour
     public void FailedMission()
     {
         isMissionActive = false;
+        UnsubscribePlayerDeathEvent();
         ClearText.text = "死んだぜ";
 
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
