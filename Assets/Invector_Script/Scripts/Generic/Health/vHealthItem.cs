@@ -16,9 +16,14 @@ namespace Invector
                 var healthController = other.GetComponent<vHealthController>();
                 if (healthController != null)
                 {
+
+                    // heal only if the character's health isn't full
+                    if (healthController.currentHealth < healthController.maxHealth)
+                    {
                         // limit healing to the max health
                         healthController.AddHealth((int)value);
-                        Destroy(gameObject);              
+                        Destroy(gameObject);
+                    }                    
                 }
             }
         }

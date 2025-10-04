@@ -96,3 +96,10 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector_Script/Scripts/Generic/Utils/Editor/Resources/EntityPreview/LocationPreview.fbx
+  uploadId: 705020

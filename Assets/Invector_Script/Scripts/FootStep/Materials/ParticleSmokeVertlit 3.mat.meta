@@ -3,3 +3,11 @@ guid: 08f4e21d3305d5d408b2b58e710aad1f
 NativeFormatImporter:
   userData: 
   assetBundleName: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 84583
+  packageName: Invector Third Person Controller - Shooter Template
+  packageVersion: 2.6.4c
+  assetPath: Assets/Invector_Script/Scripts/FootStep/Materials/ParticleSmokeVertlit
+    3.mat
+  uploadId: 705020

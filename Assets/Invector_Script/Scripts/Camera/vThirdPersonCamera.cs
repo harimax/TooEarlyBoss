@@ -8,7 +8,6 @@ namespace Invector.vCamera
     public class vThirdPersonCamera : MonoBehaviour
     {
         private static vThirdPersonCamera _instance;
-        private float fixedTargetY;
 
         public static vThirdPersonCamera instance
         {
@@ -144,9 +143,6 @@ namespace Invector.vCamera
                     _lookAtTarget = new GameObject("targetLookAt").transform;
                     _lookAtTarget.rotation = transform.rotation;
                     _lookAtTarget.position = mainTarget.position;
-                    // ゲーム開始時のプレイヤーY座標を記録（または初期化タイミングで）
-                    fixedTargetY = _lookAtTarget.position.y;
-                    // Debug.Log(fixedTargetY);
                 }
                 return _lookAtTarget;
             }
@@ -937,7 +933,7 @@ namespace Invector.vCamera
             }
 
             transformWeight = Mathf.Clamp(transformWeight += Time.fixedDeltaTime, 0f, 1f);
-            var targetPos = new Vector3(currentTarget.position.x, fixedTargetY + offSetPlayerPivot + currentState.height, currentTarget.position.z);
+            var targetPos = new Vector3(currentTarget.position.x, currentTarget.position.y + offSetPlayerPivot + currentState.height, currentTarget.position.z);
             currentTargetPos = useSmooth ? Vector3.MoveTowards(currentTargetPos, targetPos, currentState.smooth * Time.fixedDeltaTime) : targetPos;
             current_cPos = currentTargetPos;
             var pos = isValidFixedPoint ? currentState.lookPoints[indexLookPoint].positionPoint : transform.position;

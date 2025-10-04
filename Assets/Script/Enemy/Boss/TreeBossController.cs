@@ -99,11 +99,7 @@ public class TreeBossController : MonoBehaviour, IBossController
     // Update is called once per frame
     void Update()
     {
-        RotateUpperBody();
-        // if (currentState == BossState.Shooting)
-        // {
-        //     RotateUpperBody();
-        // }
+
         // 巡回処理（HPが1/3以下になったら）
         if (isWalking && agent != null)
         {
@@ -112,6 +108,10 @@ public class TreeBossController : MonoBehaviour, IBossController
                 GoToNextWaypoint();
             }
         }
+    }
+    void LateUpdate()
+    {
+        RotateUpperBody();
     }
 
     //=== HP監視コールバック ===
@@ -301,6 +301,7 @@ public class TreeBossController : MonoBehaviour, IBossController
     private void RotateUpperBody()
     {
         if (player == null) return;
+        Debug.Log("プレイヤーに向いています");
         UpperBody.LookAt(player);
         // 現在の回転角を取得
         Vector3 euler = UpperBody.localEulerAngles;

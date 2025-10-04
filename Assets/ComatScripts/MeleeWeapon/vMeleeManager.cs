@@ -48,7 +48,6 @@ namespace Invector.vMelee
         protected virtual void Start()
         {
             Init();
-            // Debug.Log(defaultDamage.damageValue);
         }
 
         /// <summary>
@@ -174,9 +173,8 @@ namespace Invector.vMelee
             if (this.senselessTime != 0) damage.senselessTime = this.senselessTime;
             /// Calc damage with multiplier 
             /// and Call ApplyDamage of attackObject 
-            
-            //damageMultiplierの分だけダメージが上乗せされる
-            damage.damageValue += damageMultiplier > 1 ? damageMultiplier : 1;
+
+            damage.damageValue *= damageMultiplier > 1 ? damageMultiplier : 1;
             hitInfo.targetIsBlocking = !hitInfo.attackObject.ApplyDamage(hitInfo.hitBox, hitInfo.targetCollider, damage);
 
             onDamageHit.Invoke(hitInfo);
@@ -429,7 +427,7 @@ namespace Invector.vMelee
         public virtual void SetRightWeapon(vMeleeWeapon weapon)
         {
             if (weapon)
-            {
+            {               
                 rightWeapon = weapon;
                 rightWeapon.IsEquipped = true;
                 rightWeapon.meleeManager = this;
