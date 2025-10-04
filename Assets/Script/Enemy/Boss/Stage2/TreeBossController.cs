@@ -24,6 +24,7 @@ public class TreeBossController : MonoBehaviour, IBossController
     [SerializeField] private Transform UpperBody;
     [SerializeField] private GameObject Floor;
     [SerializeField] private Transform target; // 移動先
+    [SerializeField] private MOGURAManager groundEnemyManager;// 参照を追加
     private Vector3 FloorInitPos;
     [SerializeField] private float duration = 10f; // 移動にかける時間
     private float baseY; // 初期のY角度（今回は180°）
@@ -72,6 +73,11 @@ public class TreeBossController : MonoBehaviour, IBossController
         }
         baseY = UpperBody.localEulerAngles.y;
         FloorInitPos = Floor.transform.position;
+        if (groundEnemyManager != null)
+        {
+            groundEnemyManager.OnGroundEnemyKilled += OnGroundEnemyKilledHandler;
+        }
+
         Debug.Log("floorInit:" + FloorInitPos);
 
         // Unityは360°表記になるので正規化
@@ -265,11 +271,14 @@ public class TreeBossController : MonoBehaviour, IBossController
         bulletShooters.SetActive(true);
         chargeLaser.SetActive(false);
 
+        // ★ Shooting開始時に、地上敵を1体だけ湧かせる（既に居れば何もしない）
+        groundEnemyManager?.SpawnOnceIfNone().Forget();
+
         Debug.Log("Shooting 開始");
         await UniTask.Delay(7000, cancellationToken: token); // 7秒後に遷移
-        Debug.Log("Shooting 終了 → ChargeShootへ");
-        if (!token.IsCancellationRequested)
-            ChangeState(BossState.ChargeShoot);
+        // Debug.Log("Shooting 終了 → ChargeShootへ");
+        // if (!token.IsCancellationRequested)
+        //     ChangeState(BossState.ChargeShoot);
     }
     /// <summary>
     /// ChargeShoot状態：5秒後にレーザー発射 → Shootingへ
@@ -281,7 +290,7 @@ public class TreeBossController : MonoBehaviour, IBossController
 
         UpFloor();
         Debug.Log("ChargeShoot 溜め開始");
-        await UniTask.Delay(5000, cancellationToken: token); // 溜め時間
+        await UniTask.Delay(10000, cancellationToken: token); // 溜め時間
         if (token.IsCancellationRequested) return;
 
         // レーザー発射
@@ -321,12 +330,21 @@ public class TreeBossController : MonoBehaviour, IBossController
     //足場を上場させる処理
     private void UpFloor()
     {
+        // 既存 UpFloor のDOTweenに OnComplete を付ける
+        DOTween.Kill(Floor.transform);
         if (player.transform.position.y < target.position.y / 2)
         {
             Debug.Log(player.transform.position.y);
             ResetFloor();
         }
-        Floor.transform.DOMove(target.position, duration).SetEase(Ease.Linear);
+        Floor.transform
+        .DOMove(target.position, duration)
+        .SetEase(Ease.Linear)
+        .OnComplete(() =>
+        {
+            // 足場上昇が終わったら「次のスポーンを許可」
+            groundEnemyManager?.ReadyForNextSpawn();
+        });
     }
     //足場の位置をリセットする処理
     private void ResetFloor()
@@ -337,5 +355,20 @@ public class TreeBossController : MonoBehaviour, IBossController
         foreach (var t in Floor.GetComponentsInChildren<Transform>(true))
             DOTween.Kill(t);
         Floor.transform.position = FloorInitPos;
+    }
+    //-----------------------------------------------------------------------------
+    private void OnDestroy()
+    {
+        if (groundEnemyManager != null)
+            groundEnemyManager.OnGroundEnemyKilled -= OnGroundEnemyKilledHandler;
+    }
+    /// <summary>
+    /// 地上敵が倒れた時に呼ばれる：足場を上昇
+    /// </summary>
+    private void OnGroundEnemyKilledHandler()
+    {
+        // ここで足場を上げる（上げ終わったら次スポーン許可を返す）
+        UpFloor();
+        ChangeState(BossState.ChargeShoot);
     }
 }
