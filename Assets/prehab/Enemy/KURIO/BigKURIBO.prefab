@@ -618,8 +618,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6126939178144438805}
   - component: {fileID: 221501856896160134}
-  - component: {fileID: 441102694242310132}
-  - component: {fileID: 2537570828718184568}
   m_Layer: 0
   m_Name: Burrow
   m_TagString: Untagged
@@ -659,6 +657,9 @@ SkinnedMeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -723,75 +724,6 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.22272307, y: -0.055911213, z: 0.0000013709068}
     m_Extent: {x: 0.6295289, y: 0.43151852, z: 0.6325811}
   m_DirtyAABB: 0
---- !u!65 &441102694242310132
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4703854553311016386}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.66, y: 0.6, z: 1.8}
-  m_Center: {x: 0, y: -0.2, z: 0}
---- !u!114 &2537570828718184568
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4703854553311016386}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8a6ee24d8c766042b403d33a08151b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  openCloseEvents: 0
-  openCloseWindow: 1
-  selectedToolbar: 0
-  damage:
-    damageValue: 0
-    staminaBlockCost: 5
-    staminaRecoveryDelay: 1
-    ignoreDefense: 0
-    activeRagdoll: 0
-    senselessTime: 0
-    sender: {fileID: 0}
-    receiver: {fileID: 0}
-    hitPosition: {x: 0, y: 0, z: 0}
-    hitReaction: 1
-    recoil_id: 0
-    reaction_id: 0
-    damageType: 
-    force: {x: 0, y: 0, z: 0}
-  overrideDamageSender: {fileID: 0}
-  layerToCollide:
-    serializedVersion: 2
-    m_Bits: 0
-  tags:
-    tags: []
-  continuousDamage: 0
-  damageFrequency: 0.5
-  onHit:
-    m_PersistentCalls:
-      m_Calls: []
-  onSendDamage:
-    m_PersistentCalls:
-      m_Calls: []
-  collisionMethod: 0
-  part: {fileID: 0}
-  limitParticleCollisionEvent: 0
-  maxParticleCollisionEvent: 1
 --- !u!1 &5406861308112879414
 GameObject:
   m_ObjectHideFlags: 0
@@ -905,7 +837,7 @@ GameObject:
   - component: {fileID: 1639835047254337741}
   m_Layer: 0
   m_Name: BigKURIBO
-  m_TagString: KURIBO
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -920,7 +852,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.98078537, z: 0, w: -0.19509031}
   m_LocalPosition: {x: 33.095787, y: 3.2989616, z: 32.8}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6126939178144438805}
@@ -928,12 +860,11 @@ Transform:
   - {fileID: 4739714941088559605}
   - {fileID: 4533296331717894287}
   - {fileID: 328039608428348505}
-  - {fileID: 7292656991440321430}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -202.5, z: 0}
 --- !u!95 &688873354896697658
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -947,6 +878,7 @@ Animator:
   m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
@@ -971,8 +903,8 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.32
-  m_Height: 1.09
+  m_Radius: 0.38
+  m_Height: 1.45
   m_Direction: 1
   m_Center: {x: 0, y: 0.38, z: 0}
 --- !u!195 &8312949463062388886
@@ -985,7 +917,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 2
+  m_Speed: 1
   m_Acceleration: 3
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -1033,8 +965,8 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
@@ -1057,6 +989,7 @@ MonoBehaviour:
   _currentHealth: 0
   isImmortal: 0
   fillHealthOnStart: 1
+  reciveDamage: 0
   _maxHealth: 50
   _healthRecovery: 0
   _healthRecoveryDelay: 0
@@ -1070,13 +1003,13 @@ MonoBehaviour:
   _onDead:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 561485934901065121}
+        m_TargetAssemblyTypeName: KURIBO, Assembly-CSharp
+        m_MethodName: Die
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1183,107 +1116,6 @@ Transform:
   - {fileID: 301439335781134885}
   m_Father: {fileID: 9106534758746442475}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &7401647332563120334
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7292656991440321430}
-  - component: {fileID: 1875700057543307981}
-  - component: {fileID: 8304364869667016483}
-  m_Layer: 19
-  m_Name: CollsionDetector
-  m_TagString: KURIBO
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7292656991440321430
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7401647332563120334}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4133591335243089751}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!136 &1875700057543307981
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7401647332563120334}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 2.79
-  m_Height: 1
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8304364869667016483
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7401647332563120334}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b40cb05ce9394045bbc2ca0c8d74eea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onTriggerEnter:
-    m_PersistentCalls:
-      m_Calls: []
-  onTriggerStay:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 561485934901065121}
-        m_TargetAssemblyTypeName: KURIBO, Assembly-CSharp
-        m_MethodName: OnDetectObjectChase
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onTriggerExit:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 561485934901065121}
-        m_TargetAssemblyTypeName: KURIBO, Assembly-CSharp
-        m_MethodName: ExitObject
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &7549749944848978152
 GameObject:
   m_ObjectHideFlags: 0

@@ -129,43 +129,6 @@ public class KURIBO : MonoBehaviour
         _agent.enabled = true;
     }
 
-    /// <summary>
-    /// プレイヤーと接触するとノックバックする処理
-    /// </summary>
-    /// <param name="other"></param>
-    private async Task OnCollisionEnter(Collision other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            Debug.Log("ノックバック");
-            KURIBOstate = KURIBOStatus.Stunned;
-            _agent.isStopped = true;
-            _agent.enabled = false;  // NavMeshAgentを無効化
-            Vector3 knockbackDirection = (transform.position - other.transform.position).normalized;
-            Vector3 startPosition = transform.position;
-            Vector3 targetPosition = startPosition + (knockbackDirection * 2.0f);  // 2m後ろにノックバック
-
-            float elapsed = 0f;
-            float duration = 0.5f;  // 0.5秒かけてノックバック
-
-            while (elapsed < duration)
-            {
-                float t = elapsed / duration;
-                rb.MovePosition(Vector3.Lerp(startPosition, targetPosition, t));  // 徐々に移動させる
-                elapsed += Time.deltaTime;
-                await UniTask.Yield();
-            }
-
-            rb.MovePosition(targetPosition);  // 最終位置を確定
-
-            await UniTask.Delay(800); // 硬直時間
-            rb.linearVelocity = Vector3.zero;  // ノックバック後に速度をゼロにする（滑り防止）
-            _agent.enabled = true;  // NavMeshAgentを再有効化
-            _agent.isStopped = false;
-            KURIBOstate = KURIBOStatus.Chase;
-        }
-    }
-
     //巡回処理
     IEnumerator Patrol()
     {
