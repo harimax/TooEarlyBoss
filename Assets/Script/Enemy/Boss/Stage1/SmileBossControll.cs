@@ -128,7 +128,7 @@ public class SmileBossControll : MonoBehaviour,IBossController
         }
     }
 
-    public async UniTaskVoid OnLaserEvent()
+    public async UniTask OnLaserEvent()
     {
         laser.SetActive(true);
         currentState = BossState.Laser;

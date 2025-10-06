@@ -31,7 +31,7 @@ public class MobEnemy : MonoBehaviour
 
         State = StateEnum.Die;
         animator.SetTrigger("Dead");
-        FindObjectOfType<MissionManager>().OnEnemyDefeated(); // ミッションに通知
+        FindFirstObjectByType<MissionManager>()?.OnEnemyDefeated(); // ミッションに通知
 
     }
     //攻撃判断処理
@@ -64,7 +64,7 @@ public class MobEnemy : MonoBehaviour
         State = StateEnum.Damage;
         canAttack = false;  // ダメージ中は攻撃無効
         animator.SetTrigger("Damage");
-         StartCoroutine(WaitForDamageRecovery());
+        StartCoroutine(WaitForDamageRecovery());
     }
     // ダメージ後に一定時間待って通常状態に戻す処理
     private IEnumerator WaitForDamageRecovery()

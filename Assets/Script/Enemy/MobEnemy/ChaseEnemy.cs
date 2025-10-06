@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 
 public class ChaseEnemy : MobEnemy
 {
@@ -69,7 +70,7 @@ public class ChaseEnemy : MobEnemy
         else if (_status.State != StateEnum.Die)
         {
             base.OnDie(); // 基底クラスの死亡処理を実行
-            StartCoroutine(DestoryCoroutine(4.0f)); // 4秒後にオブジェクト削除
+            DestoryCoroutine(4.0f).Forget(); // 4秒後にオブジェクト削除
         }
     }
 
@@ -107,9 +108,9 @@ public class ChaseEnemy : MobEnemy
         ReturnToNormal();
     }
     //死亡コルーチン
-    private IEnumerator DestoryCoroutine(float time)
+    private async UniTask DestoryCoroutine(float time)
     {
-        yield return new WaitForSeconds(time);
+        await UniTask.Delay((int)(time*1000));
         Destroy(gameObject);
     }
     //攻撃を受けると追跡・攻撃・当たりのコライダーを一時的に非表示
@@ -152,12 +153,6 @@ public class ChaseEnemy : MobEnemy
 
         // 状態が変わった＝Patrol終わり
         patrolCoroutine = default;
-    }
-    // 攻撃アニメーション中かチェックする関数
-    private bool IsPlayingAttackAnimation()
-    {
-        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0); // レイヤー0
-        return stateInfo.IsTag("Attack"); // または stateInfo.IsName("Attack") にしてもいい
     }
     public void EnemyDestory()
     {

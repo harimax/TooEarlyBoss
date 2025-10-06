@@ -252,7 +252,7 @@ public class TreeBossController : MonoBehaviour, IBossController
     /// <summary>
     /// Idle状態：5秒待機して Shooting へ
     /// </summary>
-    private async UniTaskVoid IdleState(CancellationToken token)
+    private async UniTask IdleState(CancellationToken token)
     {
         bulletShooters.SetActive(false);
         chargeLaser.SetActive(false);
@@ -266,7 +266,7 @@ public class TreeBossController : MonoBehaviour, IBossController
     /// <summary>
     /// Shooting状態：弾発射オブジェクトON → 7秒後に ChargeShoot
     /// </summary>
-    private async UniTaskVoid ShootingState(CancellationToken token)
+    private async UniTask ShootingState(CancellationToken token)
     {
         bulletShooters.SetActive(true);
         chargeLaser.SetActive(false);
@@ -283,7 +283,7 @@ public class TreeBossController : MonoBehaviour, IBossController
     /// <summary>
     /// ChargeShoot状態：5秒後にレーザー発射 → Shootingへ
     /// </summary>
-    private async UniTaskVoid ChargeShootState(CancellationToken token)
+    private async UniTask ChargeShootState(CancellationToken token)
     {
         bulletShooters.SetActive(false);
         chargeLaser.SetActive(false);

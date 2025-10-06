@@ -33,7 +33,7 @@ public class RoundFire : SkillBase
         }
     }
     // UniTask によるエフェクトの生成＆終了処理
-    private async UniTaskVoid HandleActiveEffectAsync(GameObject player)
+    private async UniTask HandleActiveEffectAsync(GameObject player)
     {
         // エフェクトを表示
         activeEffect.SetActive(true);

@@ -1,12 +1,11 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Invector;
-using Unity.VisualScripting;
 using Cinemachine;
-using UnityEngine.UIElements;
 using Invector.vMelee;
 using Invector.vCharacterController;
+using Cysharp.Threading.Tasks;
+using System;
 public class StartMission : MonoBehaviour
 {
     [Header("References")]
@@ -18,12 +17,12 @@ public class StartMission : MonoBehaviour
 
     private static StartMission _instance;
     private CinemachineVirtualCamera mainCameraVirtual;
-    private CinemachineBrain brain;
-    private vThirdPersonController vPersonController;
+    private CinemachineBrain brainCameraObj;
+    private vThirdPersonController playerController;
     private bool IsGameUI;
     private bool IstrainingUI;
     private TrianingButton trainingButton;
-    private vMeleeManager _vMeleeManager;
+    private vMeleeManager meleeManager;
     private EnemyGenerator enemyGenerator;
     private SkillManager skillManager;
 
@@ -34,7 +33,7 @@ public class StartMission : MonoBehaviour
     {
         _instance = this;
 
-        AttachPlayerCameraData();
+        AttachPlayerData();
     }
     /// <summary>
     /// 戦闘準備モードへ移行する
@@ -46,21 +45,21 @@ public class StartMission : MonoBehaviour
         SetAllUIInactive();
         IsGameUI = true;
         IstrainingUI = false;
-        AttachPlayerCameraData();
-        StartCoroutine(SwitchCamera());
+        AttachPlayerData();
+        _ = SwitchCameraAsync(); // ← ここもUniTaskに変更
     }
     /// <summary>
     /// ミッション開始ボタン
     /// </summary>
     public void StartMissionButton()
     {
-        vPersonController.ResetMaxHealth();
-        vPersonController.ResetMaxStamina();
+        playerController.ResetMaxHealth();
+        playerController.ResetMaxStamina();
         //修行したパラメータを加算させる
-        vPersonController.AddMaxStamina(trainingButton.PlayerStamina);
-        vPersonController.AddMaxHealth(trainingButton.PlayerHealth);
-        _vMeleeManager.defaultDamage.damageValue = Mathf.RoundToInt(trainingButton.PlayerPower) + 10;
-        _vMeleeManager.Init();
+        playerController.AddMaxStamina(trainingButton.PlayerStamina);
+        playerController.AddMaxHealth(trainingButton.PlayerHealth);
+        meleeManager.defaultDamage.damageValue = Mathf.RoundToInt(trainingButton.PlayerPower) + 10;
+        meleeManager.Init();
 
         // 行動可能状態に
         IsPlayerMove.GetInstance().CanMove = true;
@@ -82,13 +81,16 @@ public class StartMission : MonoBehaviour
         SetAllUIInactive();
         IsGameUI = false;
         IstrainingUI = true;
-        StartCoroutine(SwitchCamera());
+        _ = SwitchCameraAsync(); // ← ここもUniTaskに変更
     }
     // カメラ遷移完了まで待ってからUIとCanMoveを切り替える
-    private IEnumerator SwitchCamera()
+    private async UniTask SwitchCameraAsync()
     {
-        yield return new WaitForEndOfFrame(); // カメラの優先度変更反映待ち
-        yield return new WaitUntil(() => !brain.IsBlending); // 遷移完了待ち
+        // カメラの優先度変更反映待ち（1フレーム待つ）
+        await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate);
+
+        // ブレンド完了待ち
+        await UniTask.WaitUntil(() => !brainCameraObj.IsBlending);
         //戦闘シーンの際はGameUIを起動
         if (IsGameUI)
         {
@@ -116,19 +118,21 @@ public class StartMission : MonoBehaviour
     {
         return _instance;
     }
-
-    public void AttachPlayerCameraData()
+    /// <summary>
+    /// ミッション開始に必要なデータを格納
+    /// </summary>
+    public void AttachPlayerData()
     {
                 // プレイヤー参照
         var player = GameObject.FindWithTag("Player");
-        vPersonController = player.GetComponent<vThirdPersonController>();
-        _vMeleeManager = player.GetComponent<vMeleeManager>();
+        playerController = player.GetComponent<vThirdPersonController>();
+        meleeManager = player.GetComponent<vMeleeManager>();
         skillManager = player.GetComponent<SkillManager>();
 
         // カメラ関連
         var MainCameraObject = GameObject.FindWithTag("MainCamera");
         mainCameraVirtual = MainCameraObject.GetComponent<CinemachineVirtualCamera>();
-        brain = brainCameraObject.GetComponent<CinemachineBrain>();
+        brainCameraObj = brainCameraObject.GetComponent<CinemachineBrain>();
         // ゲームオブジェクト参照
         enemyGenerator = GameObject.Find("EnemyGenerator").GetComponent<EnemyGenerator>();
         trainingButton = this.gameObject.GetComponent<TrianingButton>();

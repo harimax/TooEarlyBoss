@@ -4,6 +4,9 @@ using UnityEngine;
 using Invector;
 using Invector.vCharacterController;
 using Invector.vMelee;
+using Cysharp.Threading.Tasks;
+using System;
+using System.Threading.Tasks;
 
 [CreateAssetMenu(menuName = "Skill/MoveSpeedUp")]
 public class MoveSpeedUp : SkillBase
@@ -25,12 +28,12 @@ public class MoveSpeedUp : SkillBase
         {
             if (!isEffectApplied)
             {
-                ActiveSpeedUp(player);
+                _=ActiveSpeedUp(player);//（警告なし）
             }
         }
     }
     //移動速度が速くなる処理
-    private void ActiveSpeedUp(GameObject player)
+    private async UniTask ActiveSpeedUp(GameObject player)
     {
         var playerComp = player.GetComponent<vThirdPersonController>();
         tempWalkSpeed = playerComp.freeSpeed.walkSpeed;
@@ -41,13 +44,13 @@ public class MoveSpeedUp : SkillBase
         playerComp.freeSpeed.runningSpeed = tempRunnigSpeed * 1.3f;
         playerComp.freeSpeed.sprintSpeed = tempSprintSpeed * 1.3f;
         isEffectApplied = true;
-        player.GetComponent<MonoBehaviour>().StartCoroutine(FinishSpeedUp(duration, player));
+        await FinishSpeedUp(duration, player);
     }
     //スキルが終わるタイミングと速度が元に戻る
-    private System.Collections.IEnumerator FinishSpeedUp(float time, GameObject player)
+    private async UniTask FinishSpeedUp(float time, GameObject player)
     {
 
-        yield return new WaitForSeconds(time);
+        await UniTask.Delay(TimeSpan.FromSeconds(time));
         var playerComp = player.GetComponent<vThirdPersonController>();
         playerComp.freeSpeed.walkSpeed = tempWalkSpeed;
         playerComp.freeSpeed.runningSpeed = tempRunnigSpeed;

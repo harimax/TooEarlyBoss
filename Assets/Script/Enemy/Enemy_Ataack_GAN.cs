@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Animations;
+using Cysharp.Threading.Tasks;
+using System;
+using System.Threading.Tasks;
 
 public class Enemy_Ataack_GAN : MonoBehaviour
 {
@@ -21,7 +24,7 @@ public class Enemy_Ataack_GAN : MonoBehaviour
     }
 
     //プレイヤーが範囲内に入れば起動するメソッド-------------------------------------
-    public void OnAttackGAN(Collider collider)
+    public async Task OnAttackGAN(Collider collider)
     {
         if(collider.tag=="Player")
         {
@@ -40,17 +43,16 @@ public class Enemy_Ataack_GAN : MonoBehaviour
             Quaternion lookRotation = Quaternion.LookRotation(directionToTarget);
             ParentObj.transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
             
-            // Debug.Log(collider);
-            if(isOnCooldown==false) StartCoroutine(Shot());
+            if(isOnCooldown==false) await Shot();
         }
     }
     //弾の発射--------------------------------------------------------------------------
-    public IEnumerator Shot()
+    public async UniTask Shot()
     {
         Debug.Log("発射");
         isOnCooldown = true; //弾を打てる状態になる
         Preliminary_Effect.SetActive(true);
-        yield return new WaitForSeconds(attackcooldown);
+        await UniTask.Delay(TimeSpan.FromSeconds(attackcooldown));
         var direction=(Targetpos()-gameObject.transform.position).normalized;
         var shot=Instantiate(GANObj.gameObject,this.gameObject.transform.position,this.gameObject.transform.rotation);
         shot.GetComponent<Rigidbody>().linearVelocity = direction* shotSpeed;
@@ -60,7 +62,7 @@ public class Enemy_Ataack_GAN : MonoBehaviour
             BulletSound.Play();
         }
         Preliminary_Effect.SetActive(false);
-        yield return new WaitForSeconds(attackcooldown);
+        await UniTask.Delay(TimeSpan.FromSeconds(attackcooldown));
         isOnCooldown = false; //弾を打てない状態にする
         Destroy(shot,3.0f);
     }

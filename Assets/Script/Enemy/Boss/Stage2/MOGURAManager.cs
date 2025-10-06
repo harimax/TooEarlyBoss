@@ -18,7 +18,7 @@ public class MOGURAManager : MonoBehaviour
     /// ボス側から呼ぶ：このタイミングで1体だけ湧かせたい
     /// 既にフィールドに居る場合は何もしない
     /// </summary>
-    public async UniTaskVoid SpawnOnceIfNone()
+    public async UniTask SpawnOnceIfNone()
     {
         if (!canSpawn) return;           // ボスからOKが出るまでスポーンしない
         if (currentEnemy != null) return;
