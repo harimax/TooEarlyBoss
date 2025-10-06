@@ -24,6 +24,9 @@ namespace Invector.vCharacterController
         public virtual bool isBlocking { get; protected set; }
         public virtual bool isArmed { get { return meleeManager != null && (meleeManager.rightWeapon != null || (meleeManager.leftWeapon != null && meleeManager.leftWeapon.meleeType != vMeleeType.OnlyDefense)); } }
         public virtual bool isEquipping { get; protected set; }
+        // フィールド
+        private bool isStrongAttacking;   // 強攻撃中フラグ
+
 
         [HideInInspector]
         public bool lockMeleeInput;
@@ -113,6 +116,8 @@ namespace Invector.vCharacterController
             {
                 return;
             }
+            // ★追加：攻撃中（特に強攻撃中）は弱攻撃を受け付けない
+            if (isStrongAttacking) return;
 
             if (weakAttackInput.GetButtonDown() && MeleeAttackStaminaConditions())
             {
@@ -135,6 +140,9 @@ namespace Invector.vCharacterController
             {
                 return;
             }
+            // 攻撃中は完全に無視（押しても何も起きない）
+            if (isAttacking)
+                return;
 
             if (strongAttackInput.GetButtonDown() && (!meleeManager.CurrentActiveAttackWeapon || meleeManager.CurrentActiveAttackWeapon.useStrongAttack) && MeleeAttackStaminaConditions())
             {
@@ -144,6 +152,7 @@ namespace Invector.vCharacterController
 
         public virtual void TriggerStrongAttack()
         {
+            isStrongAttacking = true;
             animator.SetInteger(vAnimatorParameters.AttackID, AttackID);
             animator.SetTrigger(vAnimatorParameters.StrongAttack);
         }
@@ -299,6 +308,11 @@ namespace Invector.vCharacterController
         public virtual void OnDisableAttack()
         {
             isAttacking = false;
+            // ★ 強攻撃が終わった瞬間に元に戻す
+            if (isStrongAttacking)
+            {
+                isStrongAttacking = false;
+            }
         }
 
         public virtual void ResetAttackTriggers()

@@ -174,7 +174,7 @@ namespace Invector.vMelee
             /// Calc damage with multiplier 
             /// and Call ApplyDamage of attackObject 
 
-            damage.damageValue *= damageMultiplier > 1 ? damageMultiplier : 1;
+            damage.damageValue += damageMultiplier > 1 ? damageMultiplier : 1;
             hitInfo.targetIsBlocking = !hitInfo.attackObject.ApplyDamage(hitInfo.hitBox, hitInfo.targetCollider, damage);
 
             onDamageHit.Invoke(hitInfo);
