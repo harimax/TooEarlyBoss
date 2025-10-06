@@ -12,7 +12,7 @@ public class MissionManager : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private GameObject player;
-    [SerializeField] private TextMeshProUGUI ClearText;
+    [SerializeField] private TextMeshProUGUI clearText;
     [SerializeField] Fade fade;
     [SerializeField] private GameObject tempButton;
     [SerializeField] private SkillSelectUI MissionUI;
@@ -23,6 +23,30 @@ public class MissionManager : MonoBehaviour
     private int enemyCount;
     private bool isMissionActive = false;
     vThirdPersonController vPersonController;
+    /// <summary>
+    /// ゲーム開始時に呼ばれるメソッド　初期設定
+    /// </summary>
+    void Awake()
+    {
+        InitPosition = player.transform.position;
+        clearText.text = "";
+        //ゲームマネージャーから各種のコンポーネントを取得
+        GameObject gameManager = GameObject.Find("GameManager");
+        startMission = gameManager.GetComponent<StartMission>();
+        trianingButton = gameManager.GetComponent<TrianingButton>();
+        // skillAcquirer = gameManager.GetComponent<SkillAcquirer>();
+        vPersonController = player.GetComponent<vThirdPersonController>();
+    }
+
+    void Update()
+    {
+        Debug.Log("isMissionActive: " + isMissionActive);
+        //敵の数でミッションを監視する
+        if (isMissionActive && enemyCount <= 0)
+        {
+            ClearMission(true); // 成功
+        }
+    }
 
     /// <summary>
     /// プレイヤーの死亡イベントを受け取ったときの処理
@@ -65,29 +89,6 @@ public class MissionManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ゲーム開始時に呼ばれるメソッド　初期設定
-    /// </summary>
-    void Awake()
-    {
-        InitPosition = player.transform.position;
-        ClearText.text = "";
-        //ゲームマネージャーから各種のコンポーネントを取得
-        GameObject gameManager = GameObject.Find("GameManager");
-        startMission = gameManager.GetComponent<StartMission>();
-        trianingButton = gameManager.GetComponent<TrianingButton>();
-        // skillAcquirer = gameManager.GetComponent<SkillAcquirer>();
-        vPersonController = player.GetComponent<vThirdPersonController>();
-    }
-
-    void Update()
-    {
-        //敵の数でミッションを監視する
-        if (isMissionActive && enemyCount <= 0)
-        {
-            ClearMission(true); // 成功
-        }
-    }
-    /// <summary>
     /// ミッションが開始されたときに起動するスクリプト 敵の数を数える
     /// </summary>
     public void StartMission()
@@ -110,14 +111,7 @@ public class MissionManager : MonoBehaviour
         // OnDead イベントの重複登録を防ぎつつ監視を開始する
         SubscribePlayerDeathEvent();
     }
-    /// <summary>
-    /// 敵を倒した際に呼び出されるメソッド mobEnemyのonDieをから呼び出される
-    /// </summary>
-    public void OnEnemyDefeated()
-    {
-        enemyCount--;
-        Debug.Log("敵撃破！残り: " + enemyCount);
-    }
+
     /// <summary>
     /// ミッションが終わった際の処理
     /// </summary>
@@ -132,24 +126,24 @@ public class MissionManager : MonoBehaviour
         DisableMovePlayer();
         ResetPlayerRigidbody();
 
-        ClearText.text = "クリア";
+        clearText.text = "クリア";
         SelectSkillCard();//元の位置に戻る
     }
     /// <summary>
     /// ミッションが失敗したときこれはDeadイベントで呼び出される
     /// </summary>
-    public void FailedMission()
+    public async void FailedMission()
     {
         isMissionActive = false;
         UnsubscribePlayerDeathEvent();
-        ClearText.text = "死んだぜ";
+        clearText.text = "死んだぜ";
 
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         foreach (GameObject enemy in enemies)
         {
             Destroy(enemy);
         }
-        StartCoroutine(WaitForAnimationEnd()); // アニメーション終了後に実行
+        await WaitForAnimationEndAsync(); // アニメーション終了後に実行
     }
     //ミッションクリア後にスキルカードを表示させる処理
     public void SelectSkillCard()
@@ -163,7 +157,7 @@ public class MissionManager : MonoBehaviour
     {
         isMissionActive = false;
         tempButton.SetActive(false);
-        ClearText.text = "";
+        clearText.text = "";
 
         player.transform.position = InitPosition;
         startMission.ReturntTrainingButton();
@@ -188,12 +182,20 @@ public class MissionManager : MonoBehaviour
     //プレイヤーを動けなくする
     public void DisableMovePlayer()
     {
-        global::IsPlayerMove.GetInstance().CanMove = false;
+        IsPlayerMove.GetInstance().CanMove = false;
 
     }
-    IEnumerator WaitForAnimationEnd()
+    /// <summary>
+    /// 敵を倒した際に呼び出されるメソッド mobEnemyのonDieをから呼び出される
+    /// </summary>
+    public void OnEnemyDefeated()
     {
-        yield return new WaitForSeconds(2.5f);
+        enemyCount--;
+        Debug.Log("敵撃破！残り: " + enemyCount);
+    }
+    private async UniTask WaitForAnimationEndAsync()
+    {
+        await UniTask.Delay(2500);
         ReturnPlayerToInitialPosition();
     }
 }

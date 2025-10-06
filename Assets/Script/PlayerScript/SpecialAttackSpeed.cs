@@ -12,7 +12,7 @@ public class SpecialAttackSpeed : MonoBehaviour
     }
     void SlowAttack()
     {
-        animator.speed = 0.3f;
+        animator.speed = 0.5f;
     }
     void SpeedAttack()
     {

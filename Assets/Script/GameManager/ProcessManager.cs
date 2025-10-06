@@ -8,7 +8,7 @@ public class ProcessManager : MonoBehaviour
 {
     private Fade fade;
     public static ProcessManager Instance { get; private set; }
-    private const string mainSceneTitle = "DunegonScene";
+    private const string mainSceneTitle = "BattleScene";
     [SerializeField] private int currentCycle = 1;// 現在のサイクル数
     [SerializeField] private int maxCycle = 5;// 現在のサイクル数
     public int currentBattleIndex = 1;// サイクル内の戦闘インデックス

@@ -34,10 +34,9 @@ public class PetBossController : MonoBehaviour
     void Update()
     {
         animator.SetFloat("MoveSpeed", _agent.velocity.magnitude);
-        if (_agent.remainingDistance <= retreatDistance)
-        {
-            _agent.destination = player.position;
-        }
+
+        _agent.destination = player.position;
+
 
     }
 

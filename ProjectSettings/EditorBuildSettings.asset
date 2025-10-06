@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Title.unity
     guid: d9b402720f1776a4288ff5ec93364925
   - enabled: 1
-    path: Assets/Scenes/DunegonScene.unity
+    path: Assets/Scenes/BattleScene.unity
     guid: b9ba18257f4f0e94bb442a0e07b59cf7
   - enabled: 1
     path: Assets/Scenes/SmileBossScene1.unity

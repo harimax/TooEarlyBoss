@@ -14,7 +14,7 @@ public class LoadGameScene : MonoBehaviour
 {
     [SerializeField] Fade fade;
     [SerializeField] private RectTransform buttonTransform;
-    private const string BossSceneTitle = "SmileBossScene";
+    private const string BossSceneTitle = "SmileBossScene1";
     private TrianingButton trainingButton;
     private vThirdPersonController vPersonController;
     private vMeleeManager meleeManager;
