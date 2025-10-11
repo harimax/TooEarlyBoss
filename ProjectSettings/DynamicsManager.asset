@@ -3,7 +3,7 @@
 --- !u!55 &1
 PhysicsManager:
   m_ObjectHideFlags: 0
-  serializedVersion: 14
+  serializedVersion: 19
   m_Gravity: {x: 0, y: -9.81, z: 0}
   m_DefaultMaterial: {fileID: 0}
   m_BounceThreshold: 2
@@ -17,8 +17,7 @@ PhysicsManager:
   m_EnableAdaptiveForce: 0
   m_ClothInterCollisionDistance: 0
   m_ClothInterCollisionStiffness: 0
-  m_ContactsGeneration: 1
-  m_LayerCollisionMatrix: df8fd3ffc900d1ffcd07d1ffffffffffc980d1ffc800d1ffffffffffffffffffcd1ffdffcd1fd5ffcd0bd5ffc98fd1ffc803d5ffc820fbffc840d1ffd988d5ffffffd1ffc920d4ffc897d2ffc821d0ffffffdfffc821c0ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+  m_LayerCollisionMatrix: df8fd3ffc900d1ffcd07d1ffffffffffc980d1ffc800d1ffffffffffffffffffcd1ffdffcd1fd5fecd0bd5ffc98fd1ffc803d5ffc820fbffc840d1ffd988d5ffffffd1ffc920d4ffc897d2ffc821d0ffffffdfffc821c0fffffffffffffffffffffdffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
   m_SimulationMode: 0
   m_AutoSyncTransforms: 0
   m_ReuseCollisionCallbacks: 0
@@ -27,13 +26,12 @@ PhysicsManager:
   m_ClothGravity: {x: 0, y: -9.81, z: 0}
   m_ContactPairsMode: 0
   m_BroadphaseType: 0
-  m_WorldBounds:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 250, y: 250, z: 250}
-  m_WorldSubdivisions: 8
   m_FrictionType: 0
   m_EnableEnhancedDeterminism: 0
-  m_EnableUnifiedHeightmaps: 1
   m_ImprovedPatchFriction: 0
+  m_GenerateOnTriggerStayEvents: 1
   m_SolverType: 0
   m_DefaultMaxAngularSpeed: 7
+  m_ScratchBufferChunkCount: 4
+  m_CurrentBackendId: 4072204805
+  m_FastMotionThreshold: 3.4028235e+38
