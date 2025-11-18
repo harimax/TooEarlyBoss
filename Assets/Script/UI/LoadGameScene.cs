@@ -14,13 +14,14 @@ public class LoadGameScene : MonoBehaviour
 {
     [SerializeField] Fade fade;
     [SerializeField] private RectTransform buttonTransform;
-    private const string BossSceneTitle = "SmileBossScene1";
+    [SerializeField] private string[] BossSceneTitle;
     private TrianingButton trainingButton;
     private vThirdPersonController vPersonController;
     private vMeleeManager meleeManager;
     private SkillManager skillManager;
-    
-    
+    private TrianingButton trianingButton;
+
+
     public async void OnClickStartButton()
     {
         await AnimateButton();
@@ -28,14 +29,24 @@ public class LoadGameScene : MonoBehaviour
         // プレイヤー情報取得 & ステータス適用
         if (!TryGetPlayerComponents()) return;
         ApplyPlayerTrainingStats();
+        trainingButton = GetComponent<TrianingButton>();
+        trainingButton.SaveParameter();
 
         Debug.Log("ゲームシーンに遷移します");
 
+
         // シーン読み込み後イベントを一度だけ登録
         SceneManager.sceneLoaded += OnSceneLoaded;
+        if (fade != null)
+        {
+            // フェード後にシーン遷移
+            fade.FadeIn(1f, () => SceneManager.LoadScene(BossSceneTitle[ProcessManager.Instance.CurrentCycle - 1]));
+        }
+        else
+        {
+            SceneManager.LoadScene(BossSceneTitle[ProcessManager.Instance.CurrentCycle - 1]);
+        }
 
-        // フェード後にシーン遷移
-        fade.FadeIn(1f, () => SceneManager.LoadScene(BossSceneTitle));
     }
     /// <summary>
     /// ボタンのアニメーション（DOTween）
@@ -55,7 +66,7 @@ public class LoadGameScene : MonoBehaviour
         //修了したパラメータを加算させる
         vPersonController.AddMaxStamina(trainingButton.PlayerStamina);
         vPersonController.AddMaxHealth(trainingButton.PlayerHealth);
-        meleeManager.defaultDamage = new vDamage(Mathf.RoundToInt(trainingButton.PlayerPower) + 10);
+        meleeManager.defaultDamage.damageValue = Mathf.RoundToInt(trainingButton.PlayerPower) + meleeManager.defaultDamage.damageValue;
         meleeManager.Init();
     }
     /// <summary>
