@@ -1,0 +1,243 @@
+using UnityEngine;
+using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
+using System.Threading;
+using UnityEngine.AI;
+using Invector;
+using System;
+
+public class DragonBossController : MonoBehaviour, IBossController
+{
+    private enum DragonState
+    {
+        Idle,
+        AttackCrow,
+        Avoid,
+        AttackFire,
+        AttackSprint,
+        CoolDown,
+        Dead
+    }
+    private bool _isPaused = false;
+    private Transform player;
+    private Animator animator;
+    [SerializeField] private float playerDistance = 25f;
+    [SerializeField] private float crowDistance = 5f;
+    CancellationTokenSource loopCts;
+    [SerializeField] private float faceTime = 0.5f;      //  向き直り（ため）時間
+    [SerializeField] private float maxSprintTime = 1.0f; //  突進の最大継続時間（秒）
+    [SerializeField] private float restTime = 3.5f;      //  休憩時間（秒）
+    [SerializeField] private float turnSpeed = 10f;         // 向き合わせスピード
+    [SerializeField] private GameObject rangeAttackPrefab;
+    private int attackChoicePercent;
+    private int closeAttackType;
+    private bool _cooling;
+    private bool isRangeAttack;
+
+    DragonState currentState = DragonState.CoolDown;
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        animator = GetComponent<Animator>();
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (_isPaused) return;
+        // クールダウンは終了したらIdleへ戻る
+        if (currentState == DragonState.CoolDown)
+        {
+            Cooldown().Forget();
+        }
+        //近距離時の行動
+        else if (currentState == DragonState.Idle && PlayerDistaneceCheck() < crowDistance)
+        {
+            FacePlayerForSeconds(faceTime, turnSpeed).Forget();
+            closeAttackType = UnityEngine.Random.Range(0, 2);
+            if (closeAttackType == 0)
+            {
+                //遠距離攻撃
+                if (isRangeAttack == true)
+                {
+                    FacePlayerForSeconds(faceTime, turnSpeed).Forget();
+                    animator.SetTrigger("IsRangeAttack");
+                    currentState = DragonState.AttackFire;
+                }
+                //近距離
+                else
+                {
+                    FacePlayerForSeconds(faceTime, turnSpeed).Forget();
+                    animator.SetTrigger("IsCrowAttack");
+                    currentState = DragonState.AttackCrow;
+                }
+            }
+            else
+            {
+                animator.SetTrigger("IsAvoid");
+                currentState = DragonState.Avoid;
+            }
+
+        }
+        // 遠距離攻撃
+        else if (currentState == DragonState.Idle && isRangeAttack == true)
+        {
+            FacePlayerForSeconds(faceTime, turnSpeed).Forget();
+            animator.SetTrigger("IsRangeAttack");
+            currentState = DragonState.AttackFire;
+        }
+        // 突進攻撃
+        else if (currentState == DragonState.Idle && isRangeAttack == false)
+        {
+            loopCts?.Cancel();
+            loopCts = new CancellationTokenSource();
+            currentState = DragonState.AttackSprint;
+            Sprint(loopCts.Token).Forget();
+        }
+    }
+
+    public void PauseBoss()
+    {
+        // Update 系を止める
+        _isPaused = true;
+    }
+    /// <summary>
+    /// ボスの動きを再開する
+    /// </summary>
+    public void ResumeBoss()
+    {
+        _isPaused = false;
+        if (animator != null) animator.enabled = true;
+        // タイマー初期化
+    }
+    //プレイヤーとの距離を測る
+    private float PlayerDistaneceCheck()
+    {
+        float distance = Vector3.Distance(transform.position, player.position);
+        return distance;
+    }
+    private async UniTaskVoid Sprint(CancellationToken ct)
+    {
+        if (!player) return;
+
+        while (!ct.IsCancellationRequested)
+        {
+            //向く（ため）
+            FacePlayerForSeconds(faceTime, turnSpeed, ct).Forget();
+
+            if (ct.IsCancellationRequested) break;
+
+            float SprintTime = UnityEngine.Random.Range(0, maxSprintTime);
+
+            // --- 突進準備 ---
+            float elapsed = 0f;
+            animator.SetTrigger("IsSprint");
+            while (elapsed < SprintTime && !ct.IsCancellationRequested)
+            {
+                elapsed += Time.deltaTime;
+                await UniTask.Yield();
+
+            }
+            Debug.Log("突進終了", this);
+            animator.SetTrigger("FinishSprint");
+            await UniTask.Delay(TimeSpan.FromSeconds(restTime), cancellationToken: ct);
+            //ダッシュ終了後に攻撃範囲内なら攻撃
+            if (PlayerDistaneceCheck() < crowDistance)
+            {
+                FacePlayerForSeconds(faceTime, turnSpeed).Forget();
+                animator.SetTrigger("IsCrowAttack");
+                currentState = DragonState.AttackCrow;
+                break;
+            }
+            //攻撃範囲外ならIdleへ戻る
+            else
+            {
+                animator.SetTrigger("FinishAttack");
+                currentState = DragonState.CoolDown;
+                break;
+            }
+        }
+        Debug.Log("BattleLoop: ct.Cancelled で終了");
+    }
+    //攻撃後のクールダウン処理
+    private async UniTask Cooldown()
+    {
+
+        if (_cooling) return;
+        _cooling = true;
+        try
+        {
+            Debug.Log("クールダウン中...");
+            await UniTask.Delay(3000, cancellationToken: this.GetCancellationTokenOnDestroy());
+            animator.SetTrigger("FinishBreakTime");
+            currentState = DragonState.Idle;
+        }
+        finally
+        {
+            _cooling = false;
+            SelectAttack();
+        }
+    }
+
+    public void FacePlayerOnlyYaw(float slerpSpeed)
+    {
+        if (!player) return;
+        Vector3 dir = player.position - transform.position;
+        dir.y = 0f;
+        if (dir.sqrMagnitude < 0.0001f) return;
+        var target = Quaternion.LookRotation(dir.normalized);
+        transform.rotation = Quaternion.Slerp(transform.rotation, target, Time.deltaTime * slerpSpeed);
+    }
+    //攻撃選択ロジック
+    private void SelectAttack()
+    {
+        //プレイヤーとの位置が遠ければ遠距離攻撃率が高くなる
+        if (PlayerDistaneceCheck() > playerDistance)
+        {
+            attackChoicePercent = 60;
+        }
+        else
+        {
+            attackChoicePercent = 40;
+        }
+        int roll = UnityEngine.Random.Range(0, 100);
+        if (roll < attackChoicePercent)
+        { isRangeAttack = true; }
+        else
+        { isRangeAttack = false; }
+    }
+    // 一定時間プレイヤーの方向に向き続ける（Yawのみ）
+    private async UniTask FacePlayerForSeconds(float duration, float turnSpeed, CancellationToken ct = default)
+    {
+        float t = 0f;
+
+        while (t < duration && !ct.IsCancellationRequested)
+        {
+            FacePlayerOnlyYaw(turnSpeed);
+            t += Time.deltaTime;
+            await UniTask.Yield(); // フレームごとに更新
+        }
+    }
+
+    //DragonAttackBehaviourから呼ばれる
+    public void OnAttackEnd()
+    {
+        currentState = DragonState.CoolDown;
+    }
+    public void OnRangeAttackEvent()
+    {
+        Debug.Log("遠距離攻撃発動", this);
+        rangeAttackPrefab.SetActive(true);
+    }
+    public void OnRangeAttackEndEvent()
+    {
+        Debug.Log("遠距離攻撃終了", this);
+        rangeAttackPrefab.SetActive(false);
+    }
+    public void DeadTrigger()
+    {
+        currentState = DragonState.Dead;
+        animator.SetTrigger("Dead");
+    }
+}
