@@ -10,11 +10,13 @@ public class StartMission : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private GameObject MainCameraObject;//Invectorのやつをアタッチ
+    [SerializeField] private GameObject trainingCameraObject;
     [SerializeField] private GameObject trainingUI;
     [SerializeField] private GameObject gameUI;
     [SerializeField] private GameObject brainCameraObject;//Brainのやつをアタッチ
     [SerializeField] private MissionManager missionManager;
 
+    private CinemachineVirtualCamera trainingCameraVirtual;
     private static StartMission _instance;
     private CinemachineVirtualCamera mainCameraVirtual;
     private CinemachineBrain brainCameraObj;
@@ -41,7 +43,8 @@ public class StartMission : MonoBehaviour
     public void PrepareMissionButton()
     {
         // Debug.Log("戦闘移行");
-        mainCameraVirtual.Priority = 20;
+        trainingCameraVirtual.Priority = 5;
+        Debug.Log("プレイヤーカメラ"+mainCameraVirtual.Priority);
         SetAllUIInactive();
         IsGameUI = true;
         IstrainingUI = false;
@@ -58,7 +61,7 @@ public class StartMission : MonoBehaviour
         //修行したパラメータを加算させる
         playerController.AddMaxStamina(trainingButton.PlayerStamina);
         playerController.AddMaxHealth(trainingButton.PlayerHealth);
-        meleeManager.defaultDamage.damageValue = Mathf.RoundToInt(trainingButton.PlayerPower) + 10;
+        meleeManager.defaultDamage.damageValue = Mathf.RoundToInt(trainingButton.PlayerPower) + meleeManager.defaultDamage.damageValue;
         meleeManager.Init();
 
         // 行動可能状態に
@@ -77,7 +80,8 @@ public class StartMission : MonoBehaviour
     public void ReturntTrainingButton()
     {
         // Debug.Log("修行に戻る");
-        mainCameraVirtual.Priority = 5;
+        trainingCameraVirtual.Priority = 30;
+        Debug.Log("プレイヤーカメラ"+mainCameraVirtual.Priority);
         SetAllUIInactive();
         IsGameUI = false;
         IstrainingUI = true;
@@ -128,11 +132,11 @@ public class StartMission : MonoBehaviour
         playerController = player.GetComponent<vThirdPersonController>();
         meleeManager = player.GetComponent<vMeleeManager>();
         skillManager = player.GetComponent<SkillManager>();
-
         // カメラ関連
         var MainCameraObject = GameObject.FindWithTag("MainCamera");
         mainCameraVirtual = MainCameraObject.GetComponent<CinemachineVirtualCamera>();
         brainCameraObj = brainCameraObject.GetComponent<CinemachineBrain>();
+        trainingCameraVirtual = trainingCameraObject.GetComponentInChildren<CinemachineVirtualCamera>();
         // ゲームオブジェクト参照
         enemyGenerator = GameObject.Find("EnemyGenerator").GetComponent<EnemyGenerator>();
         trainingButton = this.gameObject.GetComponent<TrianingButton>();
