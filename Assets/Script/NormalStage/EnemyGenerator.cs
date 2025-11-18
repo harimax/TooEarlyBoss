@@ -4,20 +4,28 @@ using UnityEngine;
 
 public class EnemyGenerator : MonoBehaviour
 {
-    
+
     [SerializeField] private GameObject[] MobEnemy;
     [SerializeField] private List<ForbiddenVolume> forbiddenVolumes;
     [SerializeField] private int generateRange_X;
     [SerializeField] private int generateRange_Y;
     private int generaterNumber;
+    private int[][] cycleEnemyArray = new int[][]
+    {
+        new int[]{0,1,2},          //サイクル1で出現する敵のインデックス
+        new int[]{0,1,2,3,4},       //サイクル2で出現する敵のインデックス
+        new int[]{0,1,2,3,4,5},     //サイクル3で出現する敵のインデックス
+        new int[]{0,1,2,3,4,5,6},   //サイクル4で出現する敵のインデックス
+        new int[]{0,1,2,3,4,5,6,7} //サイクル5で出現する敵のインデックス
+    };
 
     //敵を生成するメソッド
     public void GenerateEnemy()
     {
         generaterNumber = ProcessManager.Instance.GetEnemyCountForCurrentBattle();
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < generaterNumber; i++)
         {
-            var selectedEnemy = MobEnemy[Random.Range(0, MobEnemy.Length)];
+            var selectedEnemy = MobEnemy[Random.Range(0, cycleEnemyArray[ProcessManager.Instance.CurrentCycle - 1].Length)];
             Instantiate(selectedEnemy, generatePosition(), gameObject.transform.rotation);
         }
     }

@@ -6,6 +6,7 @@ using Invector.vMelee;
 using Invector.vCharacterController;
 using TMPro;
 using UnityEngine.UI;
+using Cysharp.Threading.Tasks;
 
 public class BossStageManager : MonoBehaviour
 {
@@ -43,10 +44,17 @@ public class BossStageManager : MonoBehaviour
         {
             skillManager.ActivePassiveSkill();
         }
-    
+
     }
     public void DefeatBoss()
     {
+        DefeatBossDelay().Forget();
+    }
+    private async UniTask DefeatBossDelay()
+    {
+        Time.timeScale = 0.3f;
+        await UniTask.Delay(1500);
+        Time.timeScale = 1f;
         ClearText.text = "倒したぜ";
         Debug.Log("敵を倒した");
         ClearButton.SetActive(true);

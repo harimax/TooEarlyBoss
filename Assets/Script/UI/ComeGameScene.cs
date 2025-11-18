@@ -6,8 +6,12 @@ public class ComeGameScene : MonoBehaviour
 {
     // Start is called before the first frame update
     [SerializeField] Fade fade;
-    void Start() 
+    void Start()
     {
-        fade.FadeOut(1.0f);
+        if (fade != null || fade.enabled == true)
+        {
+            fade.FadeOut(1.0f);
+        }
+
     }
 }

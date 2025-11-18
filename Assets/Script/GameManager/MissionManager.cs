@@ -40,12 +40,6 @@ public class MissionManager : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("isMissionActive: " + isMissionActive);
-        //敵の数でミッションを監視する
-        if (isMissionActive && enemyCount <= 0)
-        {
-            ClearMission(true); // 成功
-        }
     }
 
     /// <summary>
@@ -59,7 +53,7 @@ public class MissionManager : MonoBehaviour
     }
 
     /// <summary>
-    /// プレイヤーの死亡イベントへ安全に登録する
+    /// プレイヤーの死亡イベントをOnDeadに登録する
     /// </summary>
     private void SubscribePlayerDeathEvent()
     {
@@ -116,17 +110,22 @@ public class MissionManager : MonoBehaviour
     /// ミッションが終わった際の処理
     /// </summary>
     /// <param name="isSuccess"></param>
-    public void ClearMission(bool isSuccess)
+    public async UniTask ClearMission(bool isSuccess)
     {
-        // Debug.Log("戦闘クリア");
+        Debug.Log("戦闘クリア");
         if (!isMissionActive) return;
 
+        clearText.text = "クリア";
+        //クリアするときにスロー演出
+        Time.timeScale = 0.5f;
+        await UniTask.Delay(2000);
+        Time.timeScale = 1.0f;
         isMissionActive = false;
         UnsubscribePlayerDeathEvent();
         DisableMovePlayer();
         ResetPlayerRigidbody();
 
-        clearText.text = "クリア";
+        
         SelectSkillCard();//元の位置に戻る
     }
     /// <summary>
@@ -192,6 +191,10 @@ public class MissionManager : MonoBehaviour
     {
         enemyCount--;
         Debug.Log("敵撃破！残り: " + enemyCount);
+        if (enemyCount <= 0)
+        {
+            ClearMission(true).Forget(); // 成功
+        }
     }
     private async UniTask WaitForAnimationEndAsync()
     {

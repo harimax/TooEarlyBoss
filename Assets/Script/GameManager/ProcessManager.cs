@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
 using System.Threading.Tasks;
+using System.Data;
 public class ProcessManager : MonoBehaviour
 {
     private Fade fade;
@@ -13,6 +14,11 @@ public class ProcessManager : MonoBehaviour
     [SerializeField] private int maxCycle = 5;// 現在のサイクル数
     public int currentBattleIndex = 1;// サイクル内の戦闘インデックス
     public int totalTurns = 14; // 各サイクルの総ターン数（初期値）
+    public int CurrentCycle //外部に公開するゲームサイクル
+    {
+        get { return currentCycle; }
+        set { currentCycle = value; }
+    }
 
     void Awake()
     {
@@ -34,7 +40,7 @@ public class ProcessManager : MonoBehaviour
     //ボスを倒したときに次のサイクルに移る関数
     public void GoToNextCycle()
     {
-        fade = FindObjectOfType<Fade>();
+        fade = FindAnyObjectByType<Fade>();
 
         currentCycle++;
         currentBattleIndex = 1;
@@ -49,9 +55,14 @@ public class ProcessManager : MonoBehaviour
             Debug.Log($"サイクル{currentCycle}開始");
             // シーン読み込み後イベントを一度だけ登録
             SceneManager.sceneLoaded += OnSceneLoaded;
-
-            // フェード後にシーン遷移
-            fade.FadeIn(1f, () => SceneManager.LoadScene(mainSceneTitle));
+            if (fade)
+            {
+                fade.FadeOut(1f, () => SceneManager.LoadScene(mainSceneTitle));
+            }
+            else
+            {
+                SceneManager.LoadScene(mainSceneTitle);
+            }
         }
     }
     //敵の出現数を加算するメソッド
@@ -74,4 +85,12 @@ public class ProcessManager : MonoBehaviour
         // イベント登録解除（多重呼び出し防止）
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
+    public int GetCurrentBattleIndex()
+    {
+        return currentBattleIndex;
+    }
+    public int GetCurrentCycle()
+    {
+        return currentCycle;
+    }   
 }

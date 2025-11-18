@@ -18,13 +18,21 @@ public class Enemy_Ataack_GAN : MonoBehaviour
     private Vector3 childPosition;
     private bool isOnCooldown = false; // クールダウン中かどうかのフラグ
     public string targetTag = "Target";
-    void Start() 
+    void Start()
     {
-        BulletSound=GetComponent<AudioSource>();
+        BulletSound = GetComponent<AudioSource>();
+    }
+    public void OnAttackGANEnter(Collider collider)
+    {
+        OnAttackGAN(collider).Forget();
+    }
+    public void OnShotEvent()
+    {
+        Shot().Forget();
     }
 
     //プレイヤーが範囲内に入れば起動するメソッド-------------------------------------
-    public async Task OnAttackGAN(Collider collider)
+    private async UniTask OnAttackGAN(Collider collider)
     {
         if(collider.tag=="Player")
         {
