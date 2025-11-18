@@ -615,7 +615,7 @@ namespace Invector.vCharacterController
 
             if (tpCamera == null)
             {
-                tpCamera = FindObjectOfType<vCamera.vThirdPersonCamera>();
+                tpCamera = FindAnyObjectByType<vCamera.vThirdPersonCamera>();
                 if (tpCamera == null)
                 {
                     return;

@@ -16,7 +16,7 @@ namespace Invector.vCharacterController
             {
                 if (_instance == null)
                 {
-                    _instance = FindObjectOfType<vMousePositionHandler>();
+                    _instance = FindAnyObjectByType<vMousePositionHandler>();
                 }
 
                 if (_instance == null)

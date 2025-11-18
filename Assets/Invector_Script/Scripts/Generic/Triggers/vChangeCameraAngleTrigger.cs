@@ -21,7 +21,7 @@ namespace Invector.vCamera
         }
         IEnumerator Start()
         {
-            tpCamera = FindObjectOfType<vThirdPersonCamera>();
+            tpCamera = FindAnyObjectByType<vThirdPersonCamera>();
             var collider = GetComponent<Collider>();
             if (collider)
             {

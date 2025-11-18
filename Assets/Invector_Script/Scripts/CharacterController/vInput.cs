@@ -19,7 +19,7 @@ namespace Invector.vCharacterController
             {
                 if (_instance == null)
                 {
-                    _instance = GameObject.FindObjectOfType<vInput>();
+                    _instance = GameObject.FindAnyObjectByType<vInput>();
                     if (_instance == null)
                     {
                         _instance = new GameObject("vInputType").AddComponent<vInput>();

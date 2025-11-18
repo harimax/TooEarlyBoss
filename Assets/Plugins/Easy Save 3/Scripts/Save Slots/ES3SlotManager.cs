@@ -234,7 +234,7 @@ public class ES3SlotMenuItems : MonoBehaviour
 #if UNITY_2022_3_OR_NEWER
         if (UnityEngine.Object.FindFirstObjectByType<EventSystem>() == null)
 #else
-        if (UnityEngine.Object.FindObjectOfType<EventSystem>() == null)
+        if (UnityEngine.Object.FindAnyObjectByType<EventSystem>() == null)
 #endif
         {
             GameObject eventSystemGameObject = new GameObject("EventSystem");

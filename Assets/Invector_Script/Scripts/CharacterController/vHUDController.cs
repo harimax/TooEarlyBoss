@@ -55,7 +55,7 @@ namespace Invector.vCharacterController
             {
                 if (_instance == null)
                 {
-                    _instance = GameObject.FindObjectOfType<vHUDController>();
+                    _instance = GameObject.FindAnyObjectByType<vHUDController>();
                     //Tell unity not to destroy this object when loading a new scene
                     //DontDestroyOnLoad(_instance.gameObject);
                 }

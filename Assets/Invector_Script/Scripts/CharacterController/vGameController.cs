@@ -172,7 +172,7 @@ namespace Invector
 
         protected virtual void FindPlayer()
         {
-            var player = GameObject.FindObjectOfType<vThirdPersonController>();
+            var player = GameObject.FindAnyObjectByType<vThirdPersonController>();
 
             if (player)
             {
