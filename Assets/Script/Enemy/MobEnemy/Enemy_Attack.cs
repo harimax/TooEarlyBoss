@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class Enemy_Attack : MonoBehaviour
@@ -54,7 +55,7 @@ public class Enemy_Attack : MonoBehaviour
     /// <summary>
     /// 攻撃終了時に呼ばれる
     /// </summary>
-    public virtual async void OnAttackFinished()
+    public virtual void OnAttackFinished()
     {
         attackCollider.enabled = false;
 
@@ -62,7 +63,7 @@ public class Enemy_Attack : MonoBehaviour
         // イベントハンドラ的に「終わったらすぐ待機」する場合は許容される
         if (chaseEnemy != null)
         {
-            await chaseEnemy.Cooldown();
+            chaseEnemy.Cooldown().Forget();
         }
 
     }

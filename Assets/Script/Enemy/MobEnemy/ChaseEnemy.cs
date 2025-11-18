@@ -9,22 +9,17 @@ using System.Threading.Tasks;
 
 public class ChaseEnemy : MobEnemy
 {
-    // private float chargeTime = 5.0f;
-    // private float timeCount;
 
     [SerializeField] protected Collider AttackRangecollider;
     [SerializeField] protected Collider Damagecollider;
     [SerializeField] protected Collider chasecollider;
     [SerializeField] protected float Damagecooldown = 2.0f;
     [SerializeField] private float Reaction_Pro = 0.5f; //ダメージリアクションを起こす確率(値が大きいほど確率高い)
-    [SerializeField] private LayerMask raycastLayerMask;
     private NavMeshAgent _agent;
     protected MobEnemy _status;
     protected Enemy_Attack enemy_Attack;
-    private RaycastHit[] _raycastHits = new RaycastHit[10];
     private vHealthController vHealthController;
     private UniTask DamagecooldownCoroutine;
-    private UniTask HitStopcooldownCoroutine;
     private UniTask patrolCoroutine;
     private Vector3 initialPosition; // 敵の初期位置
     [SerializeField] private float patrolRadius = 10f; // 巡回範囲
@@ -41,10 +36,9 @@ public class ChaseEnemy : MobEnemy
     void Update()
     {
         animator.SetFloat("MoveSpeed", _agent.velocity.magnitude);
-        //        Debug.Log(_agent.velocity.magnitude);
+        // パトロール状態の場合、巡回を開始
         if (_status.State == StateEnum.Patrol && patrolCoroutine.Status != UniTaskStatus.Pending)
         {
-            // Debug.Log("パトロール中");
             patrolCoroutine = Patrol();
         }
     }
@@ -60,17 +54,13 @@ public class ChaseEnemy : MobEnemy
                 base.DamageReaction();
                 // 攻撃コライダーなどを一時無効にするクールダウン
                 DamagecooldownCoroutine = Cooldown();  // UniTaskで処理を実行
-
-                // 現在ステートがダメージなら、ヒットストップ発生
-                if (_status.State == StateEnum.Damage)
-                    HitStopcooldownCoroutine = HitStop(0.2f);  // UniTaskで処理を実行
             }
         }
         // 体力が0以下でまだ死亡状態になっていない場合
         else if (_status.State != StateEnum.Die)
         {
             base.OnDie(); // 基底クラスの死亡処理を実行
-            DestoryCoroutine(4.0f).Forget(); // 4秒後にオブジェクト削除
+            DestoryCoroutine(2.0f).Forget(); 
         }
     }
 
@@ -116,25 +106,15 @@ public class ChaseEnemy : MobEnemy
     //攻撃を受けると追跡・攻撃・当たりのコライダーを一時的に非表示
     public async UniTask Cooldown()
     {
-        // Debug.Log("クールダウン");
         AttackRangecollider.enabled = Damagecollider.enabled = chasecollider.enabled = false;
         animator.ResetTrigger("Attack");
         // 指定された時間待機
         await UniTask.Delay((int)(Damagecooldown * 1000)); // 秒からミリ秒に変換
-        AttackRangecollider.enabled = true;
-        // Debug.Log("再開");
-         AttackRangecollider.enabled = chasecollider.enabled = Damagecollider.enabled = true;
+        AttackRangecollider.enabled = chasecollider.enabled = true;
         DamagecooldownCoroutine = default;
         _status.ReturnToNormal();
         _agent.isStopped = false;
         initialPosition = transform.position;
-    }
-    public async UniTask HitStop(float stoptime)
-    {
-        // Debug.Log("ヒットストップ");
-        animator.speed = 0f;
-        await UniTask.Delay((int)(stoptime * 1000)); // 秒からミリ秒に変換
-        animator.speed = 1f;
     }
     // 巡回メソッド
     private async UniTask Patrol()
@@ -146,17 +126,10 @@ public class ChaseEnemy : MobEnemy
                 0,
                 Random.Range(-patrolRadius, patrolRadius)
             );
-
             _agent.SetDestination(randomPoint);
             await UniTask.Delay(time*1000); // 2000ms = 2秒
         }
-
         // 状態が変わった＝Patrol終わり
         patrolCoroutine = default;
     }
-    public void EnemyDestory()
-    {
-        Destroy(gameObject);
-    }
-
 }

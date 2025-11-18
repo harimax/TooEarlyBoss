@@ -2,17 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 
 public class MobEnemy : MonoBehaviour
 {
     //状態定義
     public enum StateEnum
     {
-        Patrol,
-        Chase,// 移動可能（通常状態）
-        Attack,  // 攻撃中
-        Damage,// ダメージリアクション中
-        Die// 死亡状態
+        Patrol, //巡回
+        Chase,  //移動可能（通常状態）
+        Attack, // 攻撃中
+        Damage, // ダメージリアクション中
+        Die     // 死亡状態
     }
     public StateEnum State { get; protected set; } = StateEnum.Patrol;
     protected Animator animator;
@@ -64,13 +66,13 @@ public class MobEnemy : MonoBehaviour
         State = StateEnum.Damage;
         canAttack = false;  // ダメージ中は攻撃無効
         animator.SetTrigger("Damage");
-        StartCoroutine(WaitForDamageRecovery());
+        WaitForDamageRecovery().Forget(); // UniTaskで処理を実行
     }
     // ダメージ後に一定時間待って通常状態に戻す処理
-    private IEnumerator WaitForDamageRecovery()
+    private async UniTask WaitForDamageRecovery()
     {
         // ダメージリアクションが終わるまで待つ（例えば1秒）
-        yield return new WaitForSeconds(1f);
+        await UniTask.Delay(1000);
         ReturnToNormal();
     }
 

@@ -52,8 +52,6 @@ public class DashEnemy : MobEnemy
     [SerializeField] private string dashTrigger = "Dash";   // ダッシュ開始
     [SerializeField] private string biteTrigger = "Bite";   // 噛みつき
     [SerializeField] private int windupLayer = 0;        // レイヤー
-    private bool dashInProgress;
-    private float lastDashTime;
 
     // 内部状態
     private bool isBusy;           // 予備動作〜リカバーの最中は true
@@ -122,7 +120,7 @@ public class DashEnemy : MobEnemy
         else if (_status.State != StateEnum.Die)
         {
             base.OnDie(); // 基底クラスの死亡処理を実行
-            StartCoroutine(DestoryCoroutine(4.0f)); // 4秒後にオブジェクト削除
+            DestoryCoroutine(1.5f).Forget(); // 4秒後にオブジェクト削除
         }
     }
     /// <summary>
@@ -178,9 +176,9 @@ public class DashEnemy : MobEnemy
         ReturnToNormal();
     }
     //死亡コルーチン
-    private IEnumerator DestoryCoroutine(float time)
+    private async UniTaskVoid DestoryCoroutine(float time)
     {
-        yield return new WaitForSeconds(time);
+        await UniTask.Delay((int)(time * 1000)); // 秒からミリ秒に変換;
         Destroy(gameObject);
     }
     public async UniTask HitStop(float stoptime)
@@ -264,24 +262,24 @@ public class DashEnemy : MobEnemy
     }
     private static async UniTask WaitForStateEndAsync(
     Animator anim, int layer, string stateName, CancellationToken ct)
-{
-    int target = Animator.StringToHash(stateName);
-
-    // そのステートに入るまで待つ（トランジション中も抜ける）
-    while (!ct.IsCancellationRequested)
     {
-        var st = anim.GetCurrentAnimatorStateInfo(layer);
-        if (st.shortNameHash == target && !anim.IsInTransition(layer)) break;
-        await UniTask.Yield(PlayerLoopTiming.Update, ct);
-    }
+        int target = Animator.StringToHash(stateName);
 
-    // そのステートが終わるまで待つ（normalizedTime >= 1）
-    while (!ct.IsCancellationRequested)
-    {
-        var st = anim.GetCurrentAnimatorStateInfo(layer);
-        if (st.shortNameHash != target) break;                           // 既に次のステートへ
-        if (st.normalizedTime >= 1f && !anim.IsInTransition(layer)) break;
-        await UniTask.Yield(PlayerLoopTiming.Update, ct);
+        // そのステートに入るまで待つ（トランジション中も抜ける）
+        while (!ct.IsCancellationRequested)
+        {
+            var st = anim.GetCurrentAnimatorStateInfo(layer);
+            if (st.shortNameHash == target && !anim.IsInTransition(layer)) break;
+            await UniTask.Yield(PlayerLoopTiming.Update, ct);
+        }
+
+        // そのステートが終わるまで待つ（normalizedTime >= 1）
+        while (!ct.IsCancellationRequested)
+        {
+            var st = anim.GetCurrentAnimatorStateInfo(layer);
+            if (st.shortNameHash != target) break;                           // 既に次のステートへ
+            if (st.normalizedTime >= 1f && !anim.IsInTransition(layer)) break;
+            await UniTask.Yield(PlayerLoopTiming.Update, ct);
+        }
     }
-}
 }
