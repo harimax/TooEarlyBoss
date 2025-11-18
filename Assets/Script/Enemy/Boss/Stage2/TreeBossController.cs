@@ -15,7 +15,9 @@ public class TreeBossController : MonoBehaviour, IBossController
     {
         Idle,       // 待機
         Shooting,   // 弾発射
-        ChargeShoot // チャージレーザー
+        ChargeShoot, // チャージレーザー
+        Dead// 死亡
+
     };
     private BossState currentState;
 
@@ -25,8 +27,12 @@ public class TreeBossController : MonoBehaviour, IBossController
     [SerializeField] private GameObject Floor;
     [SerializeField] private Transform target; // 移動先
     [SerializeField] private MOGURAManager groundEnemyManager;// 参照を追加
+    [SerializeField] private GameObject MOGURA;
     private Vector3 FloorInitPos;
     [SerializeField] private float duration = 10f; // 移動にかける時間
+    [SerializeField] private Transform upFloorPosArea;   // ← 画像の upFloorPosArea をアサイン
+    [SerializeField] private string keyshapeName = "Key"; // 各地点にある矢印オブジェクト名
+    private List<GameObject> upArrows = new List<GameObject>();
     private float baseY; // 初期のY角度（今回は180°）
     public static TreeBossController treeBossController;
     private Animator animator;
@@ -77,8 +83,18 @@ public class TreeBossController : MonoBehaviour, IBossController
         {
             groundEnemyManager.OnGroundEnemyKilled += OnGroundEnemyKilledHandler;
         }
-
-        Debug.Log("floorInit:" + FloorInitPos);
+        // 矢印(KeyShape)を収集（名前で拾う：非アクティブも対象）
+        if (upFloorPosArea != null)
+        {
+            foreach (var target in upFloorPosArea.GetComponentsInChildren<Transform>(true))
+            {
+                if (target.name == keyshapeName)
+                {
+                    upArrows.Add(target.gameObject);
+                    target.gameObject.SetActive(false); // 初期は消しておく
+                }
+            }
+        }
 
         // Unityは360°表記になるので正規化
         if (baseY > 180f) baseY -= 360f;
@@ -128,8 +144,9 @@ public class TreeBossController : MonoBehaviour, IBossController
         if (!firedTwoThird && current <= thTwoThird)
         {
             firedTwoThird = true;
-            Debug.Log("[BossEvent] HPが2/3以下：吹き飛ばし①予約");
+            // Debug.Log("[BossEvent] HPが2/3以下：吹き飛ばし①予約");
             await UniTask.Delay(1000); // 1秒遅延
+            if(moleHealth.currentHealth <= 0) return; // 死亡していたらキャンセル
             await OnActiveBarriar();
 
         }
@@ -138,8 +155,9 @@ public class TreeBossController : MonoBehaviour, IBossController
         if (!firedOneThird && current <= thOneThird)
         {
             firedOneThird = true;
-            Debug.Log("[BossEvent] HPが1/3以下：吹き飛ばし②予約");
+            // Debug.Log("[BossEvent] HPが1/3以下：吹き飛ばし②予約");
             await UniTask.Delay(1000); // 1秒遅延
+            if(moleHealth.currentHealth <= 0) return; // 死亡していたらキャンセル
             await OnActiveBarriar();
 
         }
@@ -160,7 +178,7 @@ public class TreeBossController : MonoBehaviour, IBossController
         agent.isStopped = false;
         currentWaypoint = 0;
         agent.SetDestination(waypoints[currentWaypoint].position);
-        Debug.Log("Boss started walking!");
+        // Debug.Log("Boss started walking!");
         animator.SetBool("Walking", true);
     }
 
@@ -169,7 +187,6 @@ public class TreeBossController : MonoBehaviour, IBossController
         if (waypoints.Length == 0) return;
 
         currentWaypoint = (currentWaypoint + 1) % waypoints.Length;
-        Debug.Log("現在のポイント:" + currentWaypoint);
         agent.SetDestination(waypoints[currentWaypoint].position);
     }
 
@@ -192,14 +209,17 @@ public class TreeBossController : MonoBehaviour, IBossController
 
     private async UniTask AnimateRadius(float from, float to, float duration)
     {
+        if (ejectCollider == null) return;
         float t = 0f;
         while (t < duration)
         {
             t += Time.fixedDeltaTime;
             float u = Mathf.Clamp01(t / duration);
+            if (ejectCollider == null) return;
             ejectCollider.radius = Mathf.Lerp(from, to, u);
             await UniTask.WaitForFixedUpdate();
         }
+        if (ejectCollider == null) return;
         ejectCollider.radius = to;
     }
     //------------------------------------------------------------------------------------------------
@@ -207,10 +227,8 @@ public class TreeBossController : MonoBehaviour, IBossController
     {
         // Update 系を止める
         _isPaused = true;
-        // MonoBehaviour の Update を無効化する場合はこちらを使ってもよい
-        // enabled = false;
-        // アニメータを止めたいなら：
-        // if (animator != null) animator.enabled = false;
+        bulletShooters.SetActive(false);
+
     }
     /// <summary>
     /// ボスの動きを再開する
@@ -218,9 +236,8 @@ public class TreeBossController : MonoBehaviour, IBossController
     public void ResumeBoss()
     {
         _isPaused = false;
-        // enabled = true;
         if (animator != null) animator.enabled = true;
-        // タイマー初期化
+        bulletShooters.SetActive(true);
     }
 
     //------------------------------------------------------------------------------------------------
@@ -257,15 +274,15 @@ public class TreeBossController : MonoBehaviour, IBossController
         bulletShooters.SetActive(false);
         chargeLaser.SetActive(false);
 
-        Debug.Log("Idle 開始");
+        // Debug.Log("Idle 開始");
         await UniTask.Delay(5000, cancellationToken: token); // 5秒待機
-        Debug.Log("Idle 終了 → Shootingへ");
+        // Debug.Log("Idle 終了 → Shootingへ");
         if (!token.IsCancellationRequested)
             ChangeState(BossState.Shooting);
     }
     /// <summary>
     /// Shooting状態：弾発射オブジェクトON → 7秒後に ChargeShoot
-    /// </summary>
+    /// </summary>  
     private async UniTask ShootingState(CancellationToken token)
     {
         bulletShooters.SetActive(true);
@@ -274,11 +291,8 @@ public class TreeBossController : MonoBehaviour, IBossController
         // ★ Shooting開始時に、地上敵を1体だけ湧かせる（既に居れば何もしない）
         groundEnemyManager?.SpawnOnceIfNone().Forget();
 
-        Debug.Log("Shooting 開始");
+        // Debug.Log("Shooting 開始");
         await UniTask.Delay(7000, cancellationToken: token); // 7秒後に遷移
-        // Debug.Log("Shooting 終了 → ChargeShootへ");
-        // if (!token.IsCancellationRequested)
-        //     ChangeState(BossState.ChargeShoot);
     }
     /// <summary>
     /// ChargeShoot状態：5秒後にレーザー発射 → Shootingへ
@@ -289,18 +303,17 @@ public class TreeBossController : MonoBehaviour, IBossController
         chargeLaser.SetActive(false);
 
         UpFloor();
-        Debug.Log("ChargeShoot 溜め開始");
         await UniTask.Delay(10000, cancellationToken: token); // 溜め時間
         if (token.IsCancellationRequested) return;
 
         // レーザー発射
         chargeLaser.SetActive(true);
-        Debug.Log("レーザー発射！");
+        // Debug.Log("レーザー発射！");
 
         await UniTask.Delay(3000, cancellationToken: token); // レーザー表示時間（任意）
         chargeLaser.SetActive(false);
 
-        Debug.Log("ChargeShoot 終了 → Shootingへ");
+        // Debug.Log("ChargeShoot 終了 → Shootingへ");
         if (!token.IsCancellationRequested)
             ChangeState(BossState.Shooting);
     }
@@ -334,9 +347,9 @@ public class TreeBossController : MonoBehaviour, IBossController
         DOTween.Kill(Floor.transform);
         if (player.transform.position.y < target.position.y / 2)
         {
-            Debug.Log(player.transform.position.y);
             ResetFloor();
         }
+        SetUpArrowsActive(true);
         Floor.transform
         .DOMove(target.position, duration)
         .SetEase(Ease.Linear)
@@ -349,18 +362,46 @@ public class TreeBossController : MonoBehaviour, IBossController
     //足場の位置をリセットする処理
     private void ResetFloor()
     {
-        Debug.Log("位置リセット");
+        SetUpArrowsActive(false);
         // Floor と子の Tween を全部停止
         DOTween.Kill(Floor.transform);
         foreach (var t in Floor.GetComponentsInChildren<Transform>(true))
             DOTween.Kill(t);
         Floor.transform.position = FloorInitPos;
     }
+    //矢印の表示/非表示を管理
+    private void SetUpArrowsActive(bool active)
+    {
+        if (upArrows == null) return;
+        for (int i = 0; i < upArrows.Count; i++)
+        {
+            if (upArrows[i] != null)
+            {
+                upArrows[i].gameObject.SetActive(active);
+            }
+        }
+    }
     //-----------------------------------------------------------------------------
     private void OnDestroy()
     {
         if (groundEnemyManager != null)
             groundEnemyManager.OnGroundEnemyKilled -= OnGroundEnemyKilledHandler;
+    }
+    public void OnDestroyRobotEvent()
+    {
+        currentState = BossState.Dead;
+        Debug.Log("ボス討伐");
+        OnDestroyRobot().Forget();
+    }
+    //
+    public async UniTaskVoid OnDestroyRobot()
+    {
+        PauseBoss();
+        bulletShooters.SetActive(false);
+        await UniTask.Delay(1000);
+        MOGURA.SetActive(false);
+        player.transform.parent = null;
+        
     }
     /// <summary>
     /// 地上敵が倒れた時に呼ばれる：足場を上昇
