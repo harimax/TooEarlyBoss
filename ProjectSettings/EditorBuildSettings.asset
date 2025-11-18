@@ -15,8 +15,17 @@ EditorBuildSettings:
     path: Assets/Scenes/SmileBossScene1.unity
     guid: 0d12b9662bebe69459427bf71abae72a
   - enabled: 1
+    path: Assets/Scenes/RobotBossScene2.unity
+    guid: b3f38756257864b429d22843d57d2431
+  - enabled: 1
     path: Assets/Scenes/TitanBossScene3.unity
     guid: 471de20beef85a9419722366e23aa522
+  - enabled: 1
+    path: Assets/Scenes/PetBossScene4.unity
+    guid: 84333685900e32b41b9dc261d17d67ba
+  - enabled: 1
+    path: Assets/Scenes/DragonBossStage5.unity
+    guid: 924e0fe9698d4ae4db968b635e26e471
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
   m_UseUCBPForAssetBundles: 0
