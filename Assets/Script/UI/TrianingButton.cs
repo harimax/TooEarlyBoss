@@ -24,13 +24,22 @@ public class TrianingButton : MonoBehaviour
 
     void Awake()
     {
+        if (ProcessManager.Instance.GetCurrentCycle() == 1)
+        {
+            PlayerPower = 1f;
+            PlayerHealth = 1;
+            PlayerStamina = 1f;
+            PlayerSpecial = 1f;
+        }
+        else
+        {
+            LoadParameter();
+        }
         Instance = this;
         turnNumber = ProcessManager.Instance.totalTurns;
     }
     void Start()
     {
-        
-        Debug.Log(turnNumber);
         // 最初はボタンを有効化
         UpdateUI();
     }
@@ -95,7 +104,7 @@ public class TrianingButton : MonoBehaviour
         {
             specialText.text = PlayerSpecial.ToString();    
         }
-        turn.text = $"残り: {turnNumber}ターン";
+        turn.text = $"残り:{turnNumber}ターン";
 
         SetButtonsInteractable();
     }
@@ -118,6 +127,40 @@ public class TrianingButton : MonoBehaviour
     public void DecreaseTurn()
     {
         turnNumber--;
+    }
+    public void SaveParameter()
+    {
+        string jsonPlayrtParam = JsonUtility.ToJson(new PlayerParamSaveData(PlayerPower, PlayerHealth, PlayerStamina, PlayerSpecial));
+        PlayerPrefs.SetString("PlayerParamSave", jsonPlayrtParam);
+        PlayerPrefs.Save();
+    }
+    public void LoadParameter()
+    {
+        if (PlayerPrefs.HasKey("PlayerParamSave"))
+        {
+            Debug.Log("パラメータ読み込み");
+            string jsonPlayerParam = PlayerPrefs.GetString("PlayerParamSave");
+            PlayerParamSaveData loadedData = JsonUtility.FromJson<PlayerParamSaveData>(jsonPlayerParam);
+            PlayerPower = loadedData.playerPower;
+            PlayerHealth = loadedData.playerHealth;
+            PlayerStamina = loadedData.playerStamina;
+            PlayerSpecial = loadedData.playerSpecial;
+        }
+    }
+    private class PlayerParamSaveData
+    {
+        public float playerPower;
+        public int playerHealth;
+        public float playerStamina;
+        public float playerSpecial;
+
+        public PlayerParamSaveData(float power, int health, float stamina, float special)
+        {
+            playerPower = power;
+            playerHealth = health;
+            playerStamina = stamina;
+            playerSpecial = special;
+        }
     }
     
 }
