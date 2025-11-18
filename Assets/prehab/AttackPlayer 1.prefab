@@ -5111,7 +5111,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.39, y: 2, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &37625153395157488
 GameObject:
@@ -6707,11 +6707,10 @@ GameObject:
   - component: {fileID: 3391161801427065340}
   - component: {fileID: 2476820828479493541}
   - component: {fileID: 7209351505757931387}
-  - component: {fileID: 3520716582344147088}
-  - component: {fileID: 9217319204373476514}
   - component: {fileID: 5680625668111797368}
   - component: {fileID: 429146110260879909}
   - component: {fileID: 8175951696326931493}
+  - component: {fileID: 6423213541644532121}
   m_Layer: 8
   m_Name: AttackPlayer 1
   m_TagString: Player
@@ -6825,7 +6824,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCloseEvents: 0
   openCloseWindow: 1
-  selectedToolbar: 0
+  selectedToolbar: 9
   _isDead: 1
   _currentHealth: 100
   isImmortal: 1
@@ -6840,7 +6839,19 @@ MonoBehaviour:
       m_Calls: []
   _onReceiveDamage:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 318066051403777523}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _onDead:
     m_PersistentCalls:
       m_Calls:
@@ -7086,9 +7097,9 @@ MonoBehaviour:
     isUnityInput: 0
     keyboard: LeftShift
     keyboardAxis: 0
-    joystick: LeftStickClick
+    joystick: LB
     joystickAxis: 0
-    mobile: LeftStickClick
+    mobile: LB
     mobileAxis: 0
     joystickAxisInvert: 0
     keyboardAxisInvert: 0
@@ -7134,9 +7145,9 @@ MonoBehaviour:
     isUnityInput: 0
     keyboard: Space
     keyboardAxis: 0
-    joystick: X
+    joystick: A
     joystickAxis: 0
-    mobile: X
+    mobile: A
     mobileAxis: 0
     joystickAxisInvert: 0
     keyboardAxisInvert: 0
@@ -7166,9 +7177,9 @@ MonoBehaviour:
     isUnityInput: 0
     keyboard: K
     keyboardAxis: 0
-    joystick: Y
+    joystick: RB
     joystickAxis: 0
-    mobile: Y
+    mobile: RB
     mobileAxis: 0
     joystickAxisInvert: 0
     keyboardAxisInvert: 0
@@ -7182,9 +7193,9 @@ MonoBehaviour:
     isUnityInput: 0
     keyboard: L
     keyboardAxis: 0
-    joystick: RB
+    joystick: RT
     joystickAxis: 0
-    mobile: RB
+    mobile: RT
     mobileAxis: 0
     joystickAxisInvert: 0
     keyboardAxisInvert: 0
@@ -7270,9 +7281,9 @@ MonoBehaviour:
     isUnityInput: 0
     keyboard: Mouse0
     keyboardAxis: 0
-    joystick: A
+    joystick: X
     joystickAxis: 0
-    mobile: A
+    mobile: X
     mobileAxis: 0
     joystickAxisInvert: 0
     keyboardAxisInvert: 0
@@ -7286,9 +7297,9 @@ MonoBehaviour:
     isUnityInput: 0
     keyboard: Alpha1
     keyboardAxis: 0
-    joystick: RT
+    joystick: Y
     joystickAxis: 1
-    mobile: RT
+    mobile: Y
     mobileAxis: 0
     joystickAxisInvert: 0
     keyboardAxisInvert: 0
@@ -7350,7 +7361,7 @@ MonoBehaviour:
     attackObject: {fileID: 8689137118588800866}
     isHuman: 0
   defaultDamage:
-    damageValue: 0
+    damageValue: 500
     staminaBlockCost: 5
     staminaRecoveryDelay: 1
     ignoreDefense: 0
@@ -8095,40 +8106,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a56c46f6aeec1d43b1244e4b89cefbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &3520716582344147088
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 318066051403777523}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Size: {x: 0.41, y: 0.22, z: 0.39}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &9217319204373476514
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 318066051403777523}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bad5e387dd0feca48b485836d3e96b82, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bounceForce: 10
 --- !u!114 &5680625668111797368
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8143,7 +8120,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   acquiredSkills:
   - {fileID: 11400000, guid: cb8058ae3a7a4a3429c4eae0c941016f, type: 2}
-  - {fileID: 11400000, guid: 7874999c9f7b7ea4b8325bd4a29540de, type: 2}
   - {fileID: 11400000, guid: 96c3ac32812c6264f95bc453f5c339ed, type: 2}
   player: {fileID: 8605119299218610018}
 --- !u!114 &429146110260879909
@@ -8171,6 +8147,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3d00f78f7a95d514ba87b96ce09f68d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6423213541644532121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 318066051403777523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5835d17ad99f45748a3eee91e8e68770, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &347782528221291498
@@ -11628,7 +11616,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 2.5, y: 2, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &900621923976387923
 GameObject:
@@ -28845,7 +28833,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0befb9e9384ab34d9dfc9d3cabf04b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  openCloseEvents: 0
+  openCloseEvents: 1
   openCloseWindow: 0
   selectedToolbar: 0
   attackObjectName: RightLowerArm

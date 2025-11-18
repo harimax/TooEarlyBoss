@@ -143,6 +143,7 @@ GameObject:
   - component: {fileID: 8654053934296956113}
   - component: {fileID: 5399271647814494163}
   - component: {fileID: 8380297791319767593}
+  - component: {fileID: 1585620825021038432}
   m_Layer: 9
   m_Name: Slime 1
   m_TagString: Enemy
@@ -251,7 +252,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 6
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 200
@@ -355,9 +356,6 @@ MonoBehaviour:
   chasecollider: {fileID: 7811144331315477356}
   Damagecooldown: 2
   Reaction_Pro: 0
-  raycastLayerMask:
-    serializedVersion: 2
-    m_Bits: 0
   patrolRadius: 10
   time: 2
 --- !u!114 &8654053934296956113
@@ -404,6 +402,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hpSlider: {fileID: 4117428769678299711}
+--- !u!114 &1585620825021038432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4769432014875442283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d060b4f7789c2e443a11232bb4fe4a46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitStopTime: 150
 --- !u!1 &4889458828947941201
 GameObject:
   m_ObjectHideFlags: 0
@@ -470,7 +481,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8a6ee24d8c766042b403d33a08151b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  openCloseEvents: 0
+  openCloseEvents: 1
   openCloseWindow: 1
   selectedToolbar: 0
   damage:
@@ -485,7 +496,7 @@ MonoBehaviour:
     hitPosition: {x: 0, y: 0, z: 0}
     hitReaction: 1
     recoil_id: 0
-    reaction_id: 0
+    reaction_id: 1
     damageType: 
     force: {x: 0, y: 0, z: 0}
   overrideDamageSender: {fileID: 0}
@@ -897,6 +908,12 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7025540143256831052, guid: 3b9ace8dbf0c3104e81162b3575f2e1b, type: 3}
+      propertyPath: m_text
+      value: '
+
+'
+      objectReference: {fileID: 0}
+    - target: {fileID: 7025540143256831052, guid: 3b9ace8dbf0c3104e81162b3575f2e1b, type: 3}
       propertyPath: m_HorizontalAlignment
       value: 1
       objectReference: {fileID: 0}
@@ -1039,6 +1056,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyHPUI
       objectReference: {fileID: 0}
+    - target: {fileID: 6710582155491214474, guid: 34abf880b86ea064eaab936c882bc16e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1071,6 +1092,10 @@ PrefabInstance:
     - target: {fileID: 2137105810950063101, guid: 876eebcae014a9a44bece86b09473fa3, type: 3}
       propertyPath: m_Name
       value: CollsionDetector
+      objectReference: {fileID: 0}
+    - target: {fileID: 3701688984633602809, guid: 876eebcae014a9a44bece86b09473fa3, type: 3}
+      propertyPath: m_Radius
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8861224010459726448, guid: 876eebcae014a9a44bece86b09473fa3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1114,6 +1139,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6297467542645202691, guid: 876eebcae014a9a44bece86b09473fa3, type: 3}
+    - {fileID: 8276287099265078363, guid: 876eebcae014a9a44bece86b09473fa3, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:

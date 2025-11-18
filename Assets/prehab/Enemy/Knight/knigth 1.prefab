@@ -3654,6 +3654,7 @@ GameObject:
   - component: {fileID: 7411224178382548718}
   - component: {fileID: 2591643399405403794}
   - component: {fileID: 9023537070105994073}
+  - component: {fileID: 6616579493484955838}
   m_Layer: 9
   m_Name: knigth 1
   m_TagString: Enemy
@@ -3773,9 +3774,6 @@ MonoBehaviour:
   chasecollider: {fileID: 487984626516832025}
   Damagecooldown: 2
   Reaction_Pro: 0
-  raycastLayerMask:
-    serializedVersion: 2
-    m_Bits: 0
   patrolRadius: 10
   time: 2
 --- !u!114 &7577358866695723042
@@ -3919,6 +3917,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hpSlider: {fileID: 6255936183932833355}
+--- !u!114 &6616579493484955838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9144288592955621078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d060b4f7789c2e443a11232bb4fe4a46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitStopTime: 150
 --- !u!1 &9174153292107093834
 GameObject:
   m_ObjectHideFlags: 0
@@ -4244,6 +4255,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5586524562102697277, guid: 3b9ace8dbf0c3104e81162b3575f2e1b, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7025540143256831052, guid: 3b9ace8dbf0c3104e81162b3575f2e1b, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
       value: 1801810542
@@ -4251,6 +4266,10 @@ PrefabInstance:
     - target: {fileID: 7981822878080495148, guid: 3b9ace8dbf0c3104e81162b3575f2e1b, type: 3}
       propertyPath: m_Name
       value: DamgeUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 7981822878080495148, guid: 3b9ace8dbf0c3104e81162b3575f2e1b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4497,6 +4516,10 @@ PrefabInstance:
     - target: {fileID: 6710582155491214474, guid: 34abf880b86ea064eaab936c882bc16e, type: 3}
       propertyPath: m_Name
       value: EnemyHPUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 6710582155491214474, guid: 34abf880b86ea064eaab936c882bc16e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

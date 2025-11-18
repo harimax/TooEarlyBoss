@@ -114,8 +114,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: -0.17, y: -0.04, z: 0}
+  m_Size: {x: 0.8, y: 0.8, z: 0.8}
+  m_Center: {x: -0.17, y: 0.05, z: 0}
 --- !u!114 &8030717075685720001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -143,7 +143,7 @@ MonoBehaviour:
     hitPosition: {x: 0, y: 0, z: 0}
     hitReaction: 1
     recoil_id: 0
-    reaction_id: 0
+    reaction_id: 1
     damageType: 
     force: {x: 0, y: 0, z: 0}
   overrideDamageSender: {fileID: 0}
@@ -217,6 +217,7 @@ GameObject:
   - component: {fileID: 2672471122720854649}
   - component: {fileID: 9147704314406864804}
   - component: {fileID: 2506541584420597246}
+  - component: {fileID: 3990147032112084841}
   m_Layer: 9
   m_Name: BigSlime
   m_TagString: Enemy
@@ -429,9 +430,6 @@ MonoBehaviour:
   chasecollider: {fileID: 610350043078506472}
   Damagecooldown: 2
   Reaction_Pro: 0
-  raycastLayerMask:
-    serializedVersion: 2
-    m_Bits: 0
   patrolRadius: 10
   time: 2
 --- !u!114 &2672471122720854649
@@ -478,6 +476,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hpSlider: {fileID: 557743666330394883}
+--- !u!114 &3990147032112084841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3861515877501182750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d060b4f7789c2e443a11232bb4fe4a46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitStopTime: 150
 --- !u!1 &4778377122817102190
 GameObject:
   m_ObjectHideFlags: 0
@@ -959,7 +970,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3701688984633602809, guid: 876eebcae014a9a44bece86b09473fa3, type: 3}
       propertyPath: m_Radius
-      value: 2
+      value: 2.89
       objectReference: {fileID: 0}
     - target: {fileID: 8861224010459726448, guid: 876eebcae014a9a44bece86b09473fa3, type: 3}
       propertyPath: m_LocalPosition.x
