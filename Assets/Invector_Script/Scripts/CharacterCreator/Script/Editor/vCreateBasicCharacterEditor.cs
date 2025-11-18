@@ -235,7 +235,7 @@ namespace Invector.vCharacterController
             if (useGameController)
             {
                 GameObject gC = null;
-                var gameController = FindObjectOfType<vGameController>();
+                var gameController = FindAnyObjectByType<vGameController>();
                 if (gameController == null)
                 {
                     gC = new GameObject("vGameController_Example");

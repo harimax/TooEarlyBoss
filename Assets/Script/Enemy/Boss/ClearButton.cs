@@ -9,7 +9,7 @@ public class ClearButton : MonoBehaviour
 
     void Start()
     {
-        var gameCycleManager = FindObjectOfType<ProcessManager>();
+        var gameCycleManager = FindAnyObjectByType<ProcessManager>();
         if (gameCycleManager != null && nextCycleButton != null)
         {
             Debug.Log("ボタンアタッチ");
