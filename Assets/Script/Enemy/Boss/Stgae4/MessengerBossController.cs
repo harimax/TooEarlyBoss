@@ -18,8 +18,9 @@ public class MessengerBossController : MonoBehaviour, IBossController
     private bool wasRunning = false;   // 前フレームが走行だったか
     private bool _isPaused = false;
     [SerializeField] private Transform[] waypoints; // 巡回ポイント
-    [SerializeField] private GameObject AttackBeam;
+    [SerializeField] private GameObject[] AttackBeam;
     [SerializeField] private GameObject ChargeEffect;
+    private bool isLooking = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -32,6 +33,7 @@ public class MessengerBossController : MonoBehaviour, IBossController
     // Update is called once per frame
     void Update()
     {
+        if (_isPaused) return;
         if (_agent == null || !_agent.isOnNavMesh) return;
 
         // 1) 周期から今のフェーズを算出
@@ -47,6 +49,9 @@ public class MessengerBossController : MonoBehaviour, IBossController
             {
                 // StopからRun
                 _agent.isStopped = false;
+                ChangeBeamBool(false);
+                animator.SetBool("IsAttack", false);
+
                 if (!_agent.hasPath) GoToNextWaypoint();
             }
             else
@@ -73,6 +78,11 @@ public class MessengerBossController : MonoBehaviour, IBossController
             // LookAtPlayerXZ();
             animator.SetBool("IsAttack", true);
         }
+
+        if (isLooking == true)
+        {
+            LookAtPlayerXZ();
+        }
     }
     private void GoToNextWaypoint()
     {
@@ -88,10 +98,7 @@ public class MessengerBossController : MonoBehaviour, IBossController
     {
         // Update 系を止める
         _isPaused = true;
-        // MonoBehaviour の Update を無効化する場合はこちらを使ってもよい
-        // enabled = false;
-        // アニメータを止めたいなら：
-        // if (animator != null) animator.enabled = false;
+        
     }
     /// <summary>
     /// ボスの動きを再開する
@@ -99,7 +106,6 @@ public class MessengerBossController : MonoBehaviour, IBossController
     public void ResumeBoss()
     {
         _isPaused = false;
-        // enabled = true;
         if (animator != null) animator.enabled = true;
         // タイマー初期化
     }
@@ -119,20 +125,58 @@ public class MessengerBossController : MonoBehaviour, IBossController
     public void StartAttackBeam()
     {
         Debug.Log("ビーム発射", this);
-        AttackBeam.SetActive(true);
+        ChangeBeamBool(true); ;
+        isLooking = false;
     }
     public void StopAttackBeam()
     {
         Debug.Log("ビーム停止", this);
+        ChangeBeamBool(false);
     }
     public void StartChargeEffect()
     {
         Debug.Log("チャージ開始", this);
         ChargeEffect.SetActive(true);
+        isLooking = true;
     }
     public void StopChargeEffect()
     {
         Debug.Log("チャージ停止", this);
         ChargeEffect.SetActive(false);
+    }
+
+    private void ChangeBeamBool(bool value)
+    {
+        foreach (GameObject beam in AttackBeam)
+        {
+            if (beam == null) continue;            // ★ Destroy済みは飛ばす
+            if (beam.activeSelf == value) continue;
+            beam.SetActive(value);
+        }
+    }
+    //ビームの数が減少するメソッド
+    public void DeleteBeam()
+    {
+        List<GameObject> aliveBeamsList = new List<GameObject>();
+        //残っているビームをリストアップ
+        foreach (GameObject beam in AttackBeam)
+        {
+            if (beam != null) aliveBeamsList.Add(beam);
+        }
+        // 消す本数を決定（残り本数が2未満ならその数に調整）
+        int countToDelete = 2;
+        // ランダムに選んで削除
+        for (int i = 0; i < countToDelete; i++)
+        {
+            int rand = Random.Range(0, aliveBeamsList.Count);
+            GameObject target = aliveBeamsList[rand];
+            aliveBeamsList.RemoveAt(rand); // リストから除外
+
+            if (target != null)
+            {
+                Destroy(target);
+                Debug.Log($"[BeamManager] ビームを削除しました。({target.name})");
+            }
+        }
     }
 }
