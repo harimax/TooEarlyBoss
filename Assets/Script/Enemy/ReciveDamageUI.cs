@@ -4,6 +4,9 @@ using UnityEngine;
 using Invector;
 using UnityEngine.UI;
 using TMPro;
+using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
+using System.Threading;
 
 public class ReciveDamageUI : MonoBehaviour
 {
@@ -23,10 +26,10 @@ public class ReciveDamageUI : MonoBehaviour
     {
         // Debug.Log(vHealthController.reciveDamage);
         damageText.text = vHealthController.reciveDamage.ToString();
-        StartCoroutine(ResetDamageText(1.0f));
+        ResetDamageText(1.0f).Forget();
     }
     //時間経過でダメージ数が0になる処理
-    private IEnumerator ResetDamageText(float time)
+    private async UniTaskVoid ResetDamageText(float time)
     {
         float elapsed = 0f;
         Color originalColor = damageText.color;
@@ -40,7 +43,7 @@ public class ReciveDamageUI : MonoBehaviour
             // 徐々に透明に
             damageText.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1 - t);
 
-            yield return null;
+            await UniTask.Yield();
         }
         // テキストを消して初期位置に戻す
         damageText.text = "";
