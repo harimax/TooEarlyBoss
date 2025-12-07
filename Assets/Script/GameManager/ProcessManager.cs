@@ -9,9 +9,9 @@ public class ProcessManager : MonoBehaviour
 {
     private Fade fade;
     public static ProcessManager Instance { get; private set; }
-    private const string mainSceneTitle = "BattleScene";
-    private const string titleSceneTitle = "TitleScene";
-    private const string GameClearTile = "GameClearScene";
+    private const string mainScene = "BattleScene";
+    private const string titleScene = "TitleScene";
+    private const string GameClear = "GameClearScene";
     [SerializeField] private ProcessSetting processSetting;
     private int currentCycle;
     private int currentBattleIndex;
@@ -64,29 +64,14 @@ public class ProcessManager : MonoBehaviour
         //すべてのボスを倒したらゲームクリアシーンへ
         if (currentCycle > maxCycle)
         {
-            if (fade)
-            {
-                fade.FadeOut(1f, () => SceneManager.LoadScene(GameClearTile));
-            }
-            else
-            {
-                SceneManager.LoadScene(GameClearTile);
-            }
-
+            LoadScene(GameClear);
+            return;
         }
+        //次のサイクルへ移行
         else
         {
             Debug.Log($"サイクル{currentCycle}開始");
-            // シーン読み込み後イベントを一度だけ登録
-            SceneManager.sceneLoaded += OnSceneLoaded;
-            if (fade)
-            {
-                fade.FadeOut(1f, () => SceneManager.LoadScene(mainSceneTitle));
-            }
-            else
-            {
-                SceneManager.LoadScene(mainSceneTitle);
-            }
+            LoadScene(mainScene);
         }
     }
     //現在のサイクルを再開するメソッド
@@ -97,20 +82,7 @@ public class ProcessManager : MonoBehaviour
         currentBattleIndex = 1;
 
         Debug.Log($"サイクル{currentCycle}再開");
-        // シーン読み込み後イベントを一度だけ登録
-        SceneManager.sceneLoaded += OnSceneLoaded;
-        if (Time.timeScale != 1f)
-        {
-            Time.timeScale = 1f;
-        }
-        if (fade)
-        {
-            fade.FadeOut(1f, () => SceneManager.LoadScene(mainSceneTitle));
-        }
-        else
-        {
-            SceneManager.LoadScene(mainSceneTitle);
-        }
+        LoadScene(mainScene);
     }
     //タイトルシーンに戻るメソッド
     public void ReturnToTitleScene()
@@ -121,21 +93,7 @@ public class ProcessManager : MonoBehaviour
         PlayerPrefs.DeleteKey("PlayerParamSave");
         PlayerPrefs.Save();
         DestroyPlayerAndManagers();// プレイヤーとマネージャーを破壊
-        if (Time.timeScale != 1f)
-        {
-            Time.timeScale = 1f;
-        }
-
-        // シーン読み込み後イベントを一度だけ登録
-        SceneManager.sceneLoaded += OnSceneLoaded;
-        if (fade)
-        {
-            fade.FadeOut(1f, () => SceneManager.LoadScene(titleSceneTitle));
-        }
-        else
-        {
-            SceneManager.LoadScene(titleSceneTitle);
-        }
+        LoadScene(titleScene);
     }
     //敵の出現数を加算するメソッド
     public void IncreaseEnemyCount()
@@ -156,6 +114,24 @@ public class ProcessManager : MonoBehaviour
 
         // イベント登録解除（多重呼び出し防止）
         SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    private void LoadScene(string sceneName)
+    {
+        if (Time.timeScale != 1f)
+        {
+            Time.timeScale = 1f;
+        }
+
+        // シーン読み込み後イベントを一度だけ登録
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        if (fade)
+        {
+            fade.FadeOut(1f, () => SceneManager.LoadScene(sceneName));
+        }
+        else
+        {
+            SceneManager.LoadScene(sceneName);
+        }
     }
     private void DestroyPlayerAndManagers()
     {
