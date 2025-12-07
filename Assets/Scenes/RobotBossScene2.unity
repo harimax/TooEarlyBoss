@@ -354,6 +354,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6539884320961332054, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
   m_PrefabInstance: {fileID: 8826517362523037229}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &69332704 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9036436479755140683, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
+  m_PrefabInstance: {fileID: 8826517362523037229}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 69332703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce8ec5f9e0f2857439427c6bea489d94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TreeBossController
 --- !u!1 &83677457
 GameObject:
   m_ObjectHideFlags: 0
@@ -1811,6 +1822,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 365784212}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &560747191 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7311595766154630676, guid: 408a8102eed4a784e9be4e5005e857d4, type: 3}
+  m_PrefabInstance: {fileID: 1021400372}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &587575966
 GameObject:
   m_ObjectHideFlags: 0
@@ -2194,6 +2210,7 @@ GameObject:
   - component: {fileID: 776178343}
   - component: {fileID: 776178344}
   - component: {fileID: 776178345}
+  - component: {fileID: 776178346}
   m_Layer: 0
   m_Name: BossStageManager
   m_TagString: Untagged
@@ -2218,6 +2235,8 @@ MonoBehaviour:
   Boss: {fileID: 69332703}
   BossCamera: {fileID: 181329840}
   ClearButton: {fileID: 1021400375}
+  GameOverButtons: {fileID: 560747191}
+  petBoss: []
 --- !u!4 &776178341
 Transform:
   m_ObjectHideFlags: 0
@@ -2293,6 +2312,20 @@ MonoBehaviour:
   - {fileID: 848621814}
   - {fileID: 935526136}
   spawnDelay: 0.5
+--- !u!114 &776178346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 776178339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a5024c2feef30e4ca7904f11de3e81f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ReturnBattleSceneButton: {fileID: 1326927083}
+  ReturnTitleSceneButton: {fileID: 1326927082}
 --- !u!4 &818102564 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 635627438620722467, guid: f250871468114b24095d2293732281ee, type: 3}
@@ -6060,7 +6093,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3823367118360743241, guid: 408a8102eed4a784e9be4e5005e857d4, type: 3}
       propertyPath: m_Name
-      value: BossCanvas (1)
+      value: BossCanvas
       objectReference: {fileID: 0}
     - target: {fileID: 4787889892143474320, guid: 408a8102eed4a784e9be4e5005e857d4, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -6503,6 +6536,28 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 635627438620722467, guid: f250871468114b24095d2293732281ee, type: 3}
   m_PrefabInstance: {fileID: 1026125333}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1326927082 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5584465574528346532, guid: 408a8102eed4a784e9be4e5005e857d4, type: 3}
+  m_PrefabInstance: {fileID: 1021400372}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1326927083 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7493223639716921688, guid: 408a8102eed4a784e9be4e5005e857d4, type: 3}
+  m_PrefabInstance: {fileID: 1021400372}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1330007526
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27162,9 +27217,49 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1514543271080042221, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      propertyPath: _onDead.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      propertyPath: _maxHealth
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 1514543271080042221, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
+      propertyPath: _currentHealth
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 1514543271080042221, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
+      propertyPath: selectedToolbar
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1514543271080042221, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
+      propertyPath: _onDead.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1514543271080042221, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
+      propertyPath: _onDead.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 776178340}
+    - target: {fileID: 1514543271080042221, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
+      propertyPath: _onDead.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 69332704}
+    - target: {fileID: 1514543271080042221, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
+      propertyPath: _onDead.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: DefeatBoss
+      objectReference: {fileID: 0}
+    - target: {fileID: 1514543271080042221, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
+      propertyPath: _onDead.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: DeadTrigger
+      objectReference: {fileID: 0}
+    - target: {fileID: 1514543271080042221, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
+      propertyPath: _onDead.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: BossStageManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1514543271080042221, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
+      propertyPath: _onDead.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: TreeBossController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1514543271080042221, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
+      propertyPath: _onDead.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 6147121398923180901, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

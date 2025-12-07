@@ -31,8 +31,8 @@ public class TitanBossController : MonoBehaviour, IBossController
     [SerializeField] private Collider SprintColider; // 突進攻撃の当たり判定
     [SerializeField] private float turnSpeed = 10f;         // 向き合わせスピード
     [SerializeField] private int jumpAttackProbability = 50; // ジャンプ攻撃の選択確率（％）
+    [SerializeField] private GameObject ballPrefab;
 
-    [SerializeField] private GameObject jmupAttackEffect; // ジャンプ攻撃エフェクト
 
     [Header("Reference")]
     [SerializeField] private float shotSpeed;
@@ -154,6 +154,7 @@ public class TitanBossController : MonoBehaviour, IBossController
             break;
         }
         Debug.Log("BattleLoop: ct.Cancelled で終了");
+        SprintColider.enabled = false;
         currentState = TitanBossState.CoolDown;
     }
     public void FacePlayerOnlyYaw(float slerpSpeed)
@@ -215,15 +216,30 @@ public class TitanBossController : MonoBehaviour, IBossController
             isjumpAttack = false;
         }
     }
+    //ジャンプ攻撃をする処理
+    public void JumpAttack()
+    {
+        float[] angles = { -150f, -120f, -90f, -60f, -30f, 0f, 30f, 60f, 90f, 120f, 150f }; // 左から右へ角度を振る
 
+
+        // 「正しい発射方向」を補正して取得
+        Vector3 baseForward = -this.transform.right; // ← ここが正しい正面！
+        Vector3 up = this.transform.up;
+
+        foreach (float angle in angles)
+        {
+            Quaternion rotation = Quaternion.AngleAxis(angle, up);
+            Vector3 dir = rotation * baseForward;
+
+            GameObject ball = Instantiate(ballPrefab, this.transform.position, Quaternion.identity);
+            ball.GetComponent<Rigidbody>().linearVelocity = dir.normalized * 10f;
+        }
+    }
     public void DeadTrigger()
     {
         currentState = TitanBossState.Dead;
         SprintColider.enabled = false;
         animator.SetTrigger("Dead");
-    }
-    public void OnSprintStart()
-    {
     }
     /// <summary>
     /// Idle状態へ戻す
@@ -232,18 +248,6 @@ public class TitanBossController : MonoBehaviour, IBossController
     {
         currentState = TitanBossState.CoolDown;
         SprintColider.enabled = false;
-    }
-    public void StartJumpAttackEffect()
-    {
-        Debug.Log("ジャンプ攻撃エフェクト開始", this);
-        jmupAttackEffect.SetActive(true);
-        // エフェクト開始処理
-    }
-    public void StopJumpAttackEffect()
-    {
-        Debug.Log("ジャンプ攻撃エフェクト停止", this);
-        jmupAttackEffect.SetActive(false);
-        // エフェクト停止処理
     }
     public void OnRockThrowEvent()
     {

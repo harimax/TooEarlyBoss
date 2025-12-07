@@ -20,6 +20,12 @@ public class SkillSelectUI : MonoBehaviour
     bool skillChosen = false;
     private void Awake()
     {
+        if(skillManager == null)
+        {
+            var player = GameObject.FindWithTag("Player");
+            skillManager =player.GetComponent<SkillManager>();
+            Debug.Log("SkillManagerを自動取得しました," + skillManager);
+        }
         // シングルトン初期化
         if (Instance == null)
         {

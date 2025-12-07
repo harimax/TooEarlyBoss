@@ -24,7 +24,7 @@ public class TrianingButton : MonoBehaviour
 
     void Awake()
     {
-        if (ProcessManager.Instance.GetCurrentCycle() == 1)
+        if (ProcessManager.Instance.CurrentCycle == 1)
         {
             PlayerPower = 1f;
             PlayerHealth = 1;
@@ -36,18 +36,13 @@ public class TrianingButton : MonoBehaviour
             LoadParameter();
         }
         Instance = this;
-        turnNumber = ProcessManager.Instance.totalTurns;
+        
     }
     void Start()
     {
+        turnNumber = ProcessManager.Instance.TotalTurns;
+        Debug.Log($"ターン数:{turnNumber}");
         // 最初はボタンを有効化
-        UpdateUI();
-    }
-
-    // Update is called once per frame
-    void OnEnable()
-    {
-        // Debug.Log("オブジェクトがアクティブ化されました！");
         UpdateUI();
     }
     //パワーボタンを押下してパワーがアップ
@@ -146,6 +141,12 @@ public class TrianingButton : MonoBehaviour
             PlayerStamina = loadedData.playerStamina;
             PlayerSpecial = loadedData.playerSpecial;
         }
+    }
+    //保持しているデータを削除するメソッド
+    public void DeleteParameter()
+    {
+        PlayerPrefs.DeleteKey("PlayerParamSave");
+        PlayerPrefs.Save();
     }
     private class PlayerParamSaveData
     {

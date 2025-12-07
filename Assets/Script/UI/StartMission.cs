@@ -34,6 +34,11 @@ public class StartMission : MonoBehaviour
     private void Awake()
     {
         _instance = this;
+        if(MainCameraObject == null)
+        {
+            MainCameraObject = GameObject.FindWithTag("MainCamera");
+            Debug.Log(mainCameraVirtual);
+        }
 
         AttachPlayerData();
     }

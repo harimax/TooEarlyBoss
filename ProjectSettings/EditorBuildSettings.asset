@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Title.unity
+    path: Assets/Scenes/TitleScene.unity
     guid: d9b402720f1776a4288ff5ec93364925
   - enabled: 1
     path: Assets/Scenes/BattleScene.unity
@@ -26,6 +26,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/DragonBossStage5.unity
     guid: 924e0fe9698d4ae4db968b635e26e471
+  - enabled: 1
+    path: Assets/Scenes/GameClearScene.unity
+    guid: 7e7dd93c078fd3b429d43c210725a497
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
   m_UseUCBPForAssetBundles: 0

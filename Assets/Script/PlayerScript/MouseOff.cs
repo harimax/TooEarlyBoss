@@ -10,12 +10,14 @@ public class Mouse_off : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(gameObject); // 重複を削除
+            Debug.LogWarning(
+                $"複数の Player が存在しています。古い方({Instance.name})を残し、新しい方({name})を破棄します。");
+            Destroy(gameObject);
             return;
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject);  // 最初の1体だけ生き残る
     }
     // Update is called once per frame
     void Update()

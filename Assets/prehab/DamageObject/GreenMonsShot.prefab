@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6998684427414783}
   - component: {fileID: 1348732876390630040}
   - component: {fileID: 4463853278856467816}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: GreenMonsShot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -63,6 +63,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 257
   m_RendererPriority: 0
   m_Materials:
@@ -197,7 +200,19 @@ MonoBehaviour:
   damageFrequency: 0.5
   onHit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onSendDamage:
     m_PersistentCalls:
       m_Calls: []

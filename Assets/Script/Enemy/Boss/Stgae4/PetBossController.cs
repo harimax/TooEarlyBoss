@@ -9,9 +9,9 @@ using System;
 using Cysharp.Threading.Tasks.CompilerServices;
 
 
-public class PetBossController : MonoBehaviour
+public class PetBossController : MonoBehaviour, IBossController
 {
-    enum BossState { Idle, Face, Charge, Rest, RangedAttack }
+    enum BossState { Idle, Face, Charge, Rest, RangedAttack,Dead }
 
     [Header("Refs")]
     private Animator animator;
@@ -40,6 +40,7 @@ public class PetBossController : MonoBehaviour
     [SerializeField] private Transform throwPoint;   // ★ 発射位置（未設定なら本体前方から）
     [SerializeField] private float projectileSpeed = 18f;
     [SerializeField] private string rangedTriggerName = "RangedAttack"; // アニメトリガ（必要なら）
+    [SerializeField] private Collider SprintColider; // 突進攻撃の当たり判定
     private bool isRockAttack = false;
 
     void Start()
@@ -55,6 +56,9 @@ public class PetBossController : MonoBehaviour
         Debug.Log("BattleLoop開始", this);
         while (true)
         {
+             // ボス戦開始フラグが立つまで待機（スタート演出などで意図せず動かないようにする）
+            await UniTask.WaitUntil(() => !_isPaused);
+
             // ② 向く（ため）
             phase = BossState.Face;
             float t = 0f;
@@ -78,6 +82,7 @@ public class PetBossController : MonoBehaviour
             float traveled = 0f;
             float elapsed = 0f;
             float baseY = startPos.y;
+            SprintColider.enabled = true;
 
             while (elapsed < maxChargeTime && traveled < targetDistance)
             {
@@ -97,8 +102,16 @@ public class PetBossController : MonoBehaviour
             // ④ 休憩
             phase = BossState.Rest;
             animator?.SetBool("Moveable", false);
+            SprintColider.enabled = false;
             Debug.Log("突進終了", this);
-            await UniTask.Delay(TimeSpan.FromSeconds(restTime));
+            // ポーズされたら休憩タイマーを停止し、再開したら残り時間を消化する
+            float restElapsed = 0f;
+            while (restElapsed < restTime)
+            {
+                await UniTask.WaitUntil(() => !_isPaused);
+                restElapsed += Time.deltaTime;
+                await UniTask.Yield();
+            }
 
             // === ★ ここで「次は遠距離か？」を判定 ===
             if (isRockAttack && chargeCount >= Mathf.Max(1, chargesBeforeRanged))
@@ -129,7 +142,12 @@ public class PetBossController : MonoBehaviour
         }
         // 遠距離後の短いクールダウン（休憩）
         float rangedRest = Mathf.Max(0.6f, restTime * 0.5f); // 例：最低0.6秒 or restTimeの半分
-        await UniTask.Delay(TimeSpan.FromSeconds(rangedRest));
+        float restElapsed = 0f;
+        while (restElapsed < rangedRest)
+        {
+            restElapsed += Time.deltaTime;
+            await UniTask.Yield();
+        }
     }
 
     void FacePlayerOnlyYaw(float slerpSpeed)
@@ -144,7 +162,7 @@ public class PetBossController : MonoBehaviour
 
     public void ThorwDamageRock()
     {
-        float[] angles = { -5f, 5f }; // 左から右へ角度を振る
+        float[] angles = { -3f, 3f }; // 左から右へ角度を振る
         Vector3 baseForward = throwPoint.forward;
         foreach (float angle in angles)
         {
@@ -157,7 +175,10 @@ public class PetBossController : MonoBehaviour
 
     public void DeadTrigger()
     {
+        phase = BossState.Dead;
+        SprintColider.enabled = false;
         animator.SetTrigger("Dead");
+        Destroy(gameObject, 1.0f);
     }
     public void EnableEffect()
     {
@@ -167,6 +188,18 @@ public class PetBossController : MonoBehaviour
     {
         if (AttackEffect) AttackEffect.SetActive(false);
     }
+    /// <summary>
+    /// ボス戦を一時停止する（開始前の待機にも利用）
+    /// </summary>
+    public void PauseBoss()
+    {
+        _isPaused = true;
+        // 念のため移動アニメーションも止めておく
+        animator?.SetBool("Moveable", false);
+    }
+    /// <summary>
+    /// ボス戦の再開（開始）フラグを立てて行動を許可する
+    /// </summary>
     public void ResumeBoss()
     {
         _isPaused = false;

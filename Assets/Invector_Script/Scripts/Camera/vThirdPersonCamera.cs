@@ -16,9 +16,7 @@ namespace Invector.vCamera
                 if (_instance == null)
                 {
                     _instance = GameObject.FindAnyObjectByType<vThirdPersonCamera>();
-
-                    //Tell unity not to destroy this object when loading a new scene!
-                    //DontDestroyOnLoad(_instance.gameObject);
+                    DontDestroyOnLoad(_instance.gameObject);
                 }
 
                 return _instance;
@@ -191,6 +189,18 @@ namespace Invector.vCamera
                     Gizmos.DrawLine(targetPos, targetPos + Vector3.up * cullingHeight);
                 }
             }
+        }
+        private void Awake()
+        {
+            if (_instance != null && _instance != this)
+            {
+                // すでにシングルトンがいるので、自分は破棄
+                Destroy(gameObject);
+                return;
+            }
+
+            _instance = this;
+            DontDestroyOnLoad(gameObject); // ここで常駐化
         }
 
         protected virtual void Start()
@@ -1009,5 +1019,10 @@ namespace Invector.vCamera
 
             return hitInfo.collider && value;
         }
+        void OnDestroy()
+        {
+            Debug.Log($"[vThirdPersonCamera] Destroy: scene={gameObject.scene.name}");
+        }
     }
+
 }

@@ -1681,6 +1681,8 @@ GameObject:
   - component: {fileID: 560769112801921652}
   - component: {fileID: 3562809746762548608}
   - component: {fileID: 7491210165720659896}
+  - component: {fileID: 9182547178140845738}
+  - component: {fileID: 8570596095532435527}
   m_Layer: 9
   m_Name: Wolf
   m_TagString: Enemy
@@ -1744,14 +1746,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   openCloseEvents: 0
-  openCloseWindow: 0
-  selectedToolbar: 0
+  openCloseWindow: 1
+  selectedToolbar: 1
   _isDead: 1
   _currentHealth: 0
   isImmortal: 0
   fillHealthOnStart: 1
   reciveDamage: 0
-  _maxHealth: 100
+  _maxHealth: 300
   _healthRecovery: 0
   _healthRecoveryDelay: 0
   checkHealthEvents: []
@@ -1760,7 +1762,43 @@ MonoBehaviour:
       m_Calls: []
   _onReceiveDamage:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4044296017875794875}
+        m_TargetAssemblyTypeName: ReciveDamageUI, Assembly-CSharp
+        m_MethodName: DamageHitNumber
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 8570596095532435527}
+        m_TargetAssemblyTypeName: EnemyHP, Assembly-CSharp
+        m_MethodName: UpdateEnemyHP
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 3562809746762548608}
+        m_TargetAssemblyTypeName: DashEnemy, Assembly-CSharp
+        m_MethodName: DamageReaction
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _onDead:
     m_PersistentCalls:
       m_Calls: []
@@ -1887,6 +1925,32 @@ MonoBehaviour:
   defaultDamageEffects:
   - {fileID: 7450026286034035301, guid: c642937febca0bd4bb89968a84551601, type: 3}
   customDamageEffects: []
+--- !u!114 &9182547178140845738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5120143686281833094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d060b4f7789c2e443a11232bb4fe4a46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitStopTime: 50
+--- !u!114 &8570596095532435527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5120143686281833094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9915496e6f551a4182f2837cec7656d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hpSlider: {fileID: 2043681889696913496}
 --- !u!1 &5160499391728574385
 GameObject:
   m_ObjectHideFlags: 0
@@ -2938,6 +3002,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 34abf880b86ea064eaab936c882bc16e, type: 3}
+--- !u!114 &2043681889696913496 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 20207214464119395, guid: 34abf880b86ea064eaab936c882bc16e, type: 3}
+  m_PrefabInstance: {fileID: 2025308677807811131}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &6778891380115665332 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4758090700149513103, guid: 34abf880b86ea064eaab936c882bc16e, type: 3}

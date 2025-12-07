@@ -10,14 +10,31 @@ public class ProcessManager : MonoBehaviour
     private Fade fade;
     public static ProcessManager Instance { get; private set; }
     private const string mainSceneTitle = "BattleScene";
-    [SerializeField] private int currentCycle = 1;// 現在のサイクル数
-    [SerializeField] private int maxCycle = 5;// 現在のサイクル数
-    public int currentBattleIndex = 1;// サイクル内の戦闘インデックス
-    public int totalTurns = 14; // 各サイクルの総ターン数（初期値）
+    private const string titleSceneTitle = "TitleScene";
+    private const string GameClearTile = "GameClearScene";
+    [SerializeField] private ProcessSetting processSetting;
+    private int currentCycle;
+    private int currentBattleIndex;
+    private int totalTurns;
+    private int maxCycle;
     public int CurrentCycle //外部に公開するゲームサイクル
     {
         get { return currentCycle; }
         set { currentCycle = value; }
+    }
+    public int TotalTurns //外部に公開するターン数
+    {
+        get { return totalTurns; }
+        set { totalTurns = value; }
+    }
+    private void Start()
+    {
+        //設定したパラメータを読み込む
+        currentCycle = processSetting.startCycle;
+        maxCycle = processSetting.maxCycle;
+        currentBattleIndex = processSetting.baseEnemyCount;
+        totalTurns = processSetting.totalTurnsPerCycle;
+        Debug.Log($"サイクル{currentCycle}開始" + $"敵の初期数{currentBattleIndex}" + $"ターン数{totalTurns}");
     }
 
     void Awake()
@@ -29,7 +46,7 @@ public class ProcessManager : MonoBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(this.gameObject);
+        DontDestroyOnLoad(gameObject);
 
     }
     //現在の出現する敵の数を返す関数
@@ -44,10 +61,17 @@ public class ProcessManager : MonoBehaviour
 
         currentCycle++;
         currentBattleIndex = 1;
-
+        //すべてのボスを倒したらゲームクリアシーンへ
         if (currentCycle > maxCycle)
         {
-            Debug.Log("ゲームクリア");
+            if (fade)
+            {
+                fade.FadeOut(1f, () => SceneManager.LoadScene(GameClearTile));
+            }
+            else
+            {
+                SceneManager.LoadScene(GameClearTile);
+            }
 
         }
         else
@@ -63,6 +87,54 @@ public class ProcessManager : MonoBehaviour
             {
                 SceneManager.LoadScene(mainSceneTitle);
             }
+        }
+    }
+    //現在のサイクルを再開するメソッド
+    public void RestartCurrentCycle()
+    {
+        fade = FindAnyObjectByType<Fade>();
+
+        currentBattleIndex = 1;
+
+        Debug.Log($"サイクル{currentCycle}再開");
+        // シーン読み込み後イベントを一度だけ登録
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        if (Time.timeScale != 1f)
+        {
+            Time.timeScale = 1f;
+        }
+        if (fade)
+        {
+            fade.FadeOut(1f, () => SceneManager.LoadScene(mainSceneTitle));
+        }
+        else
+        {
+            SceneManager.LoadScene(mainSceneTitle);
+        }
+    }
+    //タイトルシーンに戻るメソッド
+    public void ReturnToTitleScene()
+    {
+        fade = FindAnyObjectByType<Fade>();
+
+        Debug.Log("タイトルシーンに戻る");
+        PlayerPrefs.DeleteKey("PlayerParamSave");
+        PlayerPrefs.Save();
+        DestroyPlayerAndManagers();// プレイヤーとマネージャーを破壊
+        if (Time.timeScale != 1f)
+        {
+            Time.timeScale = 1f;
+        }
+
+        // シーン読み込み後イベントを一度だけ登録
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        if (fade)
+        {
+            fade.FadeOut(1f, () => SceneManager.LoadScene(titleSceneTitle));
+        }
+        else
+        {
+            SceneManager.LoadScene(titleSceneTitle);
         }
     }
     //敵の出現数を加算するメソッド
@@ -85,12 +157,14 @@ public class ProcessManager : MonoBehaviour
         // イベント登録解除（多重呼び出し防止）
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
-    public int GetCurrentBattleIndex()
+    private void DestroyPlayerAndManagers()
     {
-        return currentBattleIndex;
+        // プレイヤー破壊
+        var player = GameObject.FindWithTag("Player");
+        if (player != null) Destroy(player);
+
+        // ★ ProcessManager を破壊（自分自身ならここで消える）
+        if (Instance != null)
+            Destroy(Instance.gameObject);
     }
-    public int GetCurrentCycle()
-    {
-        return currentCycle;
-    }   
 }

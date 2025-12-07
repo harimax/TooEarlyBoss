@@ -5486,7 +5486,7 @@ GameObject:
   - component: {fileID: 6363378751093996234}
   m_Layer: 0
   m_Name: vThirdPersonCamera
-  m_TagString: Untagged
+  m_TagString: VThirdPersonCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6824,13 +6824,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCloseEvents: 0
   openCloseWindow: 1
-  selectedToolbar: 9
+  selectedToolbar: 0
   _isDead: 1
-  _currentHealth: 100
-  isImmortal: 1
-  fillHealthOnStart: 0
+  _currentHealth: 150
+  isImmortal: 0
+  fillHealthOnStart: 1
   reciveDamage: 0
-  _maxHealth: 100
+  _maxHealth: 150
   _healthRecovery: 0
   _healthRecoveryDelay: 0
   checkHealthEvents: []
@@ -6839,19 +6839,7 @@ MonoBehaviour:
       m_Calls: []
   _onReceiveDamage:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 318066051403777523}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   _onDead:
     m_PersistentCalls:
       m_Calls:
@@ -7055,7 +7043,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCloseEvents: 0
   openCloseWindow: 1
-  selectedToolbar: 0
+  selectedToolbar: 1
   unlockCursorOnStart: 1
   showCursorOnStart: 1
   toggleWalk: 301
@@ -7361,7 +7349,7 @@ MonoBehaviour:
     attackObject: {fileID: 8689137118588800866}
     isHuman: 0
   defaultDamage:
-    damageValue: 500
+    damageValue: 50
     staminaBlockCost: 5
     staminaRecoveryDelay: 1
     ignoreDefense: 0
@@ -7382,7 +7370,7 @@ MonoBehaviour:
     - Interactable
     - KURIBO
     useRecoil: 1
-    drawRecoilGizmos: 0
+    drawRecoilGizmos: 1
     recoilRange: 90
     hitRecoilLayer:
       serializedVersion: 2
@@ -8121,6 +8109,8 @@ MonoBehaviour:
   acquiredSkills:
   - {fileID: 11400000, guid: cb8058ae3a7a4a3429c4eae0c941016f, type: 2}
   - {fileID: 11400000, guid: 96c3ac32812c6264f95bc453f5c339ed, type: 2}
+  - {fileID: 11400000, guid: e8989a8672b640a4d802466f0527bb61, type: 2}
+  - {fileID: 11400000, guid: 68d93f6860b712c42a0e7bd47f640e13, type: 2}
   player: {fileID: 8605119299218610018}
 --- !u!114 &429146110260879909
 MonoBehaviour:
@@ -8161,6 +8151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5835d17ad99f45748a3eee91e8e68770, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitStopTime: 150
 --- !u!1 &347782528221291498
 GameObject:
   m_ObjectHideFlags: 0
@@ -19038,7 +19029,7 @@ Transform:
   m_GameObject: {fileID: 1577689081412370696}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.32, z: 0.04}
+  m_LocalPosition: {x: 0, y: 1.32, z: 0.331}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -47005,7 +46996,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -249.5, y: -15.000061}
+  m_AnchoredPosition: {x: -249.5, y: -15.000122}
   m_SizeDelta: {x: 250, y: -30}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &1799919997315486403
@@ -57086,7 +57077,7 @@ MonoBehaviour:
   - m_Script
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
-  m_Priority: 5
+  m_Priority: 20
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}

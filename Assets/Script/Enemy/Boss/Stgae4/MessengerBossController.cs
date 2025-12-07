@@ -179,4 +179,9 @@ public class MessengerBossController : MonoBehaviour, IBossController
             }
         }
     }
+    public void DeadTrigger()
+    {
+        // ボス死亡時の処理
+        animator.SetTrigger("Dead");
+    }
 }

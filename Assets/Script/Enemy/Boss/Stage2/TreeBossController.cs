@@ -30,6 +30,8 @@ public class TreeBossController : MonoBehaviour, IBossController
     [SerializeField] private GameObject MOGURA;
     private Vector3 FloorInitPos;
     [SerializeField] private float duration = 10f; // 移動にかける時間
+    private bool isWaitingAtWaypoint = false; // 到着後の待機中フラグ
+
     [SerializeField] private Transform upFloorPosArea;   // ← 画像の upFloorPosArea をアサイン
     [SerializeField] private string keyshapeName = "Key"; // 各地点にある矢印オブジェクト名
     private List<GameObject> upArrows = new List<GameObject>();
@@ -125,9 +127,12 @@ public class TreeBossController : MonoBehaviour, IBossController
         // 巡回処理（HPが1/3以下になったら）
         if (isWalking && agent != null)
         {
-            if (agent.remainingDistance <= waypointThreshold)
+            // 経路計算中はスキップ
+            if (!agent.pathPending &&
+                !isWaitingAtWaypoint &&               // すでに待機中でない
+                agent.remainingDistance <= waypointThreshold)
             {
-                GoToNextWaypoint();
+                WaitAtWaypointAsync().Forget();       // ← ここで非同期の待機＆次目的地へ
             }
         }
     }
@@ -146,7 +151,7 @@ public class TreeBossController : MonoBehaviour, IBossController
             firedTwoThird = true;
             // Debug.Log("[BossEvent] HPが2/3以下：吹き飛ばし①予約");
             await UniTask.Delay(1000); // 1秒遅延
-            if(moleHealth.currentHealth <= 0) return; // 死亡していたらキャンセル
+            if (moleHealth.currentHealth <= 0) return; // 死亡していたらキャンセル
             await OnActiveBarriar();
 
         }
@@ -157,7 +162,7 @@ public class TreeBossController : MonoBehaviour, IBossController
             firedOneThird = true;
             // Debug.Log("[BossEvent] HPが1/3以下：吹き飛ばし②予約");
             await UniTask.Delay(1000); // 1秒遅延
-            if(moleHealth.currentHealth <= 0) return; // 死亡していたらキャンセル
+            if (moleHealth.currentHealth <= 0) return; // 死亡していたらキャンセル
             await OnActiveBarriar();
 
         }
@@ -181,7 +186,9 @@ public class TreeBossController : MonoBehaviour, IBossController
         // Debug.Log("Boss started walking!");
         animator.SetBool("Walking", true);
     }
-
+    /// <summary>
+    /// 目的地を次に切り替える
+    /// </summary>
     private void GoToNextWaypoint()
     {
         if (waypoints.Length == 0) return;
@@ -189,6 +196,31 @@ public class TreeBossController : MonoBehaviour, IBossController
         currentWaypoint = (currentWaypoint + 1) % waypoints.Length;
         agent.SetDestination(waypoints[currentWaypoint].position);
     }
+    /// <summary>
+    /// ウェイポイント到着後に5秒止まってから次のウェイポイントへ進む
+    /// </summary>
+    private async UniTaskVoid WaitAtWaypointAsync()
+    {
+        isWaitingAtWaypoint = true;
+
+        // いったん停止
+        agent.isStopped = true;
+
+
+        // 5秒待機（Destroyされたら _ct でキャンセル）
+        await UniTask.Delay(5000, cancellationToken: _ct);
+
+
+        // まだ歩行中かつ Agent が生きていれば再開
+        if (isWalking && agent != null)
+        {
+            agent.isStopped = false;
+            GoToNextWaypoint();
+        }
+
+        isWaitingAtWaypoint = false;
+    }
+
 
 
     //-----------------------------------------------------------------------------------------------------
@@ -387,7 +419,7 @@ public class TreeBossController : MonoBehaviour, IBossController
         if (groundEnemyManager != null)
             groundEnemyManager.OnGroundEnemyKilled -= OnGroundEnemyKilledHandler;
     }
-    public void OnDestroyRobotEvent()
+    public void DeadTrigger()
     {
         currentState = BossState.Dead;
         Debug.Log("ボス討伐");
@@ -399,9 +431,8 @@ public class TreeBossController : MonoBehaviour, IBossController
         PauseBoss();
         bulletShooters.SetActive(false);
         await UniTask.Delay(1000);
-        MOGURA.SetActive(false);
-        player.transform.parent = null;
-        
+        Destroy(this.gameObject);
+
     }
     /// <summary>
     /// 地上敵が倒れた時に呼ばれる：足場を上昇

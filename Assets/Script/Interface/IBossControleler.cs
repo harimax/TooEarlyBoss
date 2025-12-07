@@ -7,5 +7,6 @@ public interface IBossController
 {
     void PauseBoss();
     void ResumeBoss();
+    void DeadTrigger();
 }
 

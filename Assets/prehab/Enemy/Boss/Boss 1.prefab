@@ -25087,6 +25087,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5733957193718370832}
   - component: {fileID: 2941559591528006020}
+  - component: {fileID: 6796465823626502321}
+  - component: {fileID: 836086454157278554}
   m_Layer: 0
   m_Name: EarthBeam (4)
   m_TagString: Untagged
@@ -25130,6 +25132,75 @@ MonoBehaviour:
   _HitEffect: {fileID: 0}
   _BodyTip: {fileID: 0}
   _ScaleSpeed: 50
+--- !u!114 &6796465823626502321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1870452655135361928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8a6ee24d8c766042b403d33a08151b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  openCloseEvents: 0
+  openCloseWindow: 1
+  selectedToolbar: 0
+  damage:
+    damageValue: 30
+    staminaBlockCost: 5
+    staminaRecoveryDelay: 1
+    ignoreDefense: 0
+    activeRagdoll: 0
+    senselessTime: 0
+    sender: {fileID: 0}
+    receiver: {fileID: 0}
+    hitPosition: {x: 0, y: 0, z: 0}
+    hitReaction: 1
+    recoil_id: 0
+    reaction_id: 1
+    damageType: 
+    force: {x: 0, y: 0, z: 0}
+  overrideDamageSender: {fileID: 0}
+  layerToCollide:
+    serializedVersion: 2
+    m_Bits: 256
+  tags:
+    tags: []
+  continuousDamage: 0
+  damageFrequency: 0.5
+  onHit:
+    m_PersistentCalls:
+      m_Calls: []
+  onSendDamage:
+    m_PersistentCalls:
+      m_Calls: []
+  collisionMethod: 0
+  part: {fileID: 0}
+  limitParticleCollisionEvent: 0
+  maxParticleCollisionEvent: 1
+--- !u!65 &836086454157278554
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1870452655135361928}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.14, y: 2.4, z: 51.9}
+  m_Center: {x: 0, y: 0, z: 26.1}
 --- !u!1 &2144197801533765882
 GameObject:
   m_ObjectHideFlags: 0
@@ -30189,6 +30260,8 @@ GameObject:
   m_Component:
   - component: {fileID: 518445572074457548}
   - component: {fileID: 6200484428577964897}
+  - component: {fileID: 6009763089554416378}
+  - component: {fileID: 75855465952860388}
   m_Layer: 0
   m_Name: EarthBeam (3)
   m_TagString: Untagged
@@ -30232,6 +30305,75 @@ MonoBehaviour:
   _HitEffect: {fileID: 0}
   _BodyTip: {fileID: 0}
   _ScaleSpeed: 50
+--- !u!114 &6009763089554416378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2488615194444772247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8a6ee24d8c766042b403d33a08151b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  openCloseEvents: 0
+  openCloseWindow: 1
+  selectedToolbar: 0
+  damage:
+    damageValue: 30
+    staminaBlockCost: 5
+    staminaRecoveryDelay: 1
+    ignoreDefense: 0
+    activeRagdoll: 0
+    senselessTime: 0
+    sender: {fileID: 0}
+    receiver: {fileID: 0}
+    hitPosition: {x: 0, y: 0, z: 0}
+    hitReaction: 1
+    recoil_id: 0
+    reaction_id: 1
+    damageType: 
+    force: {x: 0, y: 0, z: 0}
+  overrideDamageSender: {fileID: 0}
+  layerToCollide:
+    serializedVersion: 2
+    m_Bits: 256
+  tags:
+    tags: []
+  continuousDamage: 0
+  damageFrequency: 0.5
+  onHit:
+    m_PersistentCalls:
+      m_Calls: []
+  onSendDamage:
+    m_PersistentCalls:
+      m_Calls: []
+  collisionMethod: 0
+  part: {fileID: 0}
+  limitParticleCollisionEvent: 0
+  maxParticleCollisionEvent: 1
+--- !u!65 &75855465952860388
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2488615194444772247}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.14, y: 2.4, z: 51.9}
+  m_Center: {x: 0, y: 0, z: 26.1}
 --- !u!1 &2510798607523340310
 GameObject:
   m_ObjectHideFlags: 0
@@ -69545,6 +69687,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7762831095150162345}
   - component: {fileID: 5935833650256580006}
+  - component: {fileID: 5033722501902141742}
+  - component: {fileID: 1620259624898318016}
   m_Layer: 0
   m_Name: EarthBeam (1)
   m_TagString: Untagged
@@ -69588,6 +69732,75 @@ MonoBehaviour:
   _HitEffect: {fileID: 0}
   _BodyTip: {fileID: 0}
   _ScaleSpeed: 50
+--- !u!65 &5033722501902141742
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3783694049424848764}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.14, y: 2.4, z: 51.9}
+  m_Center: {x: 0, y: 0, z: 26.1}
+--- !u!114 &1620259624898318016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3783694049424848764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8a6ee24d8c766042b403d33a08151b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  openCloseEvents: 0
+  openCloseWindow: 1
+  selectedToolbar: 0
+  damage:
+    damageValue: 30
+    staminaBlockCost: 5
+    staminaRecoveryDelay: 1
+    ignoreDefense: 0
+    activeRagdoll: 0
+    senselessTime: 0
+    sender: {fileID: 0}
+    receiver: {fileID: 0}
+    hitPosition: {x: 0, y: 0, z: 0}
+    hitReaction: 1
+    recoil_id: 0
+    reaction_id: 1
+    damageType: 
+    force: {x: 0, y: 0, z: 0}
+  overrideDamageSender: {fileID: 0}
+  layerToCollide:
+    serializedVersion: 2
+    m_Bits: 256
+  tags:
+    tags: []
+  continuousDamage: 0
+  damageFrequency: 0.5
+  onHit:
+    m_PersistentCalls:
+      m_Calls: []
+  onSendDamage:
+    m_PersistentCalls:
+      m_Calls: []
+  collisionMethod: 0
+  part: {fileID: 0}
+  limitParticleCollisionEvent: 0
+  maxParticleCollisionEvent: 1
 --- !u!1 &3900605423761843172
 GameObject:
   m_ObjectHideFlags: 0
@@ -167903,6 +168116,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8182769184499876955}
   - component: {fileID: 2157031024630781537}
+  - component: {fileID: 3745029032678946468}
+  - component: {fileID: 9035118827967587362}
   m_Layer: 0
   m_Name: EarthBeam (5)
   m_TagString: Untagged
@@ -167946,6 +168161,75 @@ MonoBehaviour:
   _HitEffect: {fileID: 0}
   _BodyTip: {fileID: 0}
   _ScaleSpeed: 50
+--- !u!114 &3745029032678946468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6930068864640391863}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8a6ee24d8c766042b403d33a08151b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  openCloseEvents: 0
+  openCloseWindow: 1
+  selectedToolbar: 0
+  damage:
+    damageValue: 30
+    staminaBlockCost: 5
+    staminaRecoveryDelay: 1
+    ignoreDefense: 0
+    activeRagdoll: 0
+    senselessTime: 0
+    sender: {fileID: 0}
+    receiver: {fileID: 0}
+    hitPosition: {x: 0, y: 0, z: 0}
+    hitReaction: 1
+    recoil_id: 0
+    reaction_id: 1
+    damageType: 
+    force: {x: 0, y: 0, z: 0}
+  overrideDamageSender: {fileID: 0}
+  layerToCollide:
+    serializedVersion: 2
+    m_Bits: 256
+  tags:
+    tags: []
+  continuousDamage: 0
+  damageFrequency: 0.5
+  onHit:
+    m_PersistentCalls:
+      m_Calls: []
+  onSendDamage:
+    m_PersistentCalls:
+      m_Calls: []
+  collisionMethod: 0
+  part: {fileID: 0}
+  limitParticleCollisionEvent: 0
+  maxParticleCollisionEvent: 1
+--- !u!65 &9035118827967587362
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6930068864640391863}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.14, y: 2.4, z: 51.9}
+  m_Center: {x: 0, y: 0, z: 26.1}
 --- !u!1 &6963489918972321786
 GameObject:
   m_ObjectHideFlags: 0
@@ -167989,6 +168273,8 @@ GameObject:
   m_Component:
   - component: {fileID: 124933859253509582}
   - component: {fileID: 6906771192875499133}
+  - component: {fileID: 6154712370401983014}
+  - component: {fileID: 6762783889435904560}
   m_Layer: 0
   m_Name: EarthBeam
   m_TagString: Untagged
@@ -168032,6 +168318,75 @@ MonoBehaviour:
   _HitEffect: {fileID: 0}
   _BodyTip: {fileID: 0}
   _ScaleSpeed: 50
+--- !u!65 &6154712370401983014
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6988535233687839354}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.14, y: 2.4, z: 51.9}
+  m_Center: {x: 0, y: 0, z: 26.1}
+--- !u!114 &6762783889435904560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6988535233687839354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8a6ee24d8c766042b403d33a08151b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  openCloseEvents: 0
+  openCloseWindow: 1
+  selectedToolbar: 0
+  damage:
+    damageValue: 30
+    staminaBlockCost: 5
+    staminaRecoveryDelay: 1
+    ignoreDefense: 0
+    activeRagdoll: 0
+    senselessTime: 0
+    sender: {fileID: 0}
+    receiver: {fileID: 0}
+    hitPosition: {x: 0, y: 0, z: 0}
+    hitReaction: 1
+    recoil_id: 0
+    reaction_id: 1
+    damageType: 
+    force: {x: 0, y: 0, z: 0}
+  overrideDamageSender: {fileID: 0}
+  layerToCollide:
+    serializedVersion: 2
+    m_Bits: 256
+  tags:
+    tags: []
+  continuousDamage: 0
+  damageFrequency: 0.5
+  onHit:
+    m_PersistentCalls:
+      m_Calls: []
+  onSendDamage:
+    m_PersistentCalls:
+      m_Calls: []
+  collisionMethod: 0
+  part: {fileID: 0}
+  limitParticleCollisionEvent: 0
+  maxParticleCollisionEvent: 1
 --- !u!1 &7083560184792976814
 GameObject:
   m_ObjectHideFlags: 0
@@ -182953,6 +183308,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7893987897253410036}
   - component: {fileID: 8382839181653652598}
+  - component: {fileID: 56083733949723388}
+  - component: {fileID: 6739497462845828778}
   m_Layer: 0
   m_Name: EarthBeam (2)
   m_TagString: Untagged
@@ -182996,6 +183353,75 @@ MonoBehaviour:
   _HitEffect: {fileID: 0}
   _BodyTip: {fileID: 0}
   _ScaleSpeed: 50
+--- !u!114 &56083733949723388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8183890840094762632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8a6ee24d8c766042b403d33a08151b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  openCloseEvents: 0
+  openCloseWindow: 1
+  selectedToolbar: 0
+  damage:
+    damageValue: 30
+    staminaBlockCost: 5
+    staminaRecoveryDelay: 1
+    ignoreDefense: 0
+    activeRagdoll: 0
+    senselessTime: 0
+    sender: {fileID: 0}
+    receiver: {fileID: 0}
+    hitPosition: {x: 0, y: 0, z: 0}
+    hitReaction: 1
+    recoil_id: 0
+    reaction_id: 1
+    damageType: 
+    force: {x: 0, y: 0, z: 0}
+  overrideDamageSender: {fileID: 0}
+  layerToCollide:
+    serializedVersion: 2
+    m_Bits: 256
+  tags:
+    tags: []
+  continuousDamage: 0
+  damageFrequency: 0.5
+  onHit:
+    m_PersistentCalls:
+      m_Calls: []
+  onSendDamage:
+    m_PersistentCalls:
+      m_Calls: []
+  collisionMethod: 0
+  part: {fileID: 0}
+  limitParticleCollisionEvent: 0
+  maxParticleCollisionEvent: 1
+--- !u!65 &6739497462845828778
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8183890840094762632}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.14, y: 2.4, z: 51.9}
+  m_Center: {x: 0, y: 0, z: 26.1}
 --- !u!1 &8269947435835073252
 GameObject:
   m_ObjectHideFlags: 0

@@ -128,7 +128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8a6ee24d8c766042b403d33a08151b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  openCloseEvents: 0
+  openCloseEvents: 1
   openCloseWindow: 1
   selectedToolbar: 0
   damage:

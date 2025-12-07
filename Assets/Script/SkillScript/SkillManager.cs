@@ -5,11 +5,30 @@ using System.Linq;
 using System;
 public class SkillManager : MonoBehaviour
 {
+    public static SkillManager Instance { get; private set; }
+
     public const int MaxTotalSkills = 7;
     public const int MaxSpecialSkills = 2;
     //得たスキルを格納する
     public List<SkillBase> acquiredSkills = new List<SkillBase>();
     [SerializeField] private Transform player;
+    private void Awake()
+    {
+        foreach (var skill in acquiredSkills)
+        {
+            Debug.Log($"現在のスキル: {skill.skillName}");
+        }
+        if (Instance != null && Instance != this)
+        {
+            Debug.LogWarning(
+                $"複数の SkillManager が存在しています。古い方({Instance.name})を残し、新しい方({name})を破棄します。");
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);   // ここで本当に1体だけが残る
+    }
 
     //ミッション開始時に常時発動するスキルを適応させる
     public void ActivePassiveSkill()
@@ -32,6 +51,10 @@ public class SkillManager : MonoBehaviour
     //スキルを獲得する処理
     public void AcquireSkill(SkillBase newSkill,Action onAcquired = null)
     {
+        Debug.Log($"[AcquireSkill] 要求: {newSkill.skillName}, " +
+              $"Count={acquiredSkills.Count}, " +
+              $"Contains={acquiredSkills.Contains(newSkill)}, " +
+              $"Special={newSkill.SpcialSkill}");
         //重複取得防止
         if (acquiredSkills.Contains(newSkill)) return;
 
@@ -72,8 +95,7 @@ public class SkillManager : MonoBehaviour
         //通常時のスキル取得
         if (!acquiredSkills.Contains(newSkill))
         {
-            acquiredSkills.Add(newSkill);
-            Debug.Log(newSkill.skillName + "を獲得しました");
+            InternalAddSkill(newSkill);
             onAcquired?.Invoke();    // ← コールバック呼び出し
 
         }
@@ -99,5 +121,9 @@ public class SkillManager : MonoBehaviour
     {
         acquiredSkills.Add(newSkill);
         Debug.Log($"スキル '{newSkill.skillName}' を取得しました。");
+        foreach (var skill in acquiredSkills)
+        {
+            Debug.Log($"現在のスキル: {skill.skillName}");
+        }
     }
 }
