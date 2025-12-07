@@ -2010,7 +2010,7 @@ Transform:
   m_GameObject: {fileID: 964883218}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 26.54, y: 2.87, z: 4.14}
+  m_LocalPosition: {x: 26.54, y: 2.87, z: 5.139}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2488,10 +2488,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf6585449e1106543959abc9a0c1fcfc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentCycle: 1
-  maxCycle: 5
-  currentBattleIndex: 1
-  totalTurns: 14
+  processSetting: {fileID: 11400000, guid: 664abbf5fbfb6574bb8234295a219315, type: 2}
 --- !u!114 &1164553934
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3375,6 +3372,7 @@ GameObject:
   - component: {fileID: 1928455981}
   - component: {fileID: 1928455984}
   - component: {fileID: 1928455985}
+  - component: {fileID: 1928455986}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -3509,6 +3507,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fade: {fileID: 709482550}
+--- !u!114 &1928455986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928455976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b643c2580010c545bc3485d4ffaf4ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1948822311
 GameObject:
   m_ObjectHideFlags: 0

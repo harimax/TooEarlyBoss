@@ -1460,6 +1460,7 @@ GameObject:
   - component: {fileID: 776178343}
   - component: {fileID: 776178344}
   - component: {fileID: 776178345}
+  - component: {fileID: 776178346}
   m_Layer: 0
   m_Name: BossStageManager
   m_TagString: Untagged
@@ -1554,6 +1555,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ReturnBattleSceneButton: {fileID: 1984076041141149765}
   ReturnTitleSceneButton: {fileID: 1984076041141149764}
+--- !u!114 &776178346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 776178339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b643c2580010c545bc3485d4ffaf4ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &806440886
 PrefabInstance:
   m_ObjectHideFlags: 0

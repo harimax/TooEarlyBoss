@@ -19,7 +19,6 @@ public class LoadGameScene : MonoBehaviour
     private vThirdPersonController vPersonController;
     private vMeleeManager meleeManager;
     private SkillManager skillManager;
-    private TrianingButton trianingButton;
 
 
     public async void OnClickStartButton()
@@ -33,10 +32,6 @@ public class LoadGameScene : MonoBehaviour
         trainingButton.SaveParameter();
 
         Debug.Log("ゲームシーンに遷移します");
-
-
-        // シーン読み込み後イベントを一度だけ登録
-        SceneManager.sceneLoaded += OnSceneLoaded;
         if (fade != null)
         {
             // フェード後にシーン遷移
@@ -93,22 +88,5 @@ public class LoadGameScene : MonoBehaviour
         }
 
         return true;
-    }
-    /// <summary>
-    /// シーン読み込み完了時に実行される処理
-    /// </summary>
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        // プレイヤーとスタート地点を探す
-        GameObject player = GameObject.FindWithTag("Player");
-        GameObject startPoint = GameObject.FindWithTag("StartPoint");
-
-        if (player != null && startPoint != null)
-        {
-            player.transform.position = startPoint.transform.position;
-        }
-
-        // イベント登録解除（多重呼び出し防止）
-        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }

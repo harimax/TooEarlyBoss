@@ -101,29 +101,12 @@ public class ProcessManager : MonoBehaviour
         currentBattleIndex++;
     }
     //修行・戦闘シーンに移る時のメソッド
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        // プレイヤーとスタート地点を探す
-        GameObject player = GameObject.FindWithTag("Player");
-        GameObject startPoint = GameObject.FindWithTag("StartPoint");
-
-        if (player != null && startPoint != null)
-        {
-            player.transform.position = startPoint.transform.position;
-        }
-
-        // イベント登録解除（多重呼び出し防止）
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
     private void LoadScene(string sceneName)
     {
         if (Time.timeScale != 1f)
         {
             Time.timeScale = 1f;
         }
-
-        // シーン読み込み後イベントを一度だけ登録
-        SceneManager.sceneLoaded += OnSceneLoaded;
         if (fade)
         {
             fade.FadeOut(1f, () => SceneManager.LoadScene(sceneName));
