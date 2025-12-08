@@ -6,34 +6,30 @@ using Invector.vMelee;
 using Invector.vCharacterController;
 using Cysharp.Threading.Tasks;
 using System;
-public class StartMission : MonoBehaviour
+public class GrowPhaseUIController : MonoBehaviour
 {
+    private enum Mode
+    {
+        Training,
+        Battle
+    }
     [Header("References")]
     [SerializeField] private GameObject MainCameraObject;//Invectorのやつをアタッチ
     [SerializeField] private GameObject trainingCameraObject;
     [SerializeField] private GameObject trainingUI;
     [SerializeField] private GameObject gameUI;
     [SerializeField] private GameObject brainCameraObject;//Brainのやつをアタッチ
-    [SerializeField] private MissionManager missionManager;
-
+    [SerializeField] private BattleStartController battleStartController;
+    [Header("Camera Objects")]
     private CinemachineVirtualCamera trainingCameraVirtual;
-    private static StartMission _instance;
     private CinemachineVirtualCamera mainCameraVirtual;
     private CinemachineBrain brainCameraObj;
-    private vThirdPersonController playerController;
+    [Header("UI")]
     private bool IsGameUI;
     private bool IstrainingUI;
-    private TrianingButton trainingButton;
-    private vMeleeManager meleeManager;
-    private EnemyGenerator enemyGenerator;
-    private SkillManager skillManager;
-
-    // プレイヤーの修行値
-    public float tempPlayerSpecial = 1f;
-    private bool isMissionActive = false; // ミッションが進行中かどうか
     private void Awake()
     {
-        _instance = this;
+        //カメラが存在しないときは直接探してとる
         if(MainCameraObject == null)
         {
             MainCameraObject = GameObject.FindWithTag("MainCamera");
@@ -61,22 +57,10 @@ public class StartMission : MonoBehaviour
     /// </summary>
     public void StartMissionButton()
     {
-        playerController.ResetMaxHealth();
-        playerController.ResetMaxStamina();
-        //修行したパラメータを加算させる
-        playerController.AddMaxStamina(trainingButton.PlayerStamina);
-        playerController.AddMaxHealth(trainingButton.PlayerHealth);
-        meleeManager.defaultDamage.damageValue = Mathf.RoundToInt(trainingButton.PlayerPower) + meleeManager.defaultDamage.damageValue;
-        meleeManager.Init();
-
-        // 行動可能状態に
-        IsPlayerMove.GetInstance().CanMove = true;
-
-        // UI非表示、敵出現、スキル発動、ミッション開始
+        //バトル開始メソッドを呼び出す
+        battleStartController.StartBattle();
+        // UI非表示
         SetAllUIInactive();
-        enemyGenerator.GenerateEnemy();
-        missionManager.StartMission();//ミッション開始メソッドが呼ばれる
-        skillManager.ActivePassiveSkill();//スキルを発動させる
     }
 
     /// <summary>
@@ -122,28 +106,15 @@ public class StartMission : MonoBehaviour
         trainingUI.SetActive(false);
         gameUI.SetActive(false);
     }
-    //StartMissionクラスを受け取る
-    public static StartMission GetInstance()
-    {
-        return _instance;
-    }
     /// <summary>
     /// ミッション開始に必要なデータを格納
     /// </summary>
     public void AttachPlayerData()
     {
-                // プレイヤー参照
-        var player = GameObject.FindWithTag("Player");
-        playerController = player.GetComponent<vThirdPersonController>();
-        meleeManager = player.GetComponent<vMeleeManager>();
-        skillManager = player.GetComponent<SkillManager>();
         // カメラ関連
         var MainCameraObject = GameObject.FindWithTag("MainCamera");
         mainCameraVirtual = MainCameraObject.GetComponent<CinemachineVirtualCamera>();
         brainCameraObj = brainCameraObject.GetComponent<CinemachineBrain>();
         trainingCameraVirtual = trainingCameraObject.GetComponentInChildren<CinemachineVirtualCamera>();
-        // ゲームオブジェクト参照
-        enemyGenerator = GameObject.Find("EnemyGenerator").GetComponent<EnemyGenerator>();
-        trainingButton = this.gameObject.GetComponent<TrianingButton>();
     }
 }
