@@ -33,7 +33,7 @@ public class MobEnemy : MonoBehaviour
 
         State = StateEnum.Die;
         animator.SetTrigger("Dead");
-        FindFirstObjectByType<MissionManager>()?.OnEnemyDefeated(); // ミッションに通知
+        FindFirstObjectByType<BattleManager>()?.OnEnemyDefeated(); // ミッションに通知
 
     }
     //攻撃判断処理

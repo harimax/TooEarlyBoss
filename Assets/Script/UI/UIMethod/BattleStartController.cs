@@ -17,7 +17,7 @@ public class BattleStartController : MonoBehaviour
     private EnemyGenerator enemyGenerator;
     private SkillManager skillManager;
     private TrianingButton trainingButton;
-    [SerializeField] private MissionManager missionManager;
+    [SerializeField] private BattleManager battleManager;
 
     public void StartBattle()
     {
@@ -44,7 +44,7 @@ public class BattleStartController : MonoBehaviour
 
         skillManager.ActivePassiveSkill();//スキルを発動させる
         enemyGenerator.GenerateEnemy();//敵を出現させる
-        missionManager.StartMission();//ミッション開始メソッドが呼ばれる
+        battleManager.StartMission();//ミッション開始メソッドが呼ばれる
         
 
     }

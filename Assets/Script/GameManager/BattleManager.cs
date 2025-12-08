@@ -6,15 +6,15 @@ using TMPro;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 
-public class MissionManager : MonoBehaviour
+public class BattleManager : MonoBehaviour
 {
 
     [Header("References")]
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject tempButton;
-    [SerializeField] private SkillSelectUI missionUI;
-    [SerializeField] private MissionPlayerController missionPlayerController;
-    [SerializeField] private MissionUIController missionUIController;
+    [SerializeField] private SkillSelectUI battleUI;
+    [SerializeField] private BatltlePlayerController battlePlayerController;
+    [SerializeField] private BattleUIController battleUIController;
     private bool isPlayerDeathListenerRegistered = false;
     private int enemyCount;
     private bool isMissionActive = false;
@@ -24,7 +24,7 @@ public class MissionManager : MonoBehaviour
     /// </summary>
     void Awake()
     {
-        missionUIController.ResetText();
+        battleUIController.ResetText();
         //ゲームマネージャーから各種のコンポーネントを取得
         vPersonController = player.GetComponent<vThirdPersonController>();
     }
@@ -98,17 +98,17 @@ public class MissionManager : MonoBehaviour
         Debug.Log("戦闘クリア");
         if (!isMissionActive) return;
 
-        missionUIController.ShowClear();
+        battleUIController.ShowClear();
         //クリアするときにスロー演出
         Time.timeScale = 0.5f;
         await UniTask.Delay(2000);
         Time.timeScale = 1.0f;
         isMissionActive = false;
         UnsubscribePlayerDeathEvent();
-        missionPlayerController.DisableMovePlayer();
-        missionPlayerController.ResetPlayerRigidbody();
+        battlePlayerController.DisableMovePlayer();
+        battlePlayerController.ResetPlayerRigidbody();
         SelectSkillCard();
-        missionUIController.ResetText();
+        battleUIController.ResetText();
     }
     /// <summary>
     /// ミッションが失敗したときこれはDeadイベントで呼び出される
@@ -117,7 +117,7 @@ public class MissionManager : MonoBehaviour
     {
         isMissionActive = false;
         UnsubscribePlayerDeathEvent();
-        missionUIController.ShowFailed();
+        battleUIController.ShowFailed();
 
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
         foreach (GameObject enemy in enemies)
@@ -141,20 +141,20 @@ public class MissionManager : MonoBehaviour
     private async UniTask WaitForAnimationEndAsync()
     {
         await UniTask.Delay(2500);
-        missionPlayerController.ResetPlayerToInitialPosition();
-        missionUIController.ResetText();
+        battlePlayerController.ResetPlayerToInitialPosition();
+        battleUIController.ResetText();
     }
     //プレイヤーを初期位置に戻す処理
     public void ReturnPlayerToInitialPosition()
     {
         isMissionActive = false;
         tempButton.SetActive(false);
-        missionPlayerController.ResetPlayerToInitialPosition();
+        battlePlayerController.ResetPlayerToInitialPosition();
     }
     //ミッションクリア後にスキルカードを表示させる処理
     public void SelectSkillCard()
     {
         //スキルカードを選択する(仮にボタンにする)
-        missionUI.ShowRandomSkillChoices();
+        battleUI.ShowRandomSkillChoices();
     }
 }

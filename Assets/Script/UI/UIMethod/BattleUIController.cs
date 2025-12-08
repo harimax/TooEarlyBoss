@@ -4,7 +4,7 @@ using UnityEngine.UI;
 //// <summary>
 /// ミッションUIの制御を行うクラス  
 /// </summary>
-public class MissionUIController : MonoBehaviour
+public class BattleUIController : MonoBehaviour
 {
     [Header("Result Text")]
     [SerializeField] private TextMeshProUGUI resultText;

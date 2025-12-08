@@ -15,7 +15,7 @@ public class SkillSelectUI : MonoBehaviour
     [Header("Game References")]
     [SerializeField] private List<SkillBase> allSkills;  // 全スキル（ScriptableObject）
     [SerializeField] private SkillManager skillManager;  // プレイヤーのSkillManager参照
-    [SerializeField] private MissionManager missionManager; // ←インスペクタで設定
+    [SerializeField] private BattleManager battleManager; // ←インスペクタで設定
     [SerializeField] private GameObject discardDialogPrefab;
     bool skillChosen = false;
     private void Awake()
@@ -92,7 +92,7 @@ public class SkillSelectUI : MonoBehaviour
                     () =>
                     {
                         Debug.Log("【DEBUG】 onAcquired コールバック発火");
-                        missionManager.ReturnPlayerToInitialPosition();
+                        battleManager.ReturnPlayerToInitialPosition();
                         ClearCardUI();
                     }
                 );

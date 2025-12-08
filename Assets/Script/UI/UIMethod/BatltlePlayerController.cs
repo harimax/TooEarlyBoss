@@ -4,7 +4,7 @@ using Invector.vCharacterController;
 /// <summary>
 /// ミッション中のプレイヤーの制御を行うクラス
 /// </summary>
-public class MissionPlayerController : MonoBehaviour
+public class BatltlePlayerController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private GameObject player;
