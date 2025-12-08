@@ -43,8 +43,9 @@ public class BattleStartController : MonoBehaviour
         IsPlayerMove.GetInstance().CanMove = true;
 
         skillManager.ActivePassiveSkill();//スキルを発動させる
-        missionManager.StartMission();//ミッション開始メソッドが呼ばれる
         enemyGenerator.GenerateEnemy();//敵を出現させる
+        missionManager.StartMission();//ミッション開始メソッドが呼ばれる
+        
 
     }
 

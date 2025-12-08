@@ -8,13 +8,8 @@ using Cysharp.Threading.Tasks;
 using System;
 public class GrowPhaseUIController : MonoBehaviour
 {
-    private enum Mode
-    {
-        Training,
-        Battle
-    }
     [Header("References")]
-    [SerializeField] private GameObject MainCameraObject;//Invectorのやつをアタッチ
+    [SerializeField] private GameObject mainCameraObject;//Invectorのやつをアタッチ
     [SerializeField] private GameObject trainingCameraObject;
     [SerializeField] private GameObject trainingUI;
     [SerializeField] private GameObject gameUI;
@@ -23,34 +18,26 @@ public class GrowPhaseUIController : MonoBehaviour
     [Header("Camera Objects")]
     private CinemachineVirtualCamera trainingCameraVirtual;
     private CinemachineVirtualCamera mainCameraVirtual;
-    private CinemachineBrain brainCameraObj;
+    private CinemachineBrain brainCamera;
     [Header("UI")]
     private bool IsGameUI;
     private bool IstrainingUI;
     private void Awake()
     {
-        //カメラが存在しないときは直接探してとる
-        if(MainCameraObject == null)
-        {
-            MainCameraObject = GameObject.FindWithTag("MainCamera");
-            Debug.Log(mainCameraVirtual);
-        }
-
-        AttachPlayerData();
+        SetAllUIInactive();
+        trainingUI?.SetActive(true); // 初期状態が修行UIなら
+        CacheCameraReferences();//カメラやBrainの参照を1度だけキャッシュ
     }
     /// <summary>
     /// 戦闘準備モードへ移行する
     /// </summary>
     public void PrepareMissionButton()
     {
-        // Debug.Log("戦闘移行");
         trainingCameraVirtual.Priority = 5;
-        Debug.Log("プレイヤーカメラ"+mainCameraVirtual.Priority);
         SetAllUIInactive();
         IsGameUI = true;
         IstrainingUI = false;
-        AttachPlayerData();
-        _ = SwitchCameraAsync(); // ← ここもUniTaskに変更
+        SwitchCameraAsync().Forget(); 
     }
     /// <summary>
     /// ミッション開始ボタン
@@ -68,13 +55,11 @@ public class GrowPhaseUIController : MonoBehaviour
     /// </summary>
     public void ReturntTrainingButton()
     {
-        // Debug.Log("修行に戻る");
         trainingCameraVirtual.Priority = 30;
-        Debug.Log("プレイヤーカメラ"+mainCameraVirtual.Priority);
         SetAllUIInactive();
         IsGameUI = false;
         IstrainingUI = true;
-        _ = SwitchCameraAsync(); // ← ここもUniTaskに変更
+        SwitchCameraAsync().Forget();
     }
     // カメラ遷移完了まで待ってからUIとCanMoveを切り替える
     private async UniTask SwitchCameraAsync()
@@ -83,7 +68,7 @@ public class GrowPhaseUIController : MonoBehaviour
         await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate);
 
         // ブレンド完了待ち
-        await UniTask.WaitUntil(() => !brainCameraObj.IsBlending);
+        await UniTask.WaitUntil(() => !brainCamera.IsBlending);
         //戦闘シーンの際はGameUIを起動
         if (IsGameUI)
         {
@@ -103,18 +88,38 @@ public class GrowPhaseUIController : MonoBehaviour
     /// </summary>
     private void SetAllUIInactive()
     {
-        trainingUI.SetActive(false);
-        gameUI.SetActive(false);
+        if (trainingUI) trainingUI.SetActive(false);
+        if (gameUI) gameUI.SetActive(false);
     }
     /// <summary>
-    /// ミッション開始に必要なデータを格納
+    /// カメラやBrainの参照を1度だけキャッシュ
     /// </summary>
-    public void AttachPlayerData()
+    private void CacheCameraReferences()
     {
-        // カメラ関連
-        var MainCameraObject = GameObject.FindWithTag("MainCamera");
-        mainCameraVirtual = MainCameraObject.GetComponent<CinemachineVirtualCamera>();
-        brainCameraObj = brainCameraObject.GetComponent<CinemachineBrain>();
-        trainingCameraVirtual = trainingCameraObject.GetComponentInChildren<CinemachineVirtualCamera>();
+        // メインカメラ
+        if (mainCameraObject == null)
+        {
+            mainCameraObject = GameObject.FindWithTag("MainCamera");
+        }
+        if (mainCameraObject != null)
+        {
+            mainCameraVirtual = mainCameraObject.GetComponent<CinemachineVirtualCamera>();
+        }
+
+        // 修行カメラ
+        if (trainingCameraObject != null)
+        {
+            trainingCameraVirtual = trainingCameraObject.GetComponentInChildren<CinemachineVirtualCamera>();
+        }
+
+        // Brain
+        if (brainCameraObject == null && Camera.main != null)
+        {
+            brainCameraObject = Camera.main.gameObject;
+        }
+        if (brainCameraObject != null)
+        {
+            brainCamera = brainCameraObject.GetComponent<CinemachineBrain>();
+        }
     }
 }
