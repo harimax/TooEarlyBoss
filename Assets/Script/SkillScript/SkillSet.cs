@@ -14,9 +14,11 @@ public class SkillSet : MonoBehaviour
     //スキル名とボタンクリック時に起こす処理を引数とする
     public void Setup(SkillBase skill, System.Action onClick)
     {
+        // 表示更新
         skillNameText.text = skill.skillName;
         skillDescriptionText.text = skill.description;
 
+        // ボタンイベントを差し替え
         skillButton.onClick.RemoveAllListeners();
         skillButton.onClick.AddListener(() => onClick.Invoke());
     }

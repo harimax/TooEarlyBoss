@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class SkillAcquirer : MonoBehaviour
 {
+    [Header("取得対象スキル")]
     public SkillBase skillToAcquire;
-    public GameObject player; // プレイヤーをInspectorでアサイン
+     [Header("プレイヤー(未設定の場合は自動検索)")]
+    public GameObject player; 
     //スキルを獲得する処理
     public void OnAcquireButtonPressed()
     {

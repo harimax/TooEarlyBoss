@@ -20,10 +20,10 @@ public class SkillSelectUI : MonoBehaviour
     bool skillChosen = false;
     private void Awake()
     {
-        if(skillManager == null)
+        if (skillManager == null)
         {
             var player = GameObject.FindWithTag("Player");
-            skillManager =player.GetComponent<SkillManager>();
+            skillManager = player.GetComponent<SkillManager>();
             Debug.Log("SkillManagerを自動取得しました," + skillManager);
         }
         // シングルトン初期化
@@ -37,19 +37,20 @@ public class SkillSelectUI : MonoBehaviour
             return;
         }
         LoadAllSkills();
-
     }
 
+    /// <summary>
+    /// Resources/Skill から全スキルをロード
+    /// </summary>
     private void LoadAllSkills()
     {
         // Resources/SkillsフォルダからSkillBaseをすべてロード
         SkillBase[] loadedSkills = Resources.LoadAll<SkillBase>("Skill");
         allSkills = new List<SkillBase>(loadedSkills);
-
-        // Debug.Log($"スキルを {allSkills.Count} 個ロードしました。");
     }
-
+    /// <summary>
     //ミッションクリア後にスキルカードを表示するメソッド
+    /// <summary>
     public void ShowRandomSkillChoices()
     {
 
@@ -59,44 +60,18 @@ public class SkillSelectUI : MonoBehaviour
         var unacquiredSkills = allSkills
         .Where(skill => !skillManager.acquiredSkills.Contains(skill)).ToList();
 
-        // 選択数の制限（2つ）
         int choiceCount = Mathf.Min(4, unacquiredSkills.Count); // ← 修正ポイント
 
         //まだ獲得していないスキルからランダムに4つ選ぶ
         var selectedSkills = unacquiredSkills.OrderBy(x => UnityEngine.Random.value).Take(choiceCount).ToList();
 
         // 表示をクリア
-        foreach (Transform child in cardParent)
-        {
-            Destroy(child.gameObject);
-        }
+        ClearCardUI();
 
         //カードを表示させる
         foreach (var skill in selectedSkills)
         {
-            var capturedSkill = skill; // ループの中でコピーを作る
-            GameObject card = Instantiate(skillCardPrefab, cardParent);
-            SkillSet skillSet = card.GetComponent<SkillSet>();
-            card.SetActive(true);
-            //setUpメソッド(ボタン押下時)に初期値に戻る処理とプレイヤーにスキルをセットする処理、スキルカードUIをクリアする処理を追加させる
-            skillSet.Setup(capturedSkill, () =>
-            {
-                Debug.Log("スキル選択ボタンにリスナー登録");
-                if (skillChosen) return;
-                skillChosen = true;
-
-                // AcquireSkill の onAcquired コールバックに後処理を渡す
-                skillManager.AcquireSkill(
-                    capturedSkill,
-                    // このラムダは「真に取得したとき」にだけ呼ばれる
-                    () =>
-                    {
-                        Debug.Log("【DEBUG】 onAcquired コールバック発火");
-                        battleManager.ReturnPlayerToInitialPosition();
-                        ClearCardUI();
-                    }
-                );
-            });
+            CreateSkillCard(skill);
         }
     }
     /// <summary>
@@ -119,5 +94,33 @@ public class SkillSelectUI : MonoBehaviour
         var dialog = Instantiate(discardDialogPrefab, transform);
         dialog.GetComponent<SkillDiscardDialog>()
               .Initialize(candidates, onDiscarded);
+    }
+
+    /// <summary>
+    /// 1枚のスキルカードを生成してセットアップ
+    /// </summary>
+    private void CreateSkillCard(SkillBase skill)
+    {
+        var capturedSkill = skill; // ループの中でコピーを作る
+        var card = Instantiate(skillCardPrefab, cardParent);
+        card.SetActive(true);
+
+        var skillSet = card.GetComponent<SkillSet>();
+        skillSet.Setup(capturedSkill, () =>
+        {
+            if (skillChosen) return;
+            skillChosen = true;
+
+            skillManager.AcquireSkill(
+                capturedSkill,
+                () =>
+                {
+                    Debug.Log("【DEBUG】 onAcquired コールバック発火");
+                    battleManager.ReturnPlayerToInitialPosition();
+                    ClearCardUI();
+                }
+            );
+        }
+    );
     }
 }

@@ -3,21 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
+using NUnit.Framework;
 public class SkillManager : MonoBehaviour
 {
     public static SkillManager Instance { get; private set; }
 
     public const int MaxTotalSkills = 7;
     public const int MaxSpecialSkills = 2;
-    //得たスキルを格納する
+    /// <summary>取得済みスキル一覧</summary>
     public List<SkillBase> acquiredSkills = new List<SkillBase>();
     [SerializeField] private Transform player;
     private void Awake()
     {
-        foreach (var skill in acquiredSkills)
-        {
-            Debug.Log($"現在のスキル: {skill.skillName}");
-        }
+        // シングルトンパターンの実装
         if (Instance != null && Instance != this)
         {
             Debug.LogWarning(
@@ -35,7 +33,6 @@ public class SkillManager : MonoBehaviour
     {
         foreach (var skill in acquiredSkills)
         {
-            // Debug.Log(skill);
             skill.ApplyEffect(gameObject);
         }
     }
@@ -49,56 +46,29 @@ public class SkillManager : MonoBehaviour
         }
     }
     //スキルを獲得する処理
-    public void AcquireSkill(SkillBase newSkill,Action onAcquired = null)
+    public void AcquireSkill(SkillBase newSkill, Action onAcquired = null)
     {
-        Debug.Log($"[AcquireSkill] 要求: {newSkill.skillName}, " +
-              $"Count={acquiredSkills.Count}, " +
-              $"Contains={acquiredSkills.Contains(newSkill)}, " +
-              $"Special={newSkill.SpcialSkill}");
         //重複取得防止
         if (acquiredSkills.Contains(newSkill)) return;
 
-        //特殊スキル
-        if (newSkill.SpcialSkill)
+        //特殊スキル上限チェック
+        if (newSkill.SpcialSkill && IsSpecialSkillLimited())
         {
-            int specialCount = acquiredSkills.Count(s => s.SpcialSkill);
-            //特殊スキルが限界数を超えていれば削除ダイアログを表示する
-            if (specialCount >= MaxSpecialSkills)
-            {
-                // ダイアログを開いて、破棄候補の特殊スキルを選ばせる
-                SkillSelectUI.Instance.ShowDiscardDialog(
-                    acquiredSkills.Where(s => s.SpcialSkill).ToList(),
-                    discardedSkill =>
-                    {
-                        RemoveSkill(discardedSkill);
-                        // 選択完了後、新スキルを追加
-                        InternalAddSkill(newSkill);
-                        onAcquired?.Invoke();    // ← コールバック呼び出し
-                    });
-                return;
-            }
-        }
-        //スキルを限度で取得しているか確認
-        if (acquiredSkills.Count >= MaxTotalSkills)
-        {
-            // 全スキルを候補に破棄ダイアログを表示
-            SkillSelectUI.Instance.ShowDiscardDialog(
-                acquiredSkills,
-                discardedSkill =>
-                {
-                    RemoveSkill(discardedSkill);
-                    InternalAddSkill(newSkill);
-                    onAcquired?.Invoke();    // ← コールバック呼び出し
-                });
+
+            var specialSkills = GetSpecialSkills();
+            ShowDiscardDialogAndAdd(specialSkills, newSkill, onAcquired);
             return;
-        }
-        //通常時のスキル取得
-        if (!acquiredSkills.Contains(newSkill))
-        {
-            InternalAddSkill(newSkill);
-            onAcquired?.Invoke();    // ← コールバック呼び出し
 
         }
+        //スキルを限度で取得しているか確認
+        if (IsSkillLimitReached())
+        {
+            ShowDiscardDialogAndAdd(acquiredSkills, newSkill, onAcquired);
+            return;
+        }
+        // 通常取得
+        InternalAddSkill(newSkill);
+        onAcquired?.Invoke();
     }
     /// <summary>
     /// スキルをリストから削除する
@@ -126,4 +96,45 @@ public class SkillManager : MonoBehaviour
             Debug.Log($"現在のスキル: {skill.skillName}");
         }
     }
+
+    /// <summary>
+    /// 特殊スキルが上限に達しているか
+    /// </summary>
+    private bool IsSpecialSkillLimited()
+    {
+        int specialCount = acquiredSkills.Count(s => s.SpcialSkill);
+        return specialCount >= MaxSpecialSkills;
+    }
+    /// <summary>
+    /// 特殊スキルのみ抽出
+    /// </summary>
+    private List<SkillBase> GetSpecialSkills()
+    {
+        return acquiredSkills.Where(s => s.SpcialSkill).ToList();
+    }
+
+    /// <summary>
+    /// 総スキル数の上限に達しているか
+    /// </summary>
+    private bool IsSkillLimitReached() => acquiredSkills.Count >= MaxTotalSkills;
+
+    /// <summary>
+    /// 破棄ダイアログを出し、選択後に新スキルを追加する共通処理
+    /// </summary>
+    private void ShowDiscardDialogAndAdd(
+        List<SkillBase> candidates,
+        SkillBase newSkill,
+        Action onAcquired)
+    {
+        SkillSelectUI.Instance.ShowDiscardDialog(
+            candidates,
+            discardedSkill =>
+            {
+                RemoveSkill(discardedSkill);
+                InternalAddSkill(newSkill);
+                onAcquired?.Invoke();
+            });
+    }
+
+
 }
