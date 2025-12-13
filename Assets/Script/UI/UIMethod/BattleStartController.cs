@@ -16,7 +16,6 @@ public class BattleStartController : MonoBehaviour
     private vMeleeManager meleeManager;
     private EnemyGenerator enemyGenerator;
     private SkillManager skillManager;
-    private TrianingButton trainingButton;
     [SerializeField] private BattleManager battleManager;
 
     public void StartBattle()
@@ -26,17 +25,22 @@ public class BattleStartController : MonoBehaviour
         playerController = player.GetComponent<vThirdPersonController>();
         meleeManager = player.GetComponent<vMeleeManager>();
         skillManager = player.GetComponent<SkillManager>();
-        trainingButton = gameObject.GetComponent<TrianingButton>();
         //敵を生成するコンポーネントを取得
         enemyGenerator = gameObject.GetComponent<EnemyGenerator>();
+
+        // -------------------------------
+        // ① 育成パラメータを取得
+        // -------------------------------
+        PlayerGrowRepository.LoadParameters(out var growth);
 
         //プレイヤーの初期化を呼び出す
         playerController.ResetMaxHealth();
         playerController.ResetMaxStamina();
+        meleeManager.InitAttackParameter();//攻撃力を初期値に戻す
         //修行したパラメータを加算させる
-        playerController.AddMaxStamina(trainingButton.PlayerStamina);
-        playerController.AddMaxHealth(trainingButton.PlayerHealth);
-        meleeManager.defaultDamage.damageValue = Mathf.RoundToInt(trainingButton.PlayerPower) + meleeManager.defaultDamage.damageValue;
+        playerController.AddMaxStamina(growth.PlayerStamina);
+        playerController.AddMaxHealth(growth.PlayerHealth);
+        meleeManager.defaultDamage.damageValue = Mathf.RoundToInt(growth.PlayerPower) + meleeManager.defaultDamage.damageValue;
         meleeManager.Init();
 
         // 行動可能状態に
@@ -45,8 +49,6 @@ public class BattleStartController : MonoBehaviour
         skillManager.ActivePassiveSkill();//スキルを発動させる
         enemyGenerator.GenerateEnemy();//敵を出現させる
         battleManager.StartMission();//ミッション開始メソッドが呼ばれる
-        
-
     }
 
 }

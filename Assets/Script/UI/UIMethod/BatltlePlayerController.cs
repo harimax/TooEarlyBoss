@@ -16,9 +16,8 @@ public class BatltlePlayerController : MonoBehaviour
     private void Start()
     {
         // ゲームマネージャーから各種のコンポーネントを取得
-        GameObject gameManager = GameObject.Find("GameManager");
-        growUIController = gameManager.GetComponent<GrowPhaseUIController>();
-        trianingButton = gameManager.GetComponent<TrianingButton>();
+        growUIController = gameObject.GetComponent<GrowPhaseUIController>();
+        trianingButton = gameObject.GetComponent<TrianingButton>();
 
         // Inspector 未設定時の保険
         if (player == null)
