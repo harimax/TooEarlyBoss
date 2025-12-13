@@ -2,41 +2,70 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class TrianingButton : MonoBehaviour
 {
+    // グローバルアクセス用インスタンス（既存コード互換）
     public static TrianingButton Instance { get; private set; }
+    [Header("Debug / Backward Compatibility")]
     public float PlayerPower = 1f;
     public int PlayerHealth = 1;
     public float PlayerStamina = 1f;
     public float PlayerSpecial = 1f;
-    private int turnNumber;
+    [Header("UI Texts")]
     [SerializeField] private TextMeshProUGUI attackText;
     [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private TextMeshProUGUI staminaText;
     [SerializeField] private TextMeshProUGUI specialText;
     [SerializeField] private TextMeshProUGUI turn;
+    [Header("成長パラメータ設定")]
     [SerializeField] private int minIncrease = 1;
     [SerializeField] private int maxIncrease = 5;
-    [SerializeField] private List<UnityEngine.UI.Button> BattleButtons;
-    [SerializeField] private List<UnityEngine.UI.Button> trainingButtons;
+
+    [SerializeField] private List<Button> BattleButtons;
+    [SerializeField] private List<Button> trainingButtons;
+    private int turnNumber;
+    /// <summary>
+    /// 現在の残りターン数（読み取り専用）
+    /// </summary>
+    public int CurrentTurn => turnNumber;
+
+    /// <summary>
+    /// 現在のプレイヤー成長パラメータ。
+    /// 実データはこの値オブジェクトに集約し、直接書き換えず Add() で新インスタンスに差し替える。
+    /// </summary>
+    private PlayerGrowParameters currentParams;
+
+    /// <summary>
+    /// 現在の成長パラメータ（読み取り専用）
+    /// 他クラスはここから成長値を参照すればよい。
+    /// </summary>
+    public PlayerGrowParameters CurrentParams => currentParams;
     // Start is called before the first frame update
 
     void Awake()
     {
+        // 周回1回目は初期値、それ以外はセーブからロード
         if (ProcessManager.Instance.CurrentCycle == 1)
         {
-            PlayerPower = 1f;
-            PlayerHealth = 1;
-            PlayerStamina = 1f;
-            PlayerSpecial = 1f;
+            // 値オブジェクトを生成
+            currentParams = new PlayerGrowParameters(1f, 1, 1f, 1f);
         }
         else
         {
-            LoadParameter();
+            // Repository からロード
+            if (!PlayerGrowRepository.LoadParameters(out currentParams))
+            {
+                // 万一セーブがなければ初期値
+                currentParams = new PlayerGrowParameters(1f, 1, 1f, 1f);
+            }
         }
+        // ミラー用の public フィールドに反映
+        SyncFieldsFromParams();
+        // シングルトン処理
         Instance = this;
-        
+
     }
     void Start()
     {
@@ -48,37 +77,69 @@ public class TrianingButton : MonoBehaviour
     //パワーボタンを押下してパワーがアップ
     public void TrainingAttack()
     {
-        PlayerPower += increaceParameter(minIncrease, maxIncrease);
-        DecreaseTurn();
-        UpdateUI();
+        var add = new PlayerGrowParameters(
+            power: increaceParameter(minIncrease, maxIncrease),
+            health: 0,
+            stamina: 0, special: 0);
+        ApprlyingTraning(add);
     }
     //体力ボタンを押下して体力がアップ
     public void TrainingHealth()
     {
-        PlayerHealth += increaceParameter(minIncrease, maxIncrease);
-        DecreaseTurn();
-        UpdateUI();
+        var add = new PlayerGrowParameters(
+            power: 0,
+            health: increaceParameter(minIncrease, maxIncrease),
+            stamina: 0, special: 0);
+        ApprlyingTraning(add);
     }
 
     //スタミナボタンを押下してスタミナがアップ
     public void TrainingStamina()
     {
-        PlayerStamina += increaceParameter(minIncrease, maxIncrease);
-        DecreaseTurn();
-        UpdateUI();
+        var add = new PlayerGrowParameters(
+            power: 0,
+            health: 0,
+            stamina: increaceParameter(minIncrease, maxIncrease), special: 0);
+        ApprlyingTraning(add);
     }
     //ラッキーボタンを押下してラッキーがアップ
     public void TrainingSpcial()
     {
-        PlayerSpecial += increaceParameter(minIncrease, maxIncrease);
-        DecreaseTurn();
-        UpdateUI();
+        var add = new PlayerGrowParameters(
+            power: 0,
+            health: 0,
+            stamina: 0, special: increaceParameter(minIncrease, maxIncrease));
+        ApprlyingTraning(add);
     }
 
     //上昇値を決めるメソッド
     private int increaceParameter(int minIncrease, int maxIncrease)
     {
         return Random.Range(minIncrease, maxIncrease);
+    }
+    /// <summary>
+    /// トレーニング処理本体
+    /// 渡された増分パラメータをcurrentParamsに加算し、
+    /// ターン消費・保存・UI更新を一括でする
+    /// </summary>
+    private void ApprlyingTraning(PlayerGrowParameters addParams)
+    {
+        //ターンが残っていなければ処理しない
+        if (turnNumber <= 0)
+        {
+            return;
+        }
+
+        // 成長パラメータを加算して新インスタンスに差し替え
+        currentParams = currentParams.AddParameters(addParams);
+        // ミラー用の public フィールドに反映
+        SyncFieldsFromParams();
+        // ターンを1減らす
+        DecreaseTurn();
+        // 成長パラメータを保存
+        PlayerGrowRepository.SaveParameters(currentParams);
+        // UI更新
+        UpdateUI();
     }
     //UIの更新
     public void UpdateUI()
@@ -97,7 +158,7 @@ public class TrianingButton : MonoBehaviour
         }
         if (specialText != null)
         {
-            specialText.text = PlayerSpecial.ToString();    
+            specialText.text = PlayerSpecial.ToString();
         }
         turn.text = $"残り:{turnNumber}ターン";
 
@@ -123,45 +184,13 @@ public class TrianingButton : MonoBehaviour
     {
         turnNumber--;
     }
-    public void SaveParameter()
+    // ミラー同期用ヘルパーを追加
+    private void SyncFieldsFromParams()
     {
-        string jsonPlayrtParam = JsonUtility.ToJson(new PlayerParamSaveData(PlayerPower, PlayerHealth, PlayerStamina, PlayerSpecial));
-        PlayerPrefs.SetString("PlayerParamSave", jsonPlayrtParam);
-        PlayerPrefs.Save();
+        PlayerPower = currentParams.PlayerPower;
+        PlayerHealth = currentParams.PlayerHealth;
+        PlayerStamina = currentParams.PlayerStamina;
+        PlayerSpecial = currentParams.PlayerSpecial;
     }
-    public void LoadParameter()
-    {
-        if (PlayerPrefs.HasKey("PlayerParamSave"))
-        {
-            Debug.Log("パラメータ読み込み");
-            string jsonPlayerParam = PlayerPrefs.GetString("PlayerParamSave");
-            PlayerParamSaveData loadedData = JsonUtility.FromJson<PlayerParamSaveData>(jsonPlayerParam);
-            PlayerPower = loadedData.playerPower;
-            PlayerHealth = loadedData.playerHealth;
-            PlayerStamina = loadedData.playerStamina;
-            PlayerSpecial = loadedData.playerSpecial;
-        }
-    }
-    //保持しているデータを削除するメソッド
-    public void DeleteParameter()
-    {
-        PlayerPrefs.DeleteKey("PlayerParamSave");
-        PlayerPrefs.Save();
-    }
-    private class PlayerParamSaveData
-    {
-        public float playerPower;
-        public int playerHealth;
-        public float playerStamina;
-        public float playerSpecial;
 
-        public PlayerParamSaveData(float power, int health, float stamina, float special)
-        {
-            playerPower = power;
-            playerHealth = health;
-            playerStamina = stamina;
-            playerSpecial = special;
-        }
-    }
-    
 }
