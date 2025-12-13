@@ -71,6 +71,12 @@ public class TrianingButton : MonoBehaviour
     {
         turnNumber = ProcessManager.Instance.TotalTurns;
         Debug.Log($"ターン数:{turnNumber}");
+        // ボタンにリスナーを登録
+        trainingButtons[0].GetComponent<Button>().onClick.AddListener(TrainingAttack);
+        trainingButtons[1].GetComponent<Button>().onClick.AddListener(TrainingHealth);
+        trainingButtons[2].GetComponent<Button>().onClick.AddListener(TrainingStamina);
+        trainingButtons[3].GetComponent<Button>().onClick.AddListener(TrainingSpcial);
+
         // 最初はボタンを有効化
         UpdateUI();
     }
