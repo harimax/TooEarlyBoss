@@ -1,104 +1,85 @@
 using UnityEngine;
-using Invector;
 using UnityEngine.AI;
 using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 
-public class MessengerBossController : MonoBehaviour, IBossController
+public class MutantBossController : MonoBehaviour, IBossController
 {
-    private NavMeshAgent _agent;
-    private Animator animator;
-    private float waypointThreshold = 0.5f; // 到達判定距離
-    private int currentWaypoint = 0;
-    private Transform player;
-    [SerializeField] private float runTime;
-    [SerializeField] private float stopTime;
-    private float timer;               // 累積タイマー（秒）
-    private bool wasRunning = false;   // 前フレームが走行だったか
-    private bool _isPaused = false;
-    [SerializeField] private Transform[] waypoints; // 巡回ポイント
+    [Header("Attack & VFX")]
     [SerializeField] private GameObject[] AttackBeam;
     [SerializeField] private GameObject ChargeEffect;
+    private MutantBossMovementController movement;
+    private Animator animator;
+    private Transform player;
+    private bool _isPaused = false;
     private bool isLooking = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _agent = GetComponent<NavMeshAgent>();
+        movement = GetComponent<MutantBossMovementController>();
         animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
+
+        // 最初は「停止中はプレイヤーの方を見る」状態にしておく
+        isLooking = true;
+
+        // 移動フェーズ切り替えにあわせてアニメーション等を制御
+        if (movement != null)
+        {
+            movement.OnRunStarted  += HandleRunStarted;
+            movement.OnStopStarted += HandleStopStarted;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         if (_isPaused) return;
-        if (_agent == null || !_agent.isOnNavMesh) return;
-
-        // 1) 周期から今のフェーズを算出
-        timer += Time.deltaTime;
-        float cycle = runTime + stopTime;
-        float t = timer % cycle;
-        bool running = t < runTime;
-
-        // 2) フェーズ遷移の“瞬間”だけ処理
-        if (running != wasRunning)
+        // 移動更新
+        movement?.Tick(Time.deltaTime);
+        //移動中なら走るアニーメーション
+        if (movement.IsRunning)
         {
-            if (running)
-            {
-                // StopからRun
-                _agent.isStopped = false;
-                ChangeBeamBool(false);
-                animator.SetBool("IsAttack", false);
-
-                if (!_agent.hasPath) GoToNextWaypoint();
-            }
-            else
-            {
-                // RunからStop
-                _agent.isStopped = true;
-                animator.SetFloat("MoveSpeed", 0f);
-            }
-            wasRunning = running;
+            animator.SetFloat("MoveSpeed", movement.CurrentSpeed);
         }
-
-        // 3) 各フェーズ中の処理（浅い if だけ）
-        if (running)
-        {
-            // 走行中は目的地更新＆到達チェックのみ
-            if (!_agent.pathPending && _agent.remainingDistance <= waypointThreshold)
-                GoToNextWaypoint();
-
-            animator.SetFloat("MoveSpeed", _agent.velocity.magnitude);
-        }
+        // 停止中：攻撃モーション＋向き合わせ
         else
         {
-            // 停止中はプレイヤーの方向だけ向く
-            // LookAtPlayerXZ();
             animator.SetBool("IsAttack", true);
-        }
 
-        if (isLooking == true)
-        {
-            LookAtPlayerXZ();
+            if (isLooking)
+            {
+                LookAtPlayerXZ();
+            }
         }
     }
-    private void GoToNextWaypoint()
+
+    /// <summary>
+    /// 走行フェーズ開始時
+    /// </summary>
+    private void HandleRunStarted()
     {
-        if (waypoints.Length == 0) return;
-
-        currentWaypoint = (currentWaypoint + 1) % waypoints.Length;
-        // Debug.Log("現在のポイント:" + currentWaypoint);
-        _agent.SetDestination(waypoints[currentWaypoint].position);
         animator.SetBool("IsAttack", false);
-
+        // 走行を開始したら、次の停止までは「向きを合わせる」前提にしておく
+        isLooking = true;
+        StopAttackBeam();
+    }
+    /// <summary>
+    /// 停止フェーズ開始時
+    /// </summary>
+    private void HandleStopStarted()
+    {
+        animator.SetFloat("MoveSpeed", 0f);
+        // 停止中の基本は「向きを合わせる」が、チャージ中は isLooking=false にする
     }
     public void PauseBoss()
     {
         // Update 系を止める
         _isPaused = true;
-        
+        movement?.Pause();
+
     }
     /// <summary>
     /// ボスの動きを再開する
@@ -107,7 +88,7 @@ public class MessengerBossController : MonoBehaviour, IBossController
     {
         _isPaused = false;
         if (animator != null) animator.enabled = true;
-        // タイマー初期化
+        movement?.Resume();
     }
     private void LookAtPlayerXZ()
     {
@@ -163,7 +144,7 @@ public class MessengerBossController : MonoBehaviour, IBossController
         {
             if (beam != null) aliveBeamsList.Add(beam);
         }
-        // 消す本数を決定（残り本数が2未満ならその数に調整）
+        // 消す本数を決定
         int countToDelete = 2;
         // ランダムに選んで削除
         for (int i = 0; i < countToDelete; i++)
@@ -172,16 +153,16 @@ public class MessengerBossController : MonoBehaviour, IBossController
             GameObject target = aliveBeamsList[rand];
             aliveBeamsList.RemoveAt(rand); // リストから除外
 
-            if (target != null)
-            {
-                Destroy(target);
-                Debug.Log($"[BeamManager] ビームを削除しました。({target.name})");
-            }
+            if (!target) continue;
+
+            Destroy(target);
+            Debug.Log($"[BeamManager] ビームを削除しました。({target.name})");
         }
     }
     public void DeadTrigger()
     {
         // ボス死亡時の処理
         animator.SetTrigger("Dead");
+        PauseBoss();
     }
 }
