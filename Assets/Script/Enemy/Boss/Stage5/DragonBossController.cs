@@ -21,9 +21,9 @@ public class DragonBossController : MonoBehaviour, IBossController
     private bool _isPaused = false;
     private Transform player;
     private Animator animator;
+    [Header("Behaviour")]
     [SerializeField] private float playerDistance = 25f;
     [SerializeField] private float crowDistance = 5f;
-    CancellationTokenSource loopCts;
     [SerializeField] private float faceTime = 0.5f;      //  向き直り（ため）時間
     [SerializeField] private float maxSprintTime = 1.0f; //  突進の最大継続時間（秒）
     [SerializeField] private float restTime = 3.5f;      //  休憩時間（秒）
@@ -33,6 +33,7 @@ public class DragonBossController : MonoBehaviour, IBossController
     private int closeAttackType;
     private bool _cooling;
     private bool isRangeAttack;
+    CancellationTokenSource sprintCts;
 
     DragonState currentState = DragonState.CoolDown;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -41,17 +42,24 @@ public class DragonBossController : MonoBehaviour, IBossController
         animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
     }
+    private void OnDestroy()
+    {
+        sprintCts?.Cancel();
+        sprintCts?.Dispose();
+    }
 
     // Update is called once per frame
     void Update()
     {
-        if (_isPaused) return;
+        if (_isPaused || currentState == DragonState.Dead) return;
+        //現在の状態でそれぞれの処理に分岐する
         switch (currentState)
         {
             case DragonState.CoolDown:
                 HandleCoolDownState();
                 break;
             case DragonState.Idle:
+                HandleIdleState();
                 break;
 
             // Attack中・回避中・死亡中は基本的にアニメーション/コルーチン側に任せる
@@ -132,10 +140,10 @@ public class DragonBossController : MonoBehaviour, IBossController
         }
         else
         {
-            loopCts?.Cancel();
-            loopCts = new CancellationTokenSource();
+            sprintCts?.Cancel();
+            sprintCts = new CancellationTokenSource();
             currentState = DragonState.AttackSprint;
-            Sprint(loopCts.Token).Forget();
+            Sprint(sprintCts.Token).Forget();
         }
     }
     //=========================
@@ -205,7 +213,7 @@ public class DragonBossController : MonoBehaviour, IBossController
         }
         Debug.Log("BattleLoop: ct.Cancelled で終了");
     }
-    
+
 
     /// <summary>
     /// クールダウン状態のフレーム処理
@@ -218,7 +226,6 @@ public class DragonBossController : MonoBehaviour, IBossController
     //攻撃後のクールダウン処理
     private async UniTask Cooldown()
     {
-
         if (_cooling) return;
         _cooling = true;
         try

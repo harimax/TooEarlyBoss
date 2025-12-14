@@ -7,19 +7,22 @@ using System.Threading.Tasks;
 public class SmileBossControll : MonoBehaviour,IBossController
 {
     public enum BossState { Idle, BallShot, Laser, RockFall, ShotSmile, Dead }
+    [Header("参照")]
+    [SerializeField] private GameObject ballPrefab;
+    [SerializeField] private GameObject laser;
+    [SerializeField] private GameObject rockPrefab;
+    [SerializeField] private Transform ObjectSpawnPoint;
     private BossState currentState;
     private Transform player;
     private Animator animator;
     private bool _isPaused = false;
-    [SerializeField] private GameObject ballPrefab;
-    [SerializeField] private GameObject laser;
-    [SerializeField] private GameObject rockPrefab;
+    
     [SerializeField] private int rockCount = 5;
     [SerializeField] private float spawnRadius = 5f;
     [SerializeField] private float spawnHeight = 10f;
     // public Transform characterRoot; // キャラクターの正面（Y軸）を基準にする
 
-    public Transform ObjectSpawnPoint;
+    
     public float attackInterval = 5f;
     private float timer;
 
@@ -28,10 +31,10 @@ public class SmileBossControll : MonoBehaviour,IBossController
         currentState = BossState.Idle;
         timer = attackInterval;
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        animator = this.gameObject.GetComponent<Animator>();
+        animator = gameObject.GetComponent<Animator>();
     }
 
-    private async void Update()
+    private void Update()
     {
         if (_isPaused)
         {
@@ -45,10 +48,13 @@ public class SmileBossControll : MonoBehaviour,IBossController
         }
         if (timer <= 0f && currentState == BossState.Idle)
         {
-            await ChooseAttack();
+            ChooseAttack().Forget();
             timer = attackInterval;
         }
     }
+    /// <summary>
+    /// ランダムに攻撃を選択する   
+    /// </summary>
     private async UniTask ChooseAttack()
     {
         int choice = Random.Range(0, 4);
@@ -84,7 +90,7 @@ public class SmileBossControll : MonoBehaviour,IBossController
         currentState = BossState.Laser;
         animator.SetTrigger("laserAttack");
 
-        await UniTask.Delay(10000); // 7秒待機
+        await UniTask.Delay(7000); // 7秒待機
 
     }
 
@@ -148,9 +154,11 @@ public class SmileBossControll : MonoBehaviour,IBossController
         // 状態を戻す
         currentState = BossState.Idle;
     }
-
+    //岩を落とす攻撃イベント
     public void OnRockFallEvent()
     {
+        if (player == null) return;
+
         Vector3 center = player.transform.position;
         for (int i = 0; i < rockCount; i++)
         {
@@ -186,10 +194,6 @@ public class SmileBossControll : MonoBehaviour,IBossController
     {
         // Update 系を止める
         _isPaused = true;
-        // MonoBehaviour の Update を無効化する場合はこちらを使ってもよい
-        // enabled = false;
-        // アニメータを止めたいなら：
-        // if (animator != null) animator.enabled = false;
     }
 
     /// <summary>
@@ -203,6 +207,4 @@ public class SmileBossControll : MonoBehaviour,IBossController
         // タイマー初期化
         timer = attackInterval;
     }
-
-
 }
