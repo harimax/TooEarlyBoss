@@ -2,24 +2,29 @@ using UnityEngine;
 
 public class UpArrowAnimation : MonoBehaviour
 {
-    private Vector3 initpos;
+     [SerializeField] private float moveSpeed = 10f; // 1秒で10上がる
+    [SerializeField] private float duration = 1.0f; // 上昇し続ける時間
+    private Vector3 initialPosition;
     private float time;
-    private float duration = 1.0f;
     void Start()
     {
-        initpos = transform.position;
+        initialPosition = transform.position;
     }
     void Update()
     {
-        if(time<duration)
+        if (time < duration)
         {
             time += Time.deltaTime;
-            transform.Translate(0f, 10f * Time.deltaTime, 0f);
+            transform.Translate(0f, moveSpeed * Time.deltaTime, 0f);
+            return;
         }
-        else
-        {
-            transform.position = initpos;
-            time = 0f;
-        }
+
+        ResetPosition();
+    }
+    /// <summary>矢印の位置とタイマーを初期状態に戻す。</summary>
+    private void ResetPosition()
+    {
+        transform.position = initialPosition;
+        time = 0f;
     }
 }

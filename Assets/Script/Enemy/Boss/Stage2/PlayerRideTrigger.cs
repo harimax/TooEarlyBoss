@@ -10,10 +10,8 @@ public class PlayerRideTrigger : MonoBehaviour
     //プレイヤーが乗れば子にする
     void OnTriggerStay(Collider other)
     {
-        if (other.transform.parent != transform && other.transform.CompareTag("Player") && other.GetComponent<Invector.vCharacterController.vCharacter>() != null)
-        {
-            StartEjectTimer(other.transform);
-        }
+        if (!IsValidPlayer(other)) return;
+        StartEjectTimer(other.transform);
     }
     // タイマー開始
     private async void StartEjectTimer(Transform player)
@@ -27,7 +25,7 @@ public class PlayerRideTrigger : MonoBehaviour
         );
         var token = linked.Token;
 
-        // ★ await 前に transform をキャッシュ（これが重要）
+        // await 前に platform Transform をキャッシュしておく（Destroy 安全性のため）
         Transform platform = this.transform;
 
         try
@@ -35,24 +33,20 @@ public class PlayerRideTrigger : MonoBehaviour
             // 5秒待つ（コメントは3秒と書いてますが値は5000ms）
             await UniTask.Delay(TimeSpan.FromSeconds(5), cancellationToken: token);
 
-            // 以降は “Unity 的 null” ガードを必ず通す
-            if (!player) return;    // player が Destroy 済み
-            if (!platform) return;  // 自分（のTransform）が Destroy 済み
+            if (!player || !platform) return; // Destroy 済み
 
-            // まだ乗っていれば実行（transform を使わず platform を使う）
-            if (player.parent == platform)
+
+            // GetInstance() 側も null ガードしたほうが安全
+            var boss = RobotBossController.GetInstance();
+            if (boss != null)
             {
-                // GetInstance() 側も null ガードしたほうが安全
-                var boss = TreeBossController.GetInstance();
-                if (boss != null)
-                {
-                    await boss.OnActiveBarriar(); // ここが UniTask なら await、voidならそのまま呼ぶ
-                }
+                await boss.OnActiveBarriar(); // ここが UniTask なら await、voidならそのまま呼ぶ
             }
+
         }
         catch (OperationCanceledException)
         {
-            Debug.Log("エラー起きたけど無視!!!!!");
+             Debug.Log("PlayerRideTrigger: タイマーはキャンセルされました。");
         }
         finally
         {
@@ -60,7 +54,9 @@ public class PlayerRideTrigger : MonoBehaviour
         }
 
     }
-    // タイマー停止
+    /// <summary
+    /// >既存のタイマーを停止し、リソースを解放する。
+    /// </summary>
     private void CancelTimer()
     {
         if (cts != null)
@@ -69,5 +65,18 @@ public class PlayerRideTrigger : MonoBehaviour
             cts.Dispose();
             cts = null;
         }
+    }
+    /// <summary>
+    /// トリガの対象になるプレイヤーかどうか判定。
+    /// - Player タグ
+    /// - Invector のキャラクターコンポーネントを持っている
+    /// - まだこの足場の子になっていない
+    /// </summary>
+    private bool IsValidPlayer(Collider other)
+    {
+        if (!other.CompareTag("Player")) return false;
+        if (other.transform.parent == transform) return false;
+
+        return other.GetComponent<Invector.vCharacterController.vCharacter>() != null;
     }
 }

@@ -6,9 +6,9 @@ using Invector; // vHealthController 用
 
 public class MOGURAManager : MonoBehaviour
 {
+     [Header("Spawn Settings")]
     [SerializeField] private GameObject MOGURAPrefab;
     [SerializeField] private Transform[] spawnPoints;
-    private int nextIndex = 0;
     [SerializeField] private float spawnDelay = 0.5f;     // スポーン前の溜め（任意）
     private GameObject currentEnemy;
     private bool canSpawn = true;                         // 「次を出して良い」フラグ
@@ -23,7 +23,7 @@ public class MOGURAManager : MonoBehaviour
         if (!canSpawn) return;           // ボスからOKが出るまでスポーンしない
         if (currentEnemy != null) return;
 
-        if (MOGURAPrefab == null || spawnPoints == null || spawnPoints.Length == 0)
+        if (!CanSpawn())
         {
             Debug.LogWarning("[MOGURAManager] Prefab or SpawnPoints 未設定");
             return;
@@ -33,11 +33,13 @@ public class MOGURAManager : MonoBehaviour
 
         // === 修正箇所 ===
         // nextIndex の代わりにランダムで選ぶ
-        int randomIndex = UnityEngine.Random.Range(0, spawnPoints.Length);
-        Transform p = spawnPoints[randomIndex];
-        // ==================
+        var spawnPoint = PickRandomSpawnPoint();
+        currentEnemy = Instantiate(MOGURAPrefab, spawnPoint.position, spawnPoint.rotation);
 
-        currentEnemy = Instantiate(MOGURAPrefab, p.position, p.rotation);
+        SetupDeathCallback(currentEnemy);
+
+        // この1体が倒れるまで追加スポーンは止める
+        canSpawn = false;
 
         // vHealthController の死亡検知にフック（onChangeHealthでHP<=0を拾う）
         var hc = currentEnemy.GetComponentInChildren<vHealthController>();
@@ -60,6 +62,45 @@ public class MOGURAManager : MonoBehaviour
 
         // この1体が倒れるまで追加スポーンは止める
         canSpawn = false;
+    }
+
+    /// <summary>
+    /// スポーンに必要な設定が揃っているか。
+    /// </summary>
+    private bool CanSpawn()
+    {
+        return MOGURAPrefab != null && spawnPoints != null && spawnPoints.Length > 0;
+    }
+
+    /// <summary>
+    /// ランダムなスポーン地点を１つ選ぶ。
+    /// </summary>
+    private Transform PickRandomSpawnPoint()
+    {
+        int index = UnityEngine.Random.Range(0, spawnPoints.Length);
+        return spawnPoints[index];
+    }
+
+    /// <summary>
+    /// vHealthController に死亡時コールバックを登録する。
+    /// <summary>
+    private void SetupDeathCallback(GameObject enemy)
+    {
+        var hc =enemy.GetComponentInChildren<vHealthController>();
+        if(hc==null)
+        {
+            Debug.LogWarning("[MOGURAManager] vHealthController が見つからないため、手動で HandleEnemyKilled を呼ぶ必要があります。");
+            return;
+        }
+        bool notified = false;
+        hc.onChangeHealth.AddListener((cur) =>
+        {
+            if (!notified && cur <= 0f)
+            {
+                notified = true;
+                HandleEnemyKilled();
+            }
+        });
     }
 
     /// <summary>
