@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
 using System.Threading.Tasks;
-using System.Data;
 public class ProcessManager : MonoBehaviour
 {
     private Fade fade;
@@ -27,16 +26,6 @@ public class ProcessManager : MonoBehaviour
         get { return totalTurns; }
         set { totalTurns = value; }
     }
-    private void Start()
-    {
-        //設定したパラメータを読み込む
-        currentCycle = processSetting.startCycle;
-        maxCycle = processSetting.maxCycle;
-        currentBattleIndex = processSetting.baseEnemyCount;
-        totalTurns = processSetting.totalTurnsPerCycle;
-        Debug.Log($"サイクル{currentCycle}開始" + $"敵の初期数{currentBattleIndex}" + $"ターン数{totalTurns}");
-    }
-
     void Awake()
     {
         // シングルトン処理
@@ -47,6 +36,13 @@ public class ProcessManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        //設定したパラメータを読み込む
+        currentCycle = processSetting.startCycle;
+        maxCycle = processSetting.maxCycle;
+        currentBattleIndex = processSetting.baseEnemyCount;
+        totalTurns = processSetting.totalTurnsPerCycle;
+        Debug.Log($"サイクル{currentCycle}開始" + $"敵の初期数{currentBattleIndex}" + $"ターン数{totalTurns}");
 
     }
     //現在の出現する敵の数を返す関数
@@ -60,7 +56,7 @@ public class ProcessManager : MonoBehaviour
         fade = FindAnyObjectByType<Fade>();
 
         currentCycle++;
-        currentBattleIndex = 1;
+        currentBattleIndex=processSetting.baseEnemyCount+currentCycle - 1;
         //すべてのボスを倒したらゲームクリアシーンへ
         if (currentCycle > maxCycle)
         {
