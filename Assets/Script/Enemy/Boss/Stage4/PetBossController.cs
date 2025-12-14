@@ -34,13 +34,13 @@ public class PetBossController : MonoBehaviour, IBossController
     [Header("Pattern")]
     [SerializeField] int chargesBeforeRanged = 3; // ★ 3回突進したら遠距離
     private int chargeCount = 0;
-    private bool _isPaused = true;
+    private bool isPaused = true;
     [Header("Ranged (Optional)")]
     [SerializeField] private GameObject rock;       // ★ 玉のPrefab（未設定なら遠距離はスキップ）
     [SerializeField] private Transform throwPoint;   // ★ 発射位置（未設定なら本体前方から）
     [SerializeField] private float projectileSpeed = 18f;
     [SerializeField] private string rangedTriggerName = "RangedAttack"; // アニメトリガ（必要なら）
-    [SerializeField] private Collider SprintColider; // 突進攻撃の当たり判定
+    [SerializeField] private Collider sprintCollider; // 突進攻撃の当たり判定
     private bool isRockAttack = false;
 
     void Start()
@@ -56,75 +56,131 @@ public class PetBossController : MonoBehaviour, IBossController
         Debug.Log("BattleLoop開始", this);
         while (true)
         {
-             // ボス戦開始フラグが立つまで待機（スタート演出などで意図せず動かないようにする）
-            await UniTask.WaitUntil(() => !_isPaused);
+            await WaitBattleStartAsync();
 
-            // ② 向く（ため）
-            phase = BossState.Face;
-            float t = 0f;
-            while (t < faceTime)
-            {
-                FacePlayerOnlyYaw(turnSpeed);
-                animator?.SetFloat("MoveSpeed", 0f);
-                t += Time.deltaTime;
-                await UniTask.Yield();
-            }
-            // ③ 突進：向きをロックして一直線に移動
-            phase = BossState.Charge;
-            Vector3 startPos = transform.position;
-            Vector3 toPlayer = player.position - startPos; toPlayer.y = 0f;
-            Vector3 chargeDir = toPlayer.sqrMagnitude > 0.0001f ? toPlayer.normalized : transform.forward;
-
-            // プレイヤーを overshoot する距離をゴールに
-            float targetDistance = toPlayer.magnitude + Mathf.Max(0f, overshootDistance);
-            animator?.SetBool("Moveable", true);
-
-            float traveled = 0f;
-            float elapsed = 0f;
-            float baseY = startPos.y;
-            SprintColider.enabled = true;
-
-            while (elapsed < maxChargeTime && traveled < targetDistance)
-            {
-                float step = chargeSpeed * Time.deltaTime;
-                transform.position += chargeDir * step;
-                if (lockYPosition)
-                {
-                    var p = transform.position; p.y = baseY; transform.position = p;
-                }
-                elapsed += Time.deltaTime;
-                traveled += step;
-                await UniTask.Yield();
-            }
-            // ★ 突進を1回終えたのでカウントアップ
-            chargeCount++;
-
-            // ④ 休憩
-            phase = BossState.Rest;
-            animator?.SetBool("Moveable", false);
-            SprintColider.enabled = false;
-            Debug.Log("突進終了", this);
-            // ポーズされたら休憩タイマーを停止し、再開したら残り時間を消化する
-            float restElapsed = 0f;
-            while (restElapsed < restTime)
-            {
-                await UniTask.WaitUntil(() => !_isPaused);
-                restElapsed += Time.deltaTime;
-                await UniTask.Yield();
-            }
-
-            // === ★ ここで「次は遠距離か？」を判定 ===
-            if (isRockAttack && chargeCount >= Mathf.Max(1, chargesBeforeRanged))
-            {
-                phase = BossState.RangedAttack;
-                // 遠距離攻撃ルーチン（中で向き直し→アニメ→1発撃つ→クールダウン → 復帰）
-                await RangedAttackAysnc();
-                // 遠距離後はパターンをリセット
-                chargeCount = 0;
-            }
+            await FacePlayerAsync();
+            await ChargePhaseAsync();
+            await RestPhaseAsync();
+            await TryRangedAttackAsync();
         }       
     }
-    async UniTask RangedAttackAysnc()
+
+    /// <summary>
+    /// ボス戦開始フラグが立つまで待機
+    /// </summary>
+    private UniTask WaitBattleStartAsync()
+    {
+        return UniTask.WaitUntil(() => !isPaused);
+    }
+
+    /// <summary>
+    /// プレイヤー方向を向き直すフェーズ
+    /// </summary>
+    private async UniTask FacePlayerAsync()
+    {
+        phase = BossState.Face;
+        float elapsed = 0f;
+
+        while (elapsed < faceTime)
+        {
+            FacePlayerOnlyYaw(turnSpeed);
+            animator?.SetFloat("MoveSpeed", 0f);
+
+            elapsed += Time.deltaTime;
+            await UniTask.Yield();
+        }
+    }
+
+    /// <summary>
+    /// 突進フェーズ：向きをロックして一直線に移動
+    /// </summary>
+    private async UniTask ChargePhaseAsync()
+    {
+        phase = BossState.Charge;
+
+        Vector3 startPos = transform.position;
+        Vector3 toPlayer = player.position - startPos;
+        toPlayer.y = 0f;
+
+        Vector3 chargeDir = toPlayer.sqrMagnitude > 0.0001f
+            ? toPlayer.normalized
+            : transform.forward;
+
+        // プレイヤーを overshoot する距離をゴールに
+        float targetDistance = toPlayer.magnitude + Mathf.Max(0f, overshootDistance);
+
+        animator?.SetBool("Moveable", true);
+        if (sprintCollider) sprintCollider.enabled = true;
+
+        float traveled = 0f;
+        float elapsed = 0f;
+        float baseY = startPos.y;
+
+        while (elapsed < maxChargeTime && traveled < targetDistance)
+        {
+            float step = chargeSpeed * Time.deltaTime;
+            transform.position += chargeDir * step;
+
+            if (lockYPosition)
+            {
+                var p = transform.position;
+                p.y = baseY;
+                transform.position = p;
+            }
+
+            elapsed += Time.deltaTime;
+            traveled += step;
+            await UniTask.Yield();
+        }
+
+        // 突進終了後にカウントアップ
+        chargeCount++;
+    }
+
+    /// <summary>
+    /// 休憩フェーズ。ポーズ中は経過時間を止める。
+    /// </summary>
+    private async UniTask RestPhaseAsync()
+    {
+        phase = BossState.Rest;
+
+        animator?.SetBool("Moveable", false);
+        if (sprintCollider) sprintCollider.enabled = false;
+
+        Debug.Log("突進終了", this);
+
+        float restElapsed = 0f;
+        while (restElapsed < restTime)
+        {
+            // ポーズされている間は待機
+            await UniTask.WaitUntil(() => !isPaused);
+            restElapsed += Time.deltaTime;
+            await UniTask.Yield();
+        }
+    }
+
+    /// <summary>
+    /// 条件を満たしていれば遠距離攻撃フェーズを実行
+    /// </summary>
+    private async UniTask TryRangedAttackAsync()
+    {
+        if (!isRockAttack) return;
+
+        // chargesBeforeRanged が 0 以下でも 1 回で発動するよう補正
+        int threshold = Mathf.Max(1, chargesBeforeRanged);
+        if (chargeCount < threshold) return;
+
+        phase = BossState.RangedAttack;
+        await RangedAttackAsync();
+
+        // パターンリセット
+        chargeCount = 0;
+    }
+
+    /// <summary>
+    /// 遠距離攻撃本体（向き直し → トリガー → クールダウン）
+    /// </summary>
+    async UniTask RangedAttackAsync()
     {
         // すこしだけ向き直し（見た目を整える・必要十分）
         float t = 0f;
@@ -149,7 +205,9 @@ public class PetBossController : MonoBehaviour, IBossController
             await UniTask.Yield();
         }
     }
-
+    /// <summary>
+    /// プレイヤー方向（XZ）のみを向く
+    /// </summary>
     void FacePlayerOnlyYaw(float slerpSpeed)
     {
         if (!player) return;
@@ -159,7 +217,9 @@ public class PetBossController : MonoBehaviour, IBossController
         var target = Quaternion.LookRotation(dir.normalized);
         transform.rotation = Quaternion.Slerp(transform.rotation, target, Time.deltaTime * slerpSpeed);
     }
-
+    /// <summary>
+    /// アニメーションイベント：岩を前方へ飛ばす
+    /// </summary>
     public void ThorwDamageRock()
     {
         float[] angles = { -3f, 3f }; // 左から右へ角度を振る
@@ -172,11 +232,13 @@ public class PetBossController : MonoBehaviour, IBossController
             Initrock.GetComponent<Rigidbody>().linearVelocity = dir.normalized * projectileSpeed;
         }
     }
-
+    /// <summary>
+    /// ボス死亡時の処理
+    /// </summary>
     public void DeadTrigger()
     {
         phase = BossState.Dead;
-        SprintColider.enabled = false;
+        sprintCollider.enabled = false;
         animator.SetTrigger("Dead");
         Destroy(gameObject, 1.0f);
     }
@@ -193,7 +255,7 @@ public class PetBossController : MonoBehaviour, IBossController
     /// </summary>
     public void PauseBoss()
     {
-        _isPaused = true;
+        isPaused = true;
         // 念のため移動アニメーションも止めておく
         animator?.SetBool("Moveable", false);
     }
@@ -202,6 +264,6 @@ public class PetBossController : MonoBehaviour, IBossController
     /// </summary>
     public void ResumeBoss()
     {
-        _isPaused = false;
+        isPaused = false;
     }
 }
