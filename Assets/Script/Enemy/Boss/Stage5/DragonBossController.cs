@@ -46,49 +46,91 @@ public class DragonBossController : MonoBehaviour, IBossController
     void Update()
     {
         if (_isPaused) return;
-        // クールダウンは終了したらIdleへ戻る
-        if (currentState == DragonState.CoolDown)
+        switch (currentState)
         {
-            Cooldown().Forget();
+            case DragonState.CoolDown:
+                HandleCoolDownState();
+                break;
+            case DragonState.Idle:
+                break;
+
+            // Attack中・回避中・死亡中は基本的にアニメーション/コルーチン側に任せる
+            case DragonState.AttackCrow:
+            case DragonState.Avoid:
+            case DragonState.AttackFire:
+            case DragonState.AttackSprint:
+            case DragonState.Dead:
+            default:
+                break;
         }
-        //近距離時の行動
-        else if (currentState == DragonState.Idle && PlayerDistaneceCheck() < crowDistance)
+    }
+    /// <summary>
+    /// Idle 状態時のフレーム処理
+    /// 距離で「近距離ロジック」と「中〜遠距離ロジック」に振り分ける
+    /// </summary>
+    private void HandleIdleState()
+    {
+        float distance = PlayerDistaneceCheck();
+
+        if (distance < crowDistance)
         {
-            FacePlayerForSeconds(faceTime, turnSpeed).Forget();
-            closeAttackType = UnityEngine.Random.Range(0, 2);
-            if (closeAttackType == 0)
+            HandleCloseRangeBehaviour();
+        }
+        else
+        {
+            HandleLongRangeBehaviour();
+        }
+    }
+    /// <summary>
+    /// 近距離時の行動ロジック（元の「近距離時の大きな if/else」をここに集約）
+    /// </summary>
+    private void HandleCloseRangeBehaviour()
+    {
+        // まずプレイヤー方向に向き直る（ため）
+        FacePlayerForSeconds(faceTime, turnSpeed).Forget();
+
+        // 近距離攻撃 or 回避をランダムで決定
+        closeAttackType = UnityEngine.Random.Range(0, 2);
+
+        if (closeAttackType == 0)
+        {
+            // 遠距離攻撃フラグが立っているときは、
+            // 近距離でもブレスを選択する分岐
+            if (isRangeAttack)
             {
-                //遠距離攻撃
-                if (isRangeAttack == true)
-                {
-                    FacePlayerForSeconds(faceTime, turnSpeed).Forget();
-                    animator.SetTrigger("IsRangeAttack");
-                    currentState = DragonState.AttackFire;
-                }
-                //近距離
-                else
-                {
-                    FacePlayerForSeconds(faceTime, turnSpeed).Forget();
-                    animator.SetTrigger("IsCrowAttack");
-                    currentState = DragonState.AttackCrow;
-                }
+                FacePlayerForSeconds(faceTime, turnSpeed).Forget();
+                animator.SetTrigger("IsRangeAttack");
+                currentState = DragonState.AttackFire;
             }
+            // 通常の近距離攻撃
             else
             {
-                animator.SetTrigger("IsAvoid");
-                currentState = DragonState.Avoid;
+                FacePlayerForSeconds(faceTime, turnSpeed).Forget();
+                animator.SetTrigger("IsCrowAttack");
+                currentState = DragonState.AttackCrow;
             }
-
         }
-        // 遠距離攻撃
-        else if (currentState == DragonState.Idle && isRangeAttack == true)
+        else
+        {
+            // 回避行動
+            animator.SetTrigger("IsAvoid");
+            currentState = DragonState.Avoid;
+        }
+    }
+
+    /// <summary>
+    /// 中〜遠距離時の行動ロジック（元の「遠距離攻撃」「突進攻撃」をここに集約）
+    /// </summary>
+    private void HandleLongRangeBehaviour()
+    {
+        // isRangeAttack が true なら遠距離ブレス、false なら突進
+        if (isRangeAttack)
         {
             FacePlayerForSeconds(faceTime, turnSpeed).Forget();
             animator.SetTrigger("IsRangeAttack");
             currentState = DragonState.AttackFire;
         }
-        // 突進攻撃
-        else if (currentState == DragonState.Idle && isRangeAttack == false)
+        else
         {
             loopCts?.Cancel();
             loopCts = new CancellationTokenSource();
@@ -96,7 +138,10 @@ public class DragonBossController : MonoBehaviour, IBossController
             Sprint(loopCts.Token).Forget();
         }
     }
-
+    //=========================
+    // ここから下は元のまま
+    // PauseBoss / ResumeBoss / Sprint / Cooldown / SelectAttack など
+    //=========================
     public void PauseBoss()
     {
         // Update 系を止める
@@ -159,6 +204,16 @@ public class DragonBossController : MonoBehaviour, IBossController
             }
         }
         Debug.Log("BattleLoop: ct.Cancelled で終了");
+    }
+    
+
+    /// <summary>
+    /// クールダウン状態のフレーム処理
+    /// </summary>
+    private void HandleCoolDownState()
+    {
+        // Cooldown 内部で _cooling フラグを見てくれるので連打しても安全
+        Cooldown().Forget();
     }
     //攻撃後のクールダウン処理
     private async UniTask Cooldown()
