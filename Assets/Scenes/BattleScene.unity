@@ -1711,66 +1711,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 723754789}
   m_CullTransparentMesh: 1
---- !u!1 &743559559
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 743559561}
-  - component: {fileID: 743559562}
-  m_Layer: 0
-  m_Name: EnemyGenerator
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &743559561
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 743559559}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 71.2, y: 0, z: 41.4}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &743559562
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 743559559}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4836fb1f87197fe44ab75f23c62cdf86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MobEnemy:
-  - {fileID: 4769432014875442283, guid: 0cabef3c2408cdd4588a30077f992933, type: 3}
-  - {fileID: 3861515877501182750, guid: 63ce4bf1e3ccace4582ace2b0fb6d1fb, type: 3}
-  - {fileID: 44260241681488976, guid: c0ded8ccd3b943a4fbaca041fbc218cf, type: 3}
-  - {fileID: 390844989209774261, guid: a7259b2a341a70b4ab8c82d66fe50bd3, type: 3}
-  - {fileID: 9144288592955621078, guid: 6812751c80c7160479d7a154b4363039, type: 3}
-  - {fileID: 2458418470854875874, guid: c4736cb63ebe61843bc8f1d6e0e83721, type: 3}
-  - {fileID: 5120143686281833094, guid: d1568fc280c6ccf45a0821f69bb46248, type: 3}
-  - {fileID: 2458418470854875874, guid: c4736cb63ebe61843bc8f1d6e0e83721, type: 3}
-  forbiddenVolumes:
-  - center: {x: 24.9, y: 0, z: 5.4}
-    size: {x: 56, y: 19.9, z: 15.8}
-  - center: {x: 26.3, y: 0, z: 60.1}
-    size: {x: 60.8, y: 18.9, z: 28.8}
-  generateRange_X: 45
-  generateRange_Y: 65
 --- !u!1001 &833649866
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2028,7 +1968,7 @@ GameObject:
   - component: {fileID: 980553575}
   - component: {fileID: 980553574}
   m_Layer: 5
-  m_Name: ClearText
+  m_Name: BattleResultTitle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2454,6 +2394,7 @@ GameObject:
   - component: {fileID: 1164553932}
   - component: {fileID: 1164553933}
   - component: {fileID: 1164553934}
+  - component: {fileID: 1164553935}
   m_Layer: 0
   m_Name: GameProgressManager
   m_TagString: Untagged
@@ -2502,6 +2443,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DebugCanmove: 0
+--- !u!114 &1164553935
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1164553931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 517e1604ae808e242b92f76ef9dc3036, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1247541321
 GameObject:
   m_ObjectHideFlags: 0
@@ -2789,7 +2742,7 @@ GameObject:
   - component: {fileID: 1364778533}
   - component: {fileID: 1364778537}
   m_Layer: 5
-  m_Name: MissonUI
+  m_Name: BattleUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2899,7 +2852,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a058ce2a8eff95c4cb0a22957ae848d8, type: 2}
   - {fileID: 11400000, guid: cb8058ae3a7a4a3429c4eae0c941016f, type: 2}
   skillManager: {fileID: 0}
-  missionManager: {fileID: 1928455981}
+  battleManager: {fileID: 1928455981}
   discardDialogPrefab: {fileID: 8293367031013067924, guid: d1eb484f724333a42b2be1d631f864c9, type: 3}
 --- !u!1 &1386843297
 GameObject:
@@ -3368,11 +3321,14 @@ GameObject:
   - component: {fileID: 1928455977}
   - component: {fileID: 1928455978}
   - component: {fileID: 1928455979}
-  - component: {fileID: 1928455980}
   - component: {fileID: 1928455981}
   - component: {fileID: 1928455984}
   - component: {fileID: 1928455985}
   - component: {fileID: 1928455986}
+  - component: {fileID: 1928455987}
+  - component: {fileID: 1928455989}
+  - component: {fileID: 1928455990}
+  - component: {fileID: 1928455988}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -3407,13 +3363,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e90be62c5c5625541839fd18e61a37d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainCameraObject: {fileID: 1140682739643918367}
+  mainCameraObject: {fileID: 0}
   trainingCameraObject: {fileID: 1149535780}
   trainingUI: {fileID: 7074809910490863980}
   gameUI: {fileID: 490841121}
   brainCameraObject: {fileID: 197146913}
-  missionManager: {fileID: 1928455981}
-  tempPlayerSpecial: 1
+  battleStartController: {fileID: 1928455987}
 --- !u!114 &1928455979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3445,18 +3400,6 @@ MonoBehaviour:
   - {fileID: 1823015280229568100}
   - {fileID: 906806172537337148}
   - {fileID: 7195345169346956005}
---- !u!114 &1928455980
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1928455976}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 517e1604ae808e242b92f76ef9dc3036, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1928455981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3470,10 +3413,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 5686609428382768532}
-  clearText: {fileID: 980553574}
-  fade: {fileID: 709482550}
   tempButton: {fileID: 222287539823047655, guid: f7d5323ee01fd674c9cfaaf39d8339ef, type: 3}
-  MissionUI: {fileID: 1364778537}
+  battleUI: {fileID: 1364778537}
+  battlePlayerController: {fileID: 1928455989}
+  battleUIController: {fileID: 1928455990}
 --- !u!114 &1928455984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3519,6 +3462,75 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b643c2580010c545bc3485d4ffaf4ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1928455987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928455976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5458dcd4dd2337e428e91a0500cd5b51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  battleManager: {fileID: 1928455981}
+--- !u!114 &1928455988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928455976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4836fb1f87197fe44ab75f23c62cdf86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MobEnemy:
+  - {fileID: 4769432014875442283, guid: 0cabef3c2408cdd4588a30077f992933, type: 3}
+  - {fileID: 3861515877501182750, guid: 63ce4bf1e3ccace4582ace2b0fb6d1fb, type: 3}
+  - {fileID: 44260241681488976, guid: c0ded8ccd3b943a4fbaca041fbc218cf, type: 3}
+  - {fileID: 390844989209774261, guid: a7259b2a341a70b4ab8c82d66fe50bd3, type: 3}
+  - {fileID: 9144288592955621078, guid: 6812751c80c7160479d7a154b4363039, type: 3}
+  - {fileID: 2458418470854875874, guid: c4736cb63ebe61843bc8f1d6e0e83721, type: 3}
+  - {fileID: 5120143686281833094, guid: d1568fc280c6ccf45a0821f69bb46248, type: 3}
+  - {fileID: 2458418470854875874, guid: c4736cb63ebe61843bc8f1d6e0e83721, type: 3}
+  forbiddenVolumes:
+  - center: {x: 24.9, y: 0, z: 5.4}
+    size: {x: 56, y: 19.9, z: 15.8}
+  - center: {x: 26.3, y: 0, z: 60.1}
+    size: {x: 60.8, y: 18.9, z: 28.8}
+  generateRange_X: 45
+  generateRange_Y: 65
+--- !u!114 &1928455989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928455976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44d7ad779b3b1b44889fec5619ad21ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  growUIController: {fileID: 0}
+  trianingButton: {fileID: 0}
+--- !u!114 &1928455990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928455976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd5a744e594b9fc44aee930b93aeaf06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resultText: {fileID: 980553574}
 --- !u!1 &1948822311
 GameObject:
   m_ObjectHideFlags: 0
@@ -3922,19 +3934,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8474904638795630961}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1928455979}
-        m_TargetAssemblyTypeName: TrianingButton, Assembly-CSharp
-        m_MethodName: TrainingStamina
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1001 &954175294347804538
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4117,11 +4117,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1140682739643918367 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7277630410971850069, guid: 2bbbdcca321316d4da2435302c93ebc4, type: 3}
-  m_PrefabInstance: {fileID: 1433184659735559178}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1211094751988391272
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4304,13 +4299,29 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5587331307224710424, guid: 2bbbdcca321316d4da2435302c93ebc4, type: 3}
+      propertyPath: _maxHealth
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 5587331307224710424, guid: 2bbbdcca321316d4da2435302c93ebc4, type: 3}
+      propertyPath: reciveDamage
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5587331307224710424, guid: 2bbbdcca321316d4da2435302c93ebc4, type: 3}
+      propertyPath: _currentHealth
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 5587331307224710424, guid: 2bbbdcca321316d4da2435302c93ebc4, type: 3}
       propertyPath: _onDead.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1928455981}
     - target: {fileID: 5680625668111797368, guid: 2bbbdcca321316d4da2435302c93ebc4, type: 3}
       propertyPath: acquiredSkills.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 5680625668111797368, guid: 2bbbdcca321316d4da2435302c93ebc4, type: 3}
+      propertyPath: 'acquiredSkills.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: c4b1da6a9cb647349ab63976fef6273e, type: 2}
     - target: {fileID: 6047391677809553128, guid: 2bbbdcca321316d4da2435302c93ebc4, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -4654,19 +4665,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5386295453043685066}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1928455979}
-        m_TargetAssemblyTypeName: TrianingButton, Assembly-CSharp
-        m_MethodName: TrainingHealth
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!222 &1929752653807966468
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5927,19 +5926,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2652186013707732622}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1928455979}
-        m_TargetAssemblyTypeName: TrianingButton, Assembly-CSharp
-        m_MethodName: TrainingAttack
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &5886417745589858254
 GameObject:
   m_ObjectHideFlags: 0
@@ -6132,19 +6119,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2475300093066329160}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1928455979}
-        m_TargetAssemblyTypeName: TrianingButton, Assembly-CSharp
-        m_MethodName: TrainingSpcial
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!222 &7225447645263772606
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6599,7 +6574,6 @@ SceneRoots:
   - {fileID: 1433184659735559178}
   - {fileID: 490841125}
   - {fileID: 1045857033}
-  - {fileID: 743559561}
   - {fileID: 1928455977}
   - {fileID: 1164553932}
   - {fileID: 1075207063}
