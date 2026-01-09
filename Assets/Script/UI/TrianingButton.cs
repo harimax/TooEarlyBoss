@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 
 public class TrianingButton : MonoBehaviour
 {
@@ -25,6 +26,9 @@ public class TrianingButton : MonoBehaviour
 
     [SerializeField] private List<Button> BattleButtons;
     [SerializeField] private List<Button> trainingButtons;
+    [Header("参照")]
+    [SerializeField] private CutIinAnimation cutInAnimation;
+    [SerializeField] private TraingingEvent TraingingEvent;
     private int turnNumber;
     /// <summary>
     /// 現在の残りターン数（読み取り専用）
@@ -88,6 +92,7 @@ public class TrianingButton : MonoBehaviour
             health: 0,
             stamina: 0, special: 0);
         ApprlyingTraning(add);
+
     }
     //体力ボタンを押下して体力がアップ
     public void TrainingHealth()
@@ -107,6 +112,7 @@ public class TrianingButton : MonoBehaviour
             health: 0,
             stamina: increaceParameter(minIncrease, maxIncrease), special: 0);
         ApprlyingTraning(add);
+
     }
     //ラッキーボタンを押下してラッキーがアップ
     public void TrainingSpcial()
@@ -116,6 +122,7 @@ public class TrianingButton : MonoBehaviour
             health: 0,
             stamina: 0, special: increaceParameter(minIncrease, maxIncrease));
         ApprlyingTraning(add);
+
     }
 
     //上昇値を決めるメソッド
@@ -135,9 +142,16 @@ public class TrianingButton : MonoBehaviour
         {
             return;
         }
+        var (finalAdd, eventType) = TraingingEvent.Apply(addParams);
+
+        //イベント演出を再生
+        if(eventType != TraingingEvent.TrainingEventType.None)
+        {
+            cutInAnimation.PlayFromButton();
+        }
 
         // 成長パラメータを加算して新インスタンスに差し替え
-        currentParams = currentParams.AddParameters(addParams);
+        currentParams = currentParams.AddParameters(finalAdd);
         // ミラー用の public フィールドに反映
         SyncFieldsFromParams();
         // ターンを1減らす
