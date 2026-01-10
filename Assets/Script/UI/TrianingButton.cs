@@ -29,6 +29,7 @@ public class TrianingButton : MonoBehaviour
     [Header("参照")]
     [SerializeField] private CutIinAnimation cutInAnimation;
     [SerializeField] private TrainingEvent TrainingEvent;
+    [SerializeField] private UIFocusSwitcher focusSwitcher;
     private int turnNumber;
     /// <summary>
     /// 現在の残りターン数（読み取り専用）
@@ -184,6 +185,7 @@ public class TrianingButton : MonoBehaviour
     public void SetButtonsInteractable()
     {
         bool canTrain = (turnNumber % 5 != 0) && (turnNumber >= 0);
+        focusSwitcher.MoveFocusToBattleIfTrainingSelected().Forget();
 
         foreach (var button in trainingButtons)
         {
