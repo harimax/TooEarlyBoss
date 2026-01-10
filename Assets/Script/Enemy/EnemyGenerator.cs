@@ -9,6 +9,11 @@ public class EnemyGenerator : MonoBehaviour
     [SerializeField] private List<ForbiddenVolume> forbiddenVolumes;
     [SerializeField] private int generateRange_X;
     [SerializeField] private int generateRange_Y;
+    [Header("生成範囲ギズモ設定")]
+    [SerializeField] private bool showGenerateRangeGizmo = true;
+    [SerializeField] private float gizmoY = 0f; // 表示する高さ（床がy=0なら0でOK）
+    [SerializeField] private Color rangeFillColor = new Color(0f, 1f, 0f, 0.15f);
+    [SerializeField] private Color rangeWireColor = new Color(0f, 1f, 0f, 0.9f);
     private int generaterNumber;
     private int[][] cycleEnemyArray = new int[][]
     {
@@ -34,13 +39,21 @@ public class EnemyGenerator : MonoBehaviour
     {
         const int maxAttempts = 100;
 
+        // EnemyGenerator の位置を中心にする
+        Vector3 center = transform.position;
+
+        // 矩形範囲の半分（中心から左右に広げる）
+        float halfX = generateRange_X * 0.5f;
+        float halfZ = generateRange_Y * 0.5f;
+
         for (int attempt = 0; attempt < maxAttempts; attempt++)
         {
             Vector3 pos = new Vector3(
-                Random.Range(0, generateRange_X),
-                0,
-                Random.Range(0, generateRange_Y)
+                center.x + Random.Range(-halfX, halfX),
+                center.y,
+                center.z + Random.Range(-halfZ, halfZ)
             );
+
             if (!IsInForbiddenArea(pos))
                 return pos;
         }
@@ -71,7 +84,26 @@ public class EnemyGenerator : MonoBehaviour
         {
             Gizmos.DrawCube(volume.center, volume.size);
         }
+        if (!showGenerateRangeGizmo) return;
+
+        // EnemyGeneratorの位置を中心に表示（生成範囲もこの中心に合わせたい場合はここが自然）
+        Vector3 center = transform.position;
+        center.y = gizmoY;
+
+        // あなたの変数名に合わせる（generateRange_X, generateRange_Y）
+        Vector3 size = new Vector3(
+            Mathf.Max(0.01f, generateRange_X),
+            0.05f, // 薄い板として見せる
+            Mathf.Max(0.01f, generateRange_Y)
+        );
+
+        Gizmos.color = rangeFillColor;
+        Gizmos.DrawCube(center, size);
+
+        Gizmos.color = rangeWireColor;
+        Gizmos.DrawWireCube(center, size);
     }
+
 }
 [System.Serializable]
 public struct ForbiddenVolume
