@@ -58,13 +58,11 @@ public class Enemy_Attack : MonoBehaviour
     public virtual void OnAttackFinished()
     {
         attackCollider.enabled = false;
-
         // async void は例外処理が難しいので本当は避けたいが、
         // イベントハンドラ的に「終わったらすぐ待機」する場合は許容される
         if (chaseEnemy != null)
         {
             chaseEnemy.Cooldown().Forget();
         }
-
     }
 }

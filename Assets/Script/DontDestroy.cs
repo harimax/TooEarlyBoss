@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DontDestory : MonoBehaviour
+public class DontDestroy : MonoBehaviour
 {
-    public static DontDestory Instance { get; private set; }
+    public static DontDestroy Instance { get; private set; }
     private void Awake()
     {
         if (Instance != null && Instance != this)

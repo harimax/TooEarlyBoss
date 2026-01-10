@@ -115,12 +115,12 @@ public class PetBossController : MonoBehaviour, IBossController
         float traveled = 0f;
         float elapsed = 0f;
         float baseY = startPos.y;
-
+        // 突進移動ループ
         while (elapsed < maxChargeTime && traveled < targetDistance)
         {
             float step = chargeSpeed * Time.deltaTime;
             transform.position += chargeDir * step;
-
+            // Y位置固定
             if (lockYPosition)
             {
                 var p = transform.position;

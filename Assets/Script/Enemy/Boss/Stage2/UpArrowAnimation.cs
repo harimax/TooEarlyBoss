@@ -18,7 +18,6 @@ public class UpArrowAnimation : MonoBehaviour
             transform.Translate(0f, moveSpeed * Time.deltaTime, 0f);
             return;
         }
-
         ResetPosition();
     }
     /// <summary>矢印の位置とタイマーを初期状態に戻す。</summary>

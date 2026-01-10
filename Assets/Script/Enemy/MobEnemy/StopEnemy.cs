@@ -16,7 +16,6 @@ public class StopEnemy : MobEnemy
     [SerializeField] private float destroytime;
     [SerializeField] private  float Reaction_Pro=0.5f; //ダメージリアクションを起こす確率(値が大きいほど確率高い)
     private UniTask DamagecooldownCoroutine;
-    private UniTask HitStopcooldownCoroutine;
     private vHealthController vHealthController;
     
     protected override void Start()
@@ -42,11 +41,11 @@ public class StopEnemy : MobEnemy
         else if (_status.State != StateEnum.Die)
         {
             base.OnDie(); // 基底クラスの死亡処理を実行
-            DestoryCoroutine(1.5f).Forget(); // 4秒後にオブジェクト削除
+            DestroyCoroutine(1.5f).Forget(); // 4秒後にオブジェクト削除
         }
     }
     //死亡コルーチン--------------------------------------------------
-    private async UniTask DestoryCoroutine(float time)
+    private async UniTask DestroyCoroutine(float time)
     {
         await UniTask.Delay((int)(time*1000));
         Destroy(gameObject);

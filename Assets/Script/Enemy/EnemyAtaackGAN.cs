@@ -1,16 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+
 using UnityEngine;
-using UnityEngine.Animations;
 using Cysharp.Threading.Tasks;
 using System;
-using System.Threading.Tasks;
 
-public class Enemy_Ataack_GAN : MonoBehaviour
+public class EnemyAtaackGAN : MonoBehaviour
 {
     [SerializeField] private GameObject GANObj;
-    [SerializeField] private GameObject Preliminary_Effect;
+    [SerializeField] private GameObject preliminaryEffect;
     [SerializeField] private float shotSpeed;
     [SerializeField] protected float attackcooldown;
     [SerializeField] private GameObject ParentObj;
@@ -59,7 +55,7 @@ public class Enemy_Ataack_GAN : MonoBehaviour
     {
         Debug.Log("発射");
         isOnCooldown = true; //弾を打てる状態になる
-        Preliminary_Effect.SetActive(true);
+        preliminaryEffect.SetActive(true);
         await UniTask.Delay(TimeSpan.FromSeconds(attackcooldown));
         var direction=(Targetpos()-gameObject.transform.position).normalized;
         var shot=Instantiate(GANObj.gameObject,this.gameObject.transform.position,this.gameObject.transform.rotation);
@@ -69,7 +65,7 @@ public class Enemy_Ataack_GAN : MonoBehaviour
         {
             BulletSound.Play();
         }
-        Preliminary_Effect.SetActive(false);
+        preliminaryEffect.SetActive(false);
         await UniTask.Delay(TimeSpan.FromSeconds(attackcooldown));
         isOnCooldown = false; //弾を打てない状態にする
         Destroy(shot,3.0f);

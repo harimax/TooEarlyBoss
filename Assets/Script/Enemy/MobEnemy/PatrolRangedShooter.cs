@@ -112,8 +112,6 @@ public class PatrolRangedShooter : MonoBehaviour
     public void OnBallShotEvent()
     {
         float[] angles = {  -15f, 0f, 15f}; // 左から右へ角度を振る
-
-
         // 「正しい発射方向」を補正して取得
         Vector3 baseForward = -ObjectSpawnPoint.right; // ← ここが正しい正面！
         Vector3 up = ObjectSpawnPoint.up;

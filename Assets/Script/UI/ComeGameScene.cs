@@ -12,6 +12,5 @@ public class ComeGameScene : MonoBehaviour
         {
             fade.FadeOut(1.0f);
         }
-
     }
 }

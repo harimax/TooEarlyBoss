@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class TraingingEvent : MonoBehaviour
+public class TrainingEvent : MonoBehaviour
 {
     // =========================
     // ■ イベント各自の確率
@@ -13,8 +13,6 @@ public class TraingingEvent : MonoBehaviour
     private const float P_ALL = 0.05f;              // 全能力アップ 5%
     private const float P_EVENT_KAKUHEN = 0.05f;    // イベント確変 5%
     private const float P_TRAIN_BOOST = 0.20f;      // 育成二倍(1.5倍) 20%
-
-
     // =========================
     // 調整パラメータ（Inspector）
     // =========================
@@ -58,9 +56,8 @@ public class TraingingEvent : MonoBehaviour
     }
 
     // =========================
-    // 持続状態（ここだけで持つ）
+    // 持続状態（Stateの責務）
     // =========================
-
     private int kakuhenRemain = 0;// 上昇倍率の残り回数
     private int failUpRemain = 0;// 失敗率UPの残り回数
     private int eventKakuhenRemain = 0;   // イベント発生率2倍の残り回数
@@ -71,6 +68,14 @@ public class TraingingEvent : MonoBehaviour
     /// </summary>
     public (PlayerGrowParameters addParams, TrainingEventType eventType) Apply(PlayerGrowParameters baseAdd)
     {
+        // 前回の「育成二倍」が残っているなら、今回の結果に1.5倍をかける準備
+        bool applyBoostThisTime = nextTrainingBoost;
+
+        if (applyBoostThisTime)
+        {
+            nextTrainingBoost = false; // 今回で消費する（成功した場合に適用）
+        }
+
         //失敗判定
         float failRate = baseFailRate;
         if (failUpRemain > 0)
@@ -85,17 +90,8 @@ public class TraingingEvent : MonoBehaviour
             return (new PlayerGrowParameters(0, 0, 0, 0),
                     TrainingEventType.Fail);
         }
-        // 前回の「育成二倍」が残っているなら、今回の結果に1.5倍をかける準備
-        bool applyBoostThisTime = nextTrainingBoost;
-        if (applyBoostThisTime)
-        {
-            nextTrainingBoost = false; // 今回で消費する（成功した場合に適用）
-        }
-
 
         //イベント処理---------------------------------------------------
-
-        //イベント確変の適用
         //イベント確変の適用（eventTriggerRate自体は変更しない）
         float currentTriggerRate = eventTriggerRate;
         if (eventKakuhenRemain > 0)
@@ -108,12 +104,7 @@ public class TraingingEvent : MonoBehaviour
         if (!eventOccurs)
         {
             // イベントなし（確変が残っていれば倍率だけ適用）
-            PlayerGrowParameters result = ApplyKakuhen(baseAdd);
-            if (applyBoostThisTime)
-            {
-                result = Multiply(result, trainingBoostMul);
-            }
-            ConsumeTurns();
+            PlayerGrowParameters result = BounsApply(baseAdd, applyBoostThisTime);
             return (result, TrainingEventType.None);
         }
 
@@ -126,70 +117,39 @@ public class TraingingEvent : MonoBehaviour
         {
             case TrainingEventType.KakuhenStart: // 確変開始
                 kakuhenRemain = kakuhenTurns;
-                finalAdd = ApplyKakuhen(baseAdd);
-                if (applyBoostThisTime)
-                {
-                    finalAdd = Multiply(finalAdd, trainingBoostMul);
-                }
-                ConsumeTurns();
+                finalAdd = BounsApply(baseAdd, applyBoostThisTime);
                 return (finalAdd, TrainingEventType.KakuhenStart);
 
             case TrainingEventType.FailUpStart: // 失敗率UP開始
                 failUpRemain = failUpTurns;
-                finalAdd = ApplyKakuhen(baseAdd);
-                if (applyBoostThisTime)
-                {
-                    finalAdd = Multiply(finalAdd, trainingBoostMul);
-                }
-                ConsumeTurns();
+                finalAdd = BounsApply(baseAdd, applyBoostThisTime);
                 return (finalAdd, TrainingEventType.FailUpStart);
 
             case TrainingEventType.RandomStatUp: // ランダム1能力UP
                 finalAdd = baseAdd.AddParameters(RandomBonus());
-                finalAdd = ApplyKakuhen(finalAdd);
-                if (applyBoostThisTime)
-                {
-                    finalAdd = Multiply(finalAdd, trainingBoostMul);
-                }
-                ConsumeTurns();
+                finalAdd = BounsApply(finalAdd, applyBoostThisTime);
                 return (finalAdd, TrainingEventType.RandomStatUp);
 
             case TrainingEventType.AllStatUp: // 全能力UP
                 finalAdd = baseAdd.AddParameters(
                     new PlayerGrowParameters(allBonus, allBonus, allBonus, allBonus));
-                finalAdd = ApplyKakuhen(finalAdd);
-                if (applyBoostThisTime)
-                {
-                    finalAdd = Multiply(finalAdd, trainingBoostMul);
-                }
-                ConsumeTurns();
+                finalAdd = BounsApply(finalAdd, applyBoostThisTime);
                 return (finalAdd, TrainingEventType.AllStatUp);
 
             case TrainingEventType.EventKakuhenStart:// イベント確変開始
                 eventKakuhenRemain = eventKakuhenTurns;
-                finalAdd = ApplyKakuhen(baseAdd);
-                if (applyBoostThisTime)
-                {
-                    finalAdd = Multiply(finalAdd, trainingBoostMul);
-                }
-                ConsumeTurns();
+                finalAdd = BounsApply(baseAdd, applyBoostThisTime);
                 return (finalAdd, TrainingEventType.EventKakuhenStart);
 
             case TrainingEventType.TrainingBoostStart:  // 育成二倍開始
                 // “次の育成時に1.5倍” を付与（今回には適用しない）
                 nextTrainingBoost = true;
-                finalAdd = ApplyKakuhen(baseAdd);
-                if (applyBoostThisTime)
-                {
-                    finalAdd = Multiply(finalAdd, trainingBoostMul);
-                }
-                ConsumeTurns();
+                finalAdd = BounsApply(baseAdd, applyBoostThisTime);
                 return (finalAdd, TrainingEventType.TrainingBoostStart);
         }
 
         ConsumeTurns();
         return (baseAdd, TrainingEventType.None);
-
     }
     // =====================
     // 抽選（P_*** 合計=1.0 前提）
@@ -222,6 +182,20 @@ public class TraingingEvent : MonoBehaviour
     // =====================
 
     /// <summary>
+    /// 確変反映とターン消費の共通化メソッド
+    /// </summary>
+    private PlayerGrowParameters BounsApply(PlayerGrowParameters add, bool applyBoostThisTime)
+    {
+        var kakuhenAdd = ApplyKakuhen(add);
+        if (applyBoostThisTime)
+        {
+            kakuhenAdd = Multiply(kakuhenAdd, trainingBoostMul);
+        }
+        ConsumeTurns();
+        return kakuhenAdd;
+    }
+
+    /// <summary>
     /// 確変が残っていれば倍率をかける
     /// </summary>
     private PlayerGrowParameters ApplyKakuhen(PlayerGrowParameters add)
@@ -229,7 +203,6 @@ public class TraingingEvent : MonoBehaviour
         if (kakuhenRemain <= 0) return add;
 
         int health = Mathf.RoundToInt(add.PlayerHealth * kakuhenMultiplier);
-
         return new PlayerGrowParameters(
             add.PlayerPower * kakuhenMultiplier,
             health,
@@ -243,7 +216,6 @@ public class TraingingEvent : MonoBehaviour
     private PlayerGrowParameters Multiply(PlayerGrowParameters add, float mul)
     {
         int health = Mathf.RoundToInt(add.PlayerHealth * mul);
-
         return new PlayerGrowParameters(
             add.PlayerPower * mul,
             health,
@@ -253,7 +225,7 @@ public class TraingingEvent : MonoBehaviour
     }
 
     /// <summary>
-    /// ランダム1能力ボーナス
+    /// ランダム能力ボーナス
     /// </summary>
     private PlayerGrowParameters RandomBonus()
     {

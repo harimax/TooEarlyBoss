@@ -13,7 +13,7 @@ public class PlayerRideTrigger : MonoBehaviour
         if (!IsValidPlayer(other)) return;
         StartEjectTimer(other.transform);
     }
-    // タイマー開始
+    // 弾き飛ばしのタイマー開始
     private async void StartEjectTimer(Transform player)
     {
         CancelTimer(); // 既存のタイマーをキャンセル
@@ -30,11 +30,10 @@ public class PlayerRideTrigger : MonoBehaviour
 
         try
         {
-            // 5秒待つ（コメントは3秒と書いてますが値は5000ms）
+            // 5秒待つ
             await UniTask.Delay(TimeSpan.FromSeconds(5), cancellationToken: token);
 
             if (!player || !platform) return; // Destroy 済み
-
 
             // GetInstance() 側も null ガードしたほうが安全
             var boss = RobotBossController.GetInstance();
@@ -42,7 +41,6 @@ public class PlayerRideTrigger : MonoBehaviour
             {
                 await boss.OnActiveBarriar(); // ここが UniTask なら await、voidならそのまま呼ぶ
             }
-
         }
         catch (OperationCanceledException)
         {
@@ -52,7 +50,6 @@ public class PlayerRideTrigger : MonoBehaviour
         {
             CancelTimer(); // 後始末
         }
-
     }
     /// <summary
     /// >既存のタイマーを停止し、リソースを解放する。

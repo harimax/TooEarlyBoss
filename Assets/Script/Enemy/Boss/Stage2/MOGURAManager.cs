@@ -110,7 +110,6 @@ public class MOGURAManager : MonoBehaviour
     {
         // 現在の敵はもう管理対象外
         currentEnemy = null;
-
         // ボスへ通知（足場上昇トリガ）
         OnGroundEnemyKilled?.Invoke();
     }
@@ -122,7 +121,6 @@ public class MOGURAManager : MonoBehaviour
     {
         canSpawn = true;
     }
-
     /// <summary>
     /// いま敵が居るか？
     /// </summary>

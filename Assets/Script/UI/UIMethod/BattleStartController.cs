@@ -18,6 +18,9 @@ public class BattleStartController : MonoBehaviour
     private SkillManager skillManager;
     [SerializeField] private BattleManager battleManager;
 
+    /// <summary>
+    /// 戦闘開始時の初期化処理      
+    /// </summary>
     public void StartBattle()
     {
         //プレイヤーの情報取得
@@ -40,7 +43,7 @@ public class BattleStartController : MonoBehaviour
         //修行したパラメータを加算させる
         playerController.AddMaxStamina(growth.PlayerStamina);
         playerController.AddMaxHealth(growth.PlayerHealth);
-        meleeManager.defaultDamage.damageValue = Mathf.RoundToInt(growth.PlayerPower) + meleeManager.defaultDamage.damageValue;
+        meleeManager.defaultDamage.damageValue = Mathf.RoundToInt(growth.PlayerPower)/2 + meleeManager.defaultDamage.damageValue;
         meleeManager.Init();
 
         // 行動可能状態に

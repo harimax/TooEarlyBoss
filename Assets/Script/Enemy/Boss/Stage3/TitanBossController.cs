@@ -26,7 +26,6 @@ public class TitanBossController : MonoBehaviour, IBossController
     [Header("References")]
     [SerializeField] private TitanBossSprintAttack sprintAttack;  // 突進担当
     [SerializeField] private TitanBossRangeAttack rangedAttack;  // 飛び道具担当
-
     [Header("Behaviour")]
     [SerializeField] private float playerDistance = 10f;          // 近距離/遠距離の境目
     [SerializeField, Range(0, 100)] private int jumpAttackProbability = 20; // ジャンプ攻撃選択確率（％）
@@ -51,7 +50,6 @@ public class TitanBossController : MonoBehaviour, IBossController
         sprintCts?.Dispose();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (isPaused || currentState == TitanBossState.Dead) return;
@@ -101,7 +99,7 @@ public class TitanBossController : MonoBehaviour, IBossController
     {
         if (!player) return;
 
-        float distance = PlayerDistaneceCheck();
+        float distance = PlayerDistanceCheck();
 
         // まずジャンプ攻撃を優先
         if (isjumpAttack)
@@ -169,8 +167,6 @@ public class TitanBossController : MonoBehaviour, IBossController
         currentState = TitanBossState.AttackJump;
         animator.SetTrigger("AttackJump");
     }
-
-
     public void PauseBoss()
     {
         isPaused = true;
@@ -186,7 +182,7 @@ public class TitanBossController : MonoBehaviour, IBossController
         // タイマー初期化
     }
     //プレイヤーとの距離を計算
-    private float PlayerDistaneceCheck()
+    private float PlayerDistanceCheck()
     {
         float distance = Vector3.Distance(transform.position, player.position);
         return distance;
@@ -229,6 +225,4 @@ public class TitanBossController : MonoBehaviour, IBossController
         sprintAttack?.StopImmediately();
         animator.SetTrigger("Dead");
     }
-    
-    
 }

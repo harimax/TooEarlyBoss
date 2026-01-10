@@ -25,8 +25,9 @@ public class GrowPhaseUIController : MonoBehaviour
     private void Awake()
     {
         SetAllUIInactive();
-        trainingUI?.SetActive(true); // 初期状態が修行UIなら
         CacheCameraReferences();//カメラやBrainの参照を1度だけキャッシュ
+        trainingUI?.SetActive(true); // 初期状態が修行UIなら
+        
     }
     /// <summary>
     /// 戦闘準備モードへ移行する
@@ -110,6 +111,7 @@ public class GrowPhaseUIController : MonoBehaviour
         if (trainingCameraObject != null)
         {
             trainingCameraVirtual = trainingCameraObject.GetComponentInChildren<CinemachineVirtualCamera>();
+            Debug.Log(trainingCameraVirtual);
         }
 
         // Brain

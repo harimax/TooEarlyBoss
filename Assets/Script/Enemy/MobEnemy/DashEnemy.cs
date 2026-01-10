@@ -120,7 +120,7 @@ public class DashEnemy : MobEnemy
         else if (_status.State != StateEnum.Die)
         {
             base.OnDie(); // 基底クラスの死亡処理を実行
-            DestoryCoroutine(2f).Forget(); // 4秒後にオブジェクト削除
+            DestroyCoroutine(2f).Forget(); // 4秒後にオブジェクト削除
         }
     }
     /// <summary>
@@ -176,7 +176,7 @@ public class DashEnemy : MobEnemy
         ReturnToNormal();
     }
     //死亡コルーチン
-    private async UniTaskVoid DestoryCoroutine(float time)
+    private async UniTaskVoid DestroyCoroutine(float time)
     {
          AttackRangecollider.enabled = Damagecollider.enabled = chasecollider.enabled = false;
         await UniTask.Delay((int)(time * 1000)); // 秒からミリ秒に変換;
@@ -278,7 +278,7 @@ public class DashEnemy : MobEnemy
         while (!ct.IsCancellationRequested)
         {
             var st = anim.GetCurrentAnimatorStateInfo(layer);
-            if (st.shortNameHash != target) break;                           // 既に次のステートへ
+            if (st.shortNameHash != target) break;                         
             if (st.normalizedTime >= 1f && !anim.IsInTransition(layer)) break;
             await UniTask.Yield(PlayerLoopTiming.Update, ct);
         }

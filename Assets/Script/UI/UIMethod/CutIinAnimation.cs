@@ -95,7 +95,6 @@ public class CutIinAnimation : MonoBehaviour
             .SetUpdate(true)
             .ToUniTask(cancellationToken: token);
 
-
         // Panel OFF（終了）
         cutInPanel.SetActive(false);
         rect.anchoredPosition = _baseAnchoredPos; // 初期位置に戻す

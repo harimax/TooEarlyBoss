@@ -58,7 +58,6 @@ public class SkillManager : MonoBehaviour
             var specialSkills = GetSpecialSkills();
             ShowDiscardDialogAndAdd(specialSkills, newSkill, onAcquired);
             return;
-
         }
         //スキルを限度で取得しているか確認
         if (IsSkillLimitReached())
@@ -135,6 +134,4 @@ public class SkillManager : MonoBehaviour
                 onAcquired?.Invoke();
             });
     }
-
-
 }

@@ -60,7 +60,7 @@ public class ChaseEnemy : MobEnemy
         else if (_status.State != StateEnum.Die)
         {
             base.OnDie(); // 基底クラスの死亡処理を実行
-            DestoryCoroutine(2.0f).Forget(); 
+            DestroyCoroutine(2.0f).Forget(); 
         }
     }
 
@@ -98,7 +98,7 @@ public class ChaseEnemy : MobEnemy
         ReturnToNormal();
     }
     //死亡コルーチン
-    private async UniTask DestoryCoroutine(float time)
+    private async UniTask DestroyCoroutine(float time)
     {
         await UniTask.Delay((int)(time*1000));
         Destroy(gameObject);

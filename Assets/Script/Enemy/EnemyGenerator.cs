@@ -41,7 +41,6 @@ public class EnemyGenerator : MonoBehaviour
                 0,
                 Random.Range(0, generateRange_Y)
             );
-
             if (!IsInForbiddenArea(pos))
                 return pos;
         }
@@ -73,7 +72,6 @@ public class EnemyGenerator : MonoBehaviour
             Gizmos.DrawCube(volume.center, volume.size);
         }
     }
-
 }
 [System.Serializable]
 public struct ForbiddenVolume

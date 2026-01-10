@@ -15,14 +15,11 @@ public class RobotBossPatrol : MonoBehaviour
     [SerializeField] private Transform[] waypoints;     // 巡回ポイント
     [SerializeField] private float waypointThreshold = 0.5f; // 到達判定距離
     [SerializeField] private float waitSeconds = 5f;    // 各地点で止まる時間
-
     private NavMeshAgent agent;
     private Animator animator;
-
     private int currentWaypoint = 0;
     private bool isWalking = false;
     private bool isWaitingAtWaypoint = false;
-
     private CancellationToken _ct;
     void Start()
     {
@@ -33,7 +30,6 @@ public class RobotBossPatrol : MonoBehaviour
         if (agent != null)
             agent.isStopped = true; // 最初は停止
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -54,7 +50,6 @@ public class RobotBossPatrol : MonoBehaviour
     public void StartPatrol()
     {
         if (waypoints.Length == 0 || agent == null) return;
-
         isWalking = true;
         agent.isStopped = false;
         currentWaypoint = 0;
@@ -62,7 +57,6 @@ public class RobotBossPatrol : MonoBehaviour
         agent.SetDestination(waypoints[currentWaypoint].position);
         animator.SetBool("Walking", true);
     }
-
     /// <summary>
     /// 各ポイントで停止する非同期処理
     /// </summary>
@@ -75,7 +69,6 @@ public class RobotBossPatrol : MonoBehaviour
         {
             agent.isStopped = true;
         }
-
         // 指定時間待機
         await UniTask.Delay((int)(waitSeconds * 1000), cancellationToken: _ct);
 
@@ -85,10 +78,8 @@ public class RobotBossPatrol : MonoBehaviour
             agent.isStopped = false;
             GoToNextWaypoint();
         }
-
         isWaitingAtWaypoint = false;
     }
-
     /// <summary>
     /// 次の巡回ポイントへ移動
     /// </summary>

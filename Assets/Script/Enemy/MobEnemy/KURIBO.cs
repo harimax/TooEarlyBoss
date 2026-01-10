@@ -22,10 +22,7 @@ public class KURIBO : MonoBehaviour
     private Animator _animator;
     private Rigidbody rb;
     private Vector3 patrolCenter; // 巡回の中心点
-
     public KURIBOStatus KURIBOstate = KURIBOStatus.WalkAround;
-
-
     void Start()
     {
         _agent = gameObject.GetComponent<NavMeshAgent>();
@@ -33,7 +30,6 @@ public class KURIBO : MonoBehaviour
         rb = gameObject.GetComponent<Rigidbody>();
         patrolCenter = transform.position; // 初期位置を巡回の中心とする
         StartCoroutine(Patrol());
-
     }
     void Update()
     {
@@ -70,17 +66,13 @@ public class KURIBO : MonoBehaviour
         }
         if (collider.CompareTag("Player"))
         {
-
             if (KURIBOstate == KURIBOStatus.WalkAround)
             {
                 await DetectAction();
             }
-
             // Debug.Log("追跡中");
             _agent.destination = collider.transform.position;
-
         }
-
     }
     public async void ExitObject(Collider collider)
     {
@@ -88,7 +80,6 @@ public class KURIBO : MonoBehaviour
         if (collider.CompareTag("Player"))
         {
             // Debug.Log("追跡停止");
-
             KURIBOstate = KURIBOStatus.WalkAround;
             if (_agent.enabled)
             {
@@ -105,7 +96,6 @@ public class KURIBO : MonoBehaviour
     /// <returns></returns>
     private async UniTask DetectAction()
     {
-
         // _agent.enabled = false;
         rb.AddForce(Vector3.up * 0.15f, ForceMode.Impulse);
         await UniTask.Delay(500);
@@ -135,17 +125,14 @@ public class KURIBO : MonoBehaviour
         //巡回中なら中心位置の周りを巡回する
         while (KURIBOstate == KURIBOStatus.WalkAround)
         {
-
             Vector3 randomPoint = patrolCenter + new Vector3(
                 Random.Range(-patrolRadius, patrolRadius),
                 0,
                 Random.Range(-patrolRadius, patrolRadius)
             );
-
             //NavMesh内のポイントを設定
             _agent.SetDestination(randomPoint);
             yield return new WaitForSeconds(2f);
         }
     }
-
 }

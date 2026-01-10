@@ -18,8 +18,6 @@ public class LoadGameScene : MonoBehaviour
     private vThirdPersonController vPersonController;
     private vMeleeManager meleeManager;
     private SkillManager skillManager;
-
-
     public async void OnClickStartButton()
     {
         await AnimateButton();
@@ -27,7 +25,6 @@ public class LoadGameScene : MonoBehaviour
         // プレイヤー情報取得 & ステータス適用
         if (!TryGetPlayerComponents()) return;
         ApplyPlayerTrainingStats();
-
 
         Debug.Log("ゲームシーンに遷移します");
         if (fade != null)
@@ -63,7 +60,6 @@ public class LoadGameScene : MonoBehaviour
         vPersonController.AddMaxHealth(growth.PlayerHealth);
         meleeManager.defaultDamage.damageValue = Mathf.RoundToInt(growth.PlayerPower) + meleeManager.defaultDamage.damageValue;
         meleeManager.Init();
-
     }
     /// <summary>
     /// プレイヤーや必要なコンポーネントの取得
@@ -85,7 +81,6 @@ public class LoadGameScene : MonoBehaviour
             Debug.LogWarning("必要なコンポーネントのいずれかが見つかりません。");
             return false;
         }
-
         return true;
     }
 }

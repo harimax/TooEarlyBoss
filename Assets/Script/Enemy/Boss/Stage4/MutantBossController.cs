@@ -90,6 +90,9 @@ public class MutantBossController : MonoBehaviour, IBossController
         if (animator != null) animator.enabled = true;
         movement?.Resume();
     }
+    /// <summary>
+    /// プレイヤーの方を向く    
+    /// </summary>
     private void LookAtPlayerXZ()
     {
         if (player == null) return;
@@ -125,7 +128,9 @@ public class MutantBossController : MonoBehaviour, IBossController
         Debug.Log("チャージ停止", this);
         ChargeEffect.SetActive(false);
     }
-
+    /// <summary>
+    /// ビームのON/OFFを一括変更
+    /// </summary>
     private void ChangeBeamBool(bool value)
     {
         foreach (GameObject beam in AttackBeam)
@@ -135,7 +140,9 @@ public class MutantBossController : MonoBehaviour, IBossController
             beam.SetActive(value);
         }
     }
-    //ビームの数が減少するメソッド
+    /// <summary>
+    /// ビームの数が減少するメソッド
+    /// </summary>
     public void DeleteBeam()
     {
         List<GameObject> aliveBeamsList = new List<GameObject>();

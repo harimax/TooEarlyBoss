@@ -69,11 +69,6 @@ public class RobotBossController : MonoBehaviour, IBossController
     }
     /// <summary>シングルトンインスタンス取得。</summary>
     public static RobotBossController GetInstance() => robotBossController;
-
-
-
-
-
     //-----------------------------------------------------------------------------------------------------
     /// <summary>
     /// 吹き飛ばしバリア発動（外部：プレイヤーが一定時間乗った、HPしきい値など）。
@@ -93,7 +88,6 @@ public class RobotBossController : MonoBehaviour, IBossController
     }
     //------------------------------------------------------------------------------------------------
 
-
     /// <summary>
     /// ボスを一時停止（弾発射などを止める）。
     /// </summary>
@@ -102,7 +96,6 @@ public class RobotBossController : MonoBehaviour, IBossController
         // Update 系を止める
         _isPaused = true;
         bulletShooters.SetActive(false);
-
     }
     /// <summary>
     /// ボスの一時停止を解除。
@@ -113,7 +106,6 @@ public class RobotBossController : MonoBehaviour, IBossController
         if (animator != null) animator.enabled = true;
         bulletShooters.SetActive(true);
     }
-
     //------------------------------------------------------------------------------------------------
     /// <summary>
     /// 状態を切り替える共通関数。
@@ -124,7 +116,6 @@ public class RobotBossController : MonoBehaviour, IBossController
         // 進行中の状態処理を止める
         cts?.Cancel();
         cts = new CancellationTokenSource();
-
         currentState = newState;
 
         // 状態ごとに処理開始
@@ -148,7 +139,6 @@ public class RobotBossController : MonoBehaviour, IBossController
     {
         bulletShooters.SetActive(false);
         chargeLaser.SetActive(false);
-
         // Debug.Log("Idle 開始");
         await UniTask.Delay(5000, cancellationToken: token); // 5秒待機
         // Debug.Log("Idle 終了 → Shootingへ");
@@ -211,7 +201,6 @@ public class RobotBossController : MonoBehaviour, IBossController
         bulletShooters.SetActive(false);
         await UniTask.Delay(1000);
         Destroy(this.gameObject);
-
     }
     /// <summary>
     /// 地上敵が倒れた時に呼ばれる：足場を上昇
@@ -223,6 +212,9 @@ public class RobotBossController : MonoBehaviour, IBossController
         ChangeState(BossState.ChargeShoot);
     }
 
+    /// <summary>
+    /// バリアのコライダー半径をアニメーションで変化させる。
+    /// </summary>
     private async UniTask AnimateRadius(float from, float to, float duration)
     {
         if (ejectCollider == null) return;

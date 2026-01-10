@@ -28,7 +28,7 @@ public class TrianingButton : MonoBehaviour
     [SerializeField] private List<Button> trainingButtons;
     [Header("参照")]
     [SerializeField] private CutIinAnimation cutInAnimation;
-    [SerializeField] private TraingingEvent TraingingEvent;
+    [SerializeField] private TrainingEvent TrainingEvent;
     private int turnNumber;
     /// <summary>
     /// 現在の残りターン数（読み取り専用）
@@ -69,7 +69,6 @@ public class TrianingButton : MonoBehaviour
         SyncFieldsFromParams();
         // シングルトン処理
         Instance = this;
-
     }
     void Start()
     {
@@ -88,20 +87,19 @@ public class TrianingButton : MonoBehaviour
     public void TrainingAttack()
     {
         var add = new PlayerGrowParameters(
-            power: increaceParameter(minIncrease, maxIncrease),
+            power: increaseParameter(minIncrease, maxIncrease),
             health: 0,
             stamina: 0, special: 0);
-        ApprlyingTraning(add);
-
+        ApprlyingTraining(add);
     }
     //体力ボタンを押下して体力がアップ
     public void TrainingHealth()
     {
         var add = new PlayerGrowParameters(
             power: 0,
-            health: increaceParameter(minIncrease, maxIncrease),
+            health: increaseParameter(minIncrease, maxIncrease),
             stamina: 0, special: 0);
-        ApprlyingTraning(add);
+        ApprlyingTraining(add);
     }
 
     //スタミナボタンを押下してスタミナがアップ
@@ -110,9 +108,8 @@ public class TrianingButton : MonoBehaviour
         var add = new PlayerGrowParameters(
             power: 0,
             health: 0,
-            stamina: increaceParameter(minIncrease, maxIncrease), special: 0);
-        ApprlyingTraning(add);
-
+            stamina: increaseParameter(minIncrease, maxIncrease), special: 0);
+        ApprlyingTraining(add);
     }
     //ラッキーボタンを押下してラッキーがアップ
     public void TrainingSpcial()
@@ -120,13 +117,12 @@ public class TrianingButton : MonoBehaviour
         var add = new PlayerGrowParameters(
             power: 0,
             health: 0,
-            stamina: 0, special: increaceParameter(minIncrease, maxIncrease));
-        ApprlyingTraning(add);
-
+            stamina: 0, special: increaseParameter(minIncrease, maxIncrease));
+        ApprlyingTraining(add);
     }
 
     //上昇値を決めるメソッド
-    private int increaceParameter(int minIncrease, int maxIncrease)
+    private int increaseParameter(int minIncrease, int maxIncrease)
     {
         return Random.Range(minIncrease, maxIncrease);
     }
@@ -135,17 +131,17 @@ public class TrianingButton : MonoBehaviour
     /// 渡された増分パラメータをcurrentParamsに加算し、
     /// ターン消費・保存・UI更新を一括でする
     /// </summary>
-    private void ApprlyingTraning(PlayerGrowParameters addParams)
+    private void ApprlyingTraining(PlayerGrowParameters addParams)
     {
         //ターンが残っていなければ処理しない
         if (turnNumber <= 0)
         {
             return;
         }
-        var (finalAdd, eventType) = TraingingEvent.Apply(addParams);
+        var (finalAdd, eventType) = TrainingEvent.Apply(addParams);
 
         //イベント演出を再生
-        if(eventType != TraingingEvent.TrainingEventType.None)
+        if(eventType != TrainingEvent.TrainingEventType.None)
         {
             cutInAnimation.PlayFromButton();
         }

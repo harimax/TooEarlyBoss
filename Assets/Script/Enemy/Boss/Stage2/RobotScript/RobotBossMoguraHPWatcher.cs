@@ -13,20 +13,16 @@ public class RobotBossMoguraHPWatcher : MonoBehaviour
     [SerializeField] private RobotBossController boss;   // バリア発動用
     [SerializeField] private RobotBossPatrol patrol;     // 歩行開始用
     private vHealthController moguraHealth;// HP 監視対象
-
     // 閾値
     private float startWalkThreshold; // 1/3 で歩行開始
     private float thTwoThird;         // 2/3
     private float thOneThird;         // 1/3
-
     // フラグ
     private bool firedTwoThird = false;
     private bool firedOneThird = false;
     private bool walkTriggered = false;
     private int DelayTime = 1000;
-
     private CancellationToken _ct;
-
     void Start()
     {
         _ct = this.GetCancellationTokenOnDestroy();
@@ -52,7 +48,6 @@ public class RobotBossMoguraHPWatcher : MonoBehaviour
         if (moguraHealth != null)
             moguraHealth.onChangeHealth.RemoveListener(OnMoleHealthChanged);
     }
-
     /// <summary>
     /// HPが変化した際に呼ばれるコールバック。
     /// HP 2/3 / 1/3 を下回ったタイミングでバリア発動を予約。
@@ -85,15 +80,11 @@ public class RobotBossMoguraHPWatcher : MonoBehaviour
                 await boss.OnActiveBarriar();
             }
         }
-
         // 歩行開始閾値
         if (!walkTriggered && currentHealth <= startWalkThreshold)
         {
             walkTriggered = true;
             patrol?.StartPatrol();
         }
-
     }
-
-
 }

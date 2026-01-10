@@ -21,8 +21,6 @@ public class SmileBossControll : MonoBehaviour,IBossController
     [SerializeField] private float spawnRadius = 5f;
     [SerializeField] private float spawnHeight = 10f;
     // public Transform characterRoot; // キャラクターの正面（Y軸）を基準にする
-
-    
     public float attackInterval = 5f;
     private float timer;
 

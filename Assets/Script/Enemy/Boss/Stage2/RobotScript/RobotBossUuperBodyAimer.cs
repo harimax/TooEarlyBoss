@@ -8,22 +8,18 @@ public class RobotBossUuperBodyAimer : MonoBehaviour
 {
     [SerializeField] private Transform upperBody; // 上半身ボーン
     private Transform player;
-
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
 
         if (upperBody == null)
         {
-            // 自身が UpperBody の場合は self を使う
-            upperBody = transform;
+            upperBody = transform;// 自身が UpperBody の場合は self を使う
         }
     }
-
     private void LateUpdate()
     {
         if (player == null || upperBody == null) return;
-
         // プレイヤー方向を向く
         upperBody.LookAt(player);
 

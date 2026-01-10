@@ -41,7 +41,6 @@ public class EnemyHitStop : MonoBehaviour
     {
         if (isHitStopping) return; // 多重発火を抑制（必要ならキューや最大値合成に変更）
         isHitStopping = true;
-        Debug.Log("HitStop",this);
         animator.speed = 0;
         await UniTask.Delay(hitStopTime);
         animator.speed = 1;

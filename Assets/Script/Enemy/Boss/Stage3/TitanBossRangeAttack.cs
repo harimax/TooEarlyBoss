@@ -9,13 +9,11 @@ public class TitanBossRangeAttack : MonoBehaviour
 {
     [Header("Jump Attack")]
     [SerializeField] private GameObject ballPrefab;
-
     [Header("Rock Throw")]
     [SerializeField] private GameObject rockPrefab;
     [SerializeField] private Transform shotPos;
     [SerializeField] private float shotSpeed = 15f;
     [SerializeField] private string targetTag = "Target";
-
     private Transform player;
     private Transform targetPoint;
     private Vector3 cachedTargetPos;
@@ -62,7 +60,6 @@ public class TitanBossRangeAttack : MonoBehaviour
 
         var shot = Instantiate(rockPrefab.gameObject, origin, shotPos.rotation);
         shot.GetComponent<Rigidbody>().linearVelocity = direction * shotSpeed;
-
     }
 
     /// <summary>

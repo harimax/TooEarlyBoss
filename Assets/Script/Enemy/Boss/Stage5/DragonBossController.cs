@@ -78,7 +78,7 @@ public class DragonBossController : MonoBehaviour, IBossController
     /// </summary>
     private void HandleIdleState()
     {
-        float distance = PlayerDistaneceCheck();
+        float distance = PlayerDistanceCheck();
 
         if (distance < crowDistance)
         {
@@ -165,7 +165,7 @@ public class DragonBossController : MonoBehaviour, IBossController
         // タイマー初期化
     }
     //プレイヤーとの距離を測る
-    private float PlayerDistaneceCheck()
+    private float PlayerDistanceCheck()
     {
         float distance = Vector3.Distance(transform.position, player.position);
         return distance;
@@ -196,7 +196,7 @@ public class DragonBossController : MonoBehaviour, IBossController
             animator.SetTrigger("FinishSprint");
             await UniTask.Delay(TimeSpan.FromSeconds(restTime), cancellationToken: ct);
             //ダッシュ終了後に攻撃範囲内なら攻撃
-            if (PlayerDistaneceCheck() < crowDistance)
+            if (PlayerDistanceCheck() < crowDistance)
             {
                 FacePlayerForSeconds(faceTime, turnSpeed).Forget();
                 animator.SetTrigger("IsCrowAttack");
@@ -213,8 +213,6 @@ public class DragonBossController : MonoBehaviour, IBossController
         }
         Debug.Log("BattleLoop: ct.Cancelled で終了");
     }
-
-
     /// <summary>
     /// クールダウン状態のフレーム処理
     /// </summary>
@@ -255,7 +253,7 @@ public class DragonBossController : MonoBehaviour, IBossController
     private void SelectAttack()
     {
         //プレイヤーとの位置が遠ければ遠距離攻撃率が高くなる
-        if (PlayerDistaneceCheck() > playerDistance)
+        if (PlayerDistanceCheck() > playerDistance)
         {
             attackChoicePercent = 60;
         }

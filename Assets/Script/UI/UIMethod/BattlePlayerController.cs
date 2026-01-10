@@ -4,7 +4,7 @@ using Invector.vCharacterController;
 /// <summary>
 /// ミッション中のプレイヤーの制御を行うクラス
 /// </summary>
-public class BatltlePlayerController : MonoBehaviour
+public class BattlePlayerController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private GameObject player;
@@ -12,7 +12,6 @@ public class BatltlePlayerController : MonoBehaviour
     [SerializeField] private TrianingButton trianingButton;
     private vThirdPersonController vPersonController;
     private Vector3 initPosition;
-
     private void Start()
     {
         // ゲームマネージャーから各種のコンポーネントを取得

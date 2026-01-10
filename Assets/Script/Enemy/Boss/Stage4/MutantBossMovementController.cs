@@ -12,16 +12,12 @@ public class MutantBossMovementController : MonoBehaviour
     private NavMeshAgent agent;
     private float timer;               // 累積タイマー（秒）
     private int currentWaypoint = 0;
-
     /// <summary>現在「走行フェーズ」かどうか</summary>
     public bool IsRunning { get; private set; }
-
     /// <summary>移動速度（アニメーター用）</summary>
     public float CurrentSpeed => agent ? agent.velocity.magnitude : 0f;
-
     /// <summary>走行フェーズに入った瞬間</summary>
     public event Action OnRunStarted;
-
     /// <summary>停止フェーズに入った瞬間</summary>
     public event Action OnStopStarted;
 

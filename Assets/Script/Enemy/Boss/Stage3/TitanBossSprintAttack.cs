@@ -20,8 +20,6 @@ public class TitanBossSprintAttack : MonoBehaviour
     private Transform player;
     private Animator animator;
 
-    public float PreAttackFaceTime => faceTime;
-
     void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;

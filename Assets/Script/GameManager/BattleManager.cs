@@ -13,7 +13,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject tempButton;
     [SerializeField] private SkillSelectUI battleUI;
-    [SerializeField] private BatltlePlayerController battlePlayerController;
+    [SerializeField] private BattlePlayerController battlePlayerController;
     [SerializeField] private BattleUIController battleUIController;
     private bool isPlayerDeathListenerRegistered = false;
     private int enemyCount;

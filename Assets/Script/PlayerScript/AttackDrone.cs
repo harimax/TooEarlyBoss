@@ -15,15 +15,12 @@ public class AttackDrone : MonoBehaviour
         if (other.CompareTag("Enemy"))
         {
             Debug.Log("敵を捕捉しました");
-
             if (Time.time - lastFireTime >= fireCooldown)
             {
                 FireAtTarget(other.transform);
                 lastFireTime = Time.time;
             }
-
         }
-
     }
     private void FireAtTarget(Transform target)
     {

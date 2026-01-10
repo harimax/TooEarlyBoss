@@ -10,7 +10,4 @@ public class DroneNotRotate : MonoBehaviour
     {
         transform.rotation = worldRotation;
     }
-
-
-
 }

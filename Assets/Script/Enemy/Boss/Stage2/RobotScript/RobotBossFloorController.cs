@@ -10,14 +10,11 @@ public class RobotBossFloorController : MonoBehaviour
     [SerializeField] private GameObject floor;        // 足場オブジェクト
     [SerializeField] private Transform target;        // 上昇先
     [SerializeField] private float duration = 10f;    // 上昇にかける時間
-
     [Header("Arrows")]
     [SerializeField] private Transform upFloorPosArea;  // 矢印が配置されている親
     [SerializeField] private string keyshapeName = "Key"; // 矢印オブジェクト名
-
     [Header("Ground Enemy Manager")]
     [SerializeField] private MOGURAManager groundEnemyManager; // 上昇完了後に次スポーン許可
-
     private List<GameObject> upArrows = new();
     private Vector3 floorInitPos;
 
@@ -59,7 +56,6 @@ public class RobotBossFloorController : MonoBehaviour
                 groundEnemyManager.ReadyForNextSpawn();
             }
         });
-
     }
     /// <summary>
     /// 足場を初期位置にリセットする。
