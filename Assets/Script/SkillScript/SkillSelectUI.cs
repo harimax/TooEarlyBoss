@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using System;
+using UnityEngine.EventSystems;
+using Cysharp.Threading.Tasks;
 
 public class SkillSelectUI : MonoBehaviour
 {
@@ -17,6 +19,8 @@ public class SkillSelectUI : MonoBehaviour
     [SerializeField] private SkillManager skillManager;  // プレイヤーのSkillManager参照
     [SerializeField] private BattleManager battleManager; // ←インスペクタで設定
     [SerializeField] private GameObject discardDialogPrefab;
+    [Header("Focus")]
+    [SerializeField] private Selectable fallbackSelectable; // フォーカスが外れたときの予備選択肢
     bool skillChosen = false;
     private void Awake()
     {
@@ -54,7 +58,7 @@ public class SkillSelectUI : MonoBehaviour
     public void ShowRandomSkillChoices()
     {
 
-        skillChosen = false; // ←★ ここで毎回リセット！
+        skillChosen = false; // ここで毎回リセット！
 
         //既に獲得しているスキルは表示対象外にする
         var unacquiredSkills = allSkills
@@ -73,6 +77,8 @@ public class SkillSelectUI : MonoBehaviour
         {
             CreateSkillCard(skill);
         }
+        // 最初のスキルカードにフォーカスを移動
+        FocusFirstSkillButton().Forget();
     }
     /// <summary>
     /// UI上のスキルカードをすべて削除する
@@ -123,4 +129,33 @@ public class SkillSelectUI : MonoBehaviour
         }
     );
     }
+    /// <summary>
+    /// スキル選択UIの最初の選択肢にフォーカスを移動する
+    /// </summary>
+    /// <returns></returns>
+    private async UniTaskVoid FocusFirstSkillButton()
+    {
+        if (EventSystem.current == null) return;
+
+        // LayoutGroup / Instantiate 完了待ち
+        await UniTask.Yield(PlayerLoopTiming.PostLateUpdate);
+
+        // cardParent 配下の Button を取得
+        var buttons = cardParent.GetComponentsInChildren<Button>(true);
+
+        // 最初に選択可能なボタン
+        var first = buttons
+            .Select(b => (Selectable)b)
+            .FirstOrDefault(b =>
+                b != null &&
+                b.IsInteractable() &&
+                b.gameObject.activeInHierarchy);
+
+        var target = first ?? fallbackSelectable;
+        if (target == null) return;
+
+        EventSystem.current.SetSelectedGameObject(null);
+        target.Select();
+    }
+
 }
