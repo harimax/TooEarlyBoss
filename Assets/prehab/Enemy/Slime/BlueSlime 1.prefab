@@ -1130,6 +1130,10 @@ PrefabInstance:
       propertyPath: ParentObj
       value: 
       objectReference: {fileID: 44260241681488976}
+    - target: {fileID: 27455182655273466, guid: 5d2842dae16fa0648b7bae12c6642f7b, type: 3}
+      propertyPath: preliminaryEffect
+      value: 
+      objectReference: {fileID: 3003841506748342278, guid: 9922494e2c51a3b44bf142314319e086, type: 3}
     - target: {fileID: 153300520490503402, guid: 5d2842dae16fa0648b7bae12c6642f7b, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.002

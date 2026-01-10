@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e972bf4c76493634390396d71c3c8eb1, type: 3}
   m_Name: ProcessSetting
   m_EditorClassIdentifier: 
-  startCycle: 4
+  startCycle: 1
   maxCycle: 5
   totalTurnsPerCycle: 14
   baseEnemyCount: 1

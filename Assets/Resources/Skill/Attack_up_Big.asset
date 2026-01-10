@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Attack_up_Big
   m_EditorClassIdentifier: 
   skillName: "\u653B\u6483\u529Bup\u5927"
-  description: "\u653B\u6483\u529B20\u4E0A\u6607"
-  AttackUPValue: 20
+  description: "\u653B\u6483\u529B15\u4E0A\u6607"
+  SpcialSkill: 0
+  AttackUPValue: 15

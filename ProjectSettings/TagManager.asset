@@ -37,6 +37,7 @@ TagManager:
   - Target
   - StartPoint
   - VThirdPersonCamera
+  - BattlePoint
   layers:
   - Default
   - TransparentFX
