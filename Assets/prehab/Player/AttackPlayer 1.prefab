@@ -5499,15 +5499,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 127608865321161041}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.20545262, y: -0, z: -0, w: 0.9786671}
-  m_LocalPosition: {x: 0, y: 3.8500772, z: -4.8131647}
+  m_LocalRotation: {x: 0.17003664, y: 0.5493153, z: -0.115318336, w: 0.8099642}
+  m_LocalPosition: {x: -5.32, y: 3.8500772, z: -2.92}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9149547344553304682}
   - {fileID: 1318515057969025019}
   m_Father: {fileID: 1063739292119412740}
-  m_LocalEulerAnglesHint: {x: 23.712, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 23.712, y: 68.29, z: 0}
 --- !u!114 &441790012585453088
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6824,13 +6824,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCloseEvents: 0
   openCloseWindow: 1
-  selectedToolbar: 0
+  selectedToolbar: 3
   _isDead: 1
-  _currentHealth: 150
+  _currentHealth: 100
   isImmortal: 0
   fillHealthOnStart: 1
   reciveDamage: 0
-  _maxHealth: 150
+  _maxHealth: 100
   _healthRecovery: 0
   _healthRecoveryDelay: 0
   checkHealthEvents: []
@@ -7043,7 +7043,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCloseEvents: 0
   openCloseWindow: 1
-  selectedToolbar: 1
+  selectedToolbar: 0
   unlockCursorOnStart: 1
   showCursorOnStart: 1
   toggleWalk: 301
@@ -7286,7 +7286,7 @@ MonoBehaviour:
     keyboard: Alpha1
     keyboardAxis: 0
     joystick: Y
-    joystickAxis: 1
+    joystickAxis: 0
     mobile: Y
     mobileAxis: 0
     joystickAxisInvert: 0
@@ -7349,7 +7349,7 @@ MonoBehaviour:
     attackObject: {fileID: 8689137118588800866}
     isHuman: 0
   defaultDamage:
-    damageValue: 50
+    damageValue: 10
     staminaBlockCost: 5
     staminaRecoveryDelay: 1
     ignoreDefense: 0
@@ -7390,7 +7390,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   defaultAttackDistance: 3
-  defaultStaminaCost: 10
+  defaultStaminaCost: 25
   defaultStaminaRecoveryDelay: 1
   defaultDefenseRate: 85
   defaultDefenseRange: 80
@@ -8109,8 +8109,7 @@ MonoBehaviour:
   acquiredSkills:
   - {fileID: 11400000, guid: cb8058ae3a7a4a3429c4eae0c941016f, type: 2}
   - {fileID: 11400000, guid: 96c3ac32812c6264f95bc453f5c339ed, type: 2}
-  - {fileID: 11400000, guid: e8989a8672b640a4d802466f0527bb61, type: 2}
-  - {fileID: 11400000, guid: 68d93f6860b712c42a0e7bd47f640e13, type: 2}
+  - {fileID: 11400000, guid: c4b1da6a9cb647349ab63976fef6273e, type: 2}
   player: {fileID: 8605119299218610018}
 --- !u!114 &429146110260879909
 MonoBehaviour:
@@ -57077,7 +57076,7 @@ MonoBehaviour:
   - m_Script
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
-  m_Priority: 20
+  m_Priority: 1
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
