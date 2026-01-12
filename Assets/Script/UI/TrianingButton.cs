@@ -1,9 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using Unity.VisualScripting;
+using Cysharp.Threading.Tasks;
 
 public class TrianingButton : MonoBehaviour
 {
@@ -23,6 +26,7 @@ public class TrianingButton : MonoBehaviour
     [Header("成長パラメータ設定")]
     [SerializeField] private int minIncrease = 1;
     [SerializeField] private int maxIncrease = 5;
+    [SerializeField] private float increaseDisplaySeconds = 1.2f;
 
     [SerializeField] private List<Button> BattleButtons;
     [SerializeField] private List<Button> trainingButtons;
@@ -31,6 +35,8 @@ public class TrianingButton : MonoBehaviour
     [SerializeField] private TrainingEvent TrainingEvent;
     [SerializeField] private UIFocusSwitcher focusSwitcher;
     private int turnNumber;
+    // 一時表示のキャンセル用トークン
+    private CancellationTokenSource increaseDisplayCts;
     /// <summary>
     /// 現在の残りターン数（読み取り専用）
     /// </summary>
@@ -83,6 +89,17 @@ public class TrianingButton : MonoBehaviour
 
         // 最初はボタンを有効化
         UpdateUI();
+    }
+    // UniTaskの遅延表示を安全に破棄する
+    private void OnDestroy()
+    {
+        if (increaseDisplayCts == null)
+        {
+            return;
+        }
+        increaseDisplayCts.Cancel();
+        increaseDisplayCts.Dispose();
+        increaseDisplayCts = null;
     }
     //パワーボタンを押下してパワーがアップ
     public void TrainingAttack()
@@ -157,6 +174,7 @@ public class TrianingButton : MonoBehaviour
         PlayerGrowRepository.SaveParameters(currentParams);
         // UI更新
         UpdateUI();
+        ShowIncrease(finalAdd);
     }
     //UIの更新
     public void UpdateUI()
@@ -211,4 +229,66 @@ public class TrianingButton : MonoBehaviour
         PlayerSpecial = currentParams.PlayerSpecial;
     }
 
+    // 増分があるステータスのみ一時的に「+X」を表示する
+    private void ShowIncrease(PlayerGrowParameters add)
+    {
+        if (!HasAnyIncrease(add))
+        {
+            return;
+        }
+
+        if (increaseDisplayCts != null)
+        {
+            increaseDisplayCts.Cancel();
+            increaseDisplayCts.Dispose();
+        }
+        increaseDisplayCts = new CancellationTokenSource();
+        ShowIncreaseAsync(add, increaseDisplayCts.Token).Forget();
+    }
+
+    // 一定時間だけ増分表示を出してから通常UIに戻す
+    private async UniTaskVoid ShowIncreaseAsync(PlayerGrowParameters add, CancellationToken token)
+    {
+        if (attackText != null && add.PlayerPower > 0f)
+        {
+            attackText.text = $"{FormatFloat(PlayerPower)} (+{FormatFloat(add.PlayerPower)})";
+        }
+        if (healthText != null && add.PlayerHealth > 0)
+        {
+            healthText.text = $"{PlayerHealth} (+{add.PlayerHealth})";
+        }
+        if (staminaText != null && add.PlayerStamina > 0f)
+        {
+            staminaText.text = $"{FormatFloat(PlayerStamina)} (+{FormatFloat(add.PlayerStamina)})";
+        }
+        if (specialText != null && add.PlayerSpecial > 0f)
+        {
+            specialText.text = $"{FormatFloat(PlayerSpecial)} (+{FormatFloat(add.PlayerSpecial)})";
+        }
+
+        try
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(increaseDisplaySeconds), cancellationToken: token);
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+        UpdateUI();
+    }
+
+    // いずれかのステータスが上昇しているか
+    private static bool HasAnyIncrease(PlayerGrowParameters add)
+    {
+        return add.PlayerHealth > 0
+            || add.PlayerPower > 0f
+            || add.PlayerStamina > 0f
+            || add.PlayerSpecial > 0f;
+    }
+
+    // 小数点以下を見やすく整形する
+    private static string FormatFloat(float value)
+    {
+        return value.ToString("0.##");
+    }
 }
