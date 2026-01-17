@@ -17,6 +17,7 @@ public class PlayerSpawnOnSceneStart : MonoBehaviour
             // そこで「位置移動 + 物理の初期化」をセットで行い、
             // ボス/実践クリア後に育成へ戻っても勝手に動かないようにする。
             player.transform.position = startPoint.transform.position;
+            ResetPlayerRotationY(player);
             ResetPlayerPhysics(player);
         }
         else
@@ -41,5 +42,16 @@ public class PlayerSpawnOnSceneStart : MonoBehaviour
 
         // 念のためスリープさせて停止状態を安定させる。
         rb.Sleep();
+    }
+
+    /// <summary>
+    /// プレイヤーのY軸回転だけを0に戻す。
+    /// </summary>
+    /// <param name="player">対象のプレイヤー</param>
+    private void ResetPlayerRotationY(GameObject player)
+    {
+        var euler = player.transform.eulerAngles;
+        euler.y = 0f;
+        player.transform.eulerAngles = euler;
     }
 }
