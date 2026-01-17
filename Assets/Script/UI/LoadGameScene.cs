@@ -20,7 +20,7 @@ public class LoadGameScene : MonoBehaviour
     private SkillManager skillManager;
     public async void OnClickStartButton()
     {
-        await AnimateButton();
+
 
         // プレイヤー情報取得 & ステータス適用
         if (!TryGetPlayerComponents()) return;
@@ -37,14 +37,6 @@ public class LoadGameScene : MonoBehaviour
             SceneManager.LoadScene(BossSceneTitle[ProcessManager.Instance.CurrentCycle - 1]);
         }
 
-    }
-    /// <summary>
-    /// ボタンのアニメーション（DOTween）
-    /// </summary>
-    private async Task AnimateButton()
-    {
-        await buttonTransform.DOScale(0.9f, 0.5f).SetEase(Ease.OutCubic).AsyncWaitForCompletion();
-        await buttonTransform.DOScale(1.0f, 0.24f).SetEase(Ease.OutCubic).SetDelay(0.05f).AsyncWaitForCompletion();
     }
     /// <summary>
     /// プレイヤーのトレーニング値をステータスに反映

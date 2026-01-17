@@ -119,6 +119,7 @@ public class BossStageManager : MonoBehaviour
         Time.timeScale = 0f;
         ClearText.text = "倒したぜ";
         Debug.Log("敵を倒した");
+        IsPlayerMove.GetInstance().CanMove = false;
         ClearButton.SetActive(true);
     }
     private async UniTask GameOverDelay()

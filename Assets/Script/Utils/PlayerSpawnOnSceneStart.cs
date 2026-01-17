@@ -37,7 +37,7 @@ public class PlayerSpawnOnSceneStart : MonoBehaviour
         if (rb == null) return;
 
         // 速度・角速度をゼロにして、慣性による勝手な移動を止める。
-        rb.velocity = Vector3.zero;
+        rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
         // 念のためスリープさせて停止状態を安定させる。

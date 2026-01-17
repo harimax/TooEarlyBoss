@@ -24,7 +24,7 @@ public class RoundFire : SkillBase
         // if (Input.GetKeyDown(KeyCode.F))
         if(vInput.skill1Input.GetButtonDown())
         {
-            Debug.Log("スキル発動");
+            Debug.Log("炎スキル発動");
             // すでにエフェクトが存在しない場合のみ発動
             if (activeEffect.activeSelf == false)
             {
