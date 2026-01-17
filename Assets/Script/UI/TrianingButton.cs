@@ -23,6 +23,11 @@ public class TrianingButton : MonoBehaviour
     [SerializeField] private TextMeshProUGUI staminaText;
     [SerializeField] private TextMeshProUGUI specialText;
     [SerializeField] private TextMeshProUGUI turn;
+    [SerializeField] private TextMeshProUGUI increaseAttackText;
+    [SerializeField] private TextMeshProUGUI increaseHealthText;
+    [SerializeField] private TextMeshProUGUI increaseStaminaText;
+    [SerializeField] private TextMeshProUGUI increaseSpecialText;
+
     [Header("成長パラメータ設定")]
     [SerializeField] private int minIncrease = 1;
     [SerializeField] private int maxIncrease = 5;
@@ -142,7 +147,7 @@ public class TrianingButton : MonoBehaviour
     //上昇値を決めるメソッド
     private int increaseParameter(int minIncrease, int maxIncrease)
     {
-        return Random.Range(minIncrease, maxIncrease);
+        return UnityEngine.Random.Range(minIncrease, maxIncrease);
     }
     /// <summary>
     /// トレーニング処理本体
@@ -173,8 +178,9 @@ public class TrianingButton : MonoBehaviour
         // 成長パラメータを保存
         PlayerGrowRepository.SaveParameters(currentParams);
         // UI更新
-        UpdateUI();
         ShowIncrease(finalAdd);
+        UpdateUI();
+        
     }
     //UIの更新
     public void UpdateUI()
@@ -249,32 +255,35 @@ public class TrianingButton : MonoBehaviour
     // 一定時間だけ増分表示を出してから通常UIに戻す
     private async UniTaskVoid ShowIncreaseAsync(PlayerGrowParameters add, CancellationToken token)
     {
-        if (attackText != null && add.PlayerPower > 0f)
+        if (increaseAttackText != null && add.PlayerPower > 0f)
         {
-            attackText.text = $"{FormatFloat(PlayerPower)} (+{FormatFloat(add.PlayerPower)})";
+            increaseAttackText.text = $"↑{FormatFloat(add.PlayerPower)}";
         }
-        if (healthText != null && add.PlayerHealth > 0)
+        if (increaseHealthText != null && add.PlayerHealth > 0)
         {
-            healthText.text = $"{PlayerHealth} (+{add.PlayerHealth})";
+            increaseHealthText.text = $"↑{FormatFloat(add.PlayerHealth)}";
         }
-        if (staminaText != null && add.PlayerStamina > 0f)
+        if (increaseStaminaText != null && add.PlayerStamina > 0f)
         {
-            staminaText.text = $"{FormatFloat(PlayerStamina)} (+{FormatFloat(add.PlayerStamina)})";
+            increaseStaminaText.text = $"↑{FormatFloat(add.PlayerStamina)}";
         }
-        if (specialText != null && add.PlayerSpecial > 0f)
+        if (increaseSpecialText != null && add.PlayerSpecial > 0f)
         {
-            specialText.text = $"{FormatFloat(PlayerSpecial)} (+{FormatFloat(add.PlayerSpecial)})";
+            increaseSpecialText.text = $"↑{FormatFloat(add.PlayerSpecial)}";
         }
-
         try
         {
             await UniTask.Delay(TimeSpan.FromSeconds(increaseDisplaySeconds), cancellationToken: token);
+            // 増分表示をクリア
+            increaseAttackText.text = "";
+            increaseHealthText.text = "";
+            increaseStaminaText.text = "";
+            increaseSpecialText.text = "";
         }
         catch (OperationCanceledException)
         {
             return;
         }
-        UpdateUI();
     }
 
     // いずれかのステータスが上昇しているか
