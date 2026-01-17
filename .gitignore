@@ -12,6 +12,7 @@
 /Assets/gitignore_asset
 /Assets/**/bin/
 /Assets/**/obj/
+/Assets/MyImage
 
 
 # MemoryCaptures can get excessive in size.
