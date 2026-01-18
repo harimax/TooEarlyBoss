@@ -1,10 +1,8 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
-using System.Threading.Tasks;
 using System.Threading;
-using UnityEngine.AI;
-using Invector;
 using System;
+using Game.Boss;
 
 public class DragonBossController : MonoBehaviour, IBossController
 {
