@@ -47,7 +47,7 @@ public class RoundFire : SkillBase
 
         activeEffect.SetActive(false);
     }
-
+    //特殊パラメータを割り当てる処理
     private void ApplySpecialDamage(GameObject effectObject)
     {
         if (!PlayerGrowRepository.LoadParameters(out var growth))
@@ -55,12 +55,16 @@ public class RoundFire : SkillBase
             return;
         }
 
-        var damageComponent = effectObject.GetComponentInChildren<vObjectDamage>();
-        if (damageComponent == null)
+        var damageComponents = effectObject.GetComponentsInChildren<vObjectDamage>(true);
+        if (damageComponents == null || damageComponents.Length == 0)
         {
             return;
         }
 
-        damageComponent.damage.damageValue = Mathf.Ceil(growth.PlayerSpecial / 3f);
+        var damageValue = Mathf.Ceil(growth.PlayerSpecial / 3f);
+        foreach (var damageComponent in damageComponents)
+        {
+            damageComponent.damage.damageValue = damageValue;
+        }
     }
 }

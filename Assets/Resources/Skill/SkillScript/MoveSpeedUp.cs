@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 public class MoveSpeedUp : SkillBase
 {
     private bool isEffectApplied = false;
-    public float duration = 10f;         // エフェクトの持続時間
+    public float duration = 5f;         // エフェクトの持続時間
     private float tempWalkSpeed;
     private float tempRunnigSpeed;
     private float tempSprintSpeed;
@@ -29,7 +29,7 @@ public class MoveSpeedUp : SkillBase
         {
             if (!isEffectApplied)
             {
-                _=ActiveSpeedUp(player);//（警告なし）
+                ActiveSpeedUp(player).Forget();
             }
         }
     }
@@ -64,9 +64,10 @@ public class MoveSpeedUp : SkillBase
 
     private void SetMeshTrailEnabled(GameObject player, bool enabled)
     {
-        var components = player.GetComponentsInChildren<Component>(true);
+        Debug.Log("メッシュトレイルの有効化状態を変更");
         var updated = false;
 
+        var components = player.GetComponentsInChildren<Component>(true);
         foreach (var component in components)
         {
             if (component == null)
