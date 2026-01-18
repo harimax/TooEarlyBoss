@@ -81,7 +81,6 @@ public class BossStageManager : MonoBehaviour
         var skillManager = player.GetComponent<SkillManager>();
 
         IsPlayerMove.GetInstance().CanMove = true;
-        SetPlayerGravity(true); // ボス戦開始時は重力をオンにする
         StartButton.SetActive(false);
         BossCamera.SetActive(false);
         bossController.ResumeBoss();
@@ -169,23 +168,5 @@ public class BossStageManager : MonoBehaviour
 
         lastSelected = target;
         EventSystem.current.SetSelectedGameObject(target);
-    }
-
-    /// <summary>
-    /// プレイヤーの重力をオン/オフする。
-    /// </summary>
-    /// <param name="enabled">オンにする場合はtrue</param>
-    private void SetPlayerGravity(bool enabled)
-    {
-        if (player == null)
-        {
-            player = GameObject.FindGameObjectWithTag("Player");
-        }
-        if (player == null) return;
-
-        var rb = player.GetComponent<Rigidbody>();
-        if (rb == null) return;
-
-        rb.useGravity = enabled;
     }
 }

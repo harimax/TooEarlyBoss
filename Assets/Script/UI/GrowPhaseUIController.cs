@@ -49,7 +49,7 @@ public class GrowPhaseUIController : MonoBehaviour
         SetAllUIInactive();
         CacheCameraReferences();//カメラやBrainの参照を1度だけキャッシュ
         trainingUI?.SetActive(true); // 初期状態が修行UIなら
-        SetPlayerGravity(false); // 育成中は重力をオフにする
+        // SetPlayerGravity(false); // 育成中は重力をオフにする
         // Inspector 未設定時の保険
         if (player == null)
         {
@@ -67,7 +67,7 @@ public class GrowPhaseUIController : MonoBehaviour
         SetCameraMode(CameraMode.BattlePrepare);
         IsGameUI = true;
         IstrainingUI = false;
-        SetPlayerGravity(false); // 戦闘開始前は重力を切って育成待機状態にする
+        // SetPlayerGravity(false); // 戦闘開始前は重力を切って育成待機状態にする
         SwitchCameraAsync().Forget();
     }
     /// <summary>
@@ -78,7 +78,7 @@ public class GrowPhaseUIController : MonoBehaviour
         // UI非表示
         SetAllUIInactive();
         SetCameraMode(CameraMode.Follow);
-        SetPlayerGravity(true); // バトル開始時は重力をオンにする
+        // SetPlayerGravity(true); // バトル開始時は重力をオンにする
         player.transform.position = battleStartPoint.position;
         battleStartController.StartBattle();//バトル開始メソッドを呼び出す
     }
@@ -92,7 +92,7 @@ public class GrowPhaseUIController : MonoBehaviour
         SetAllUIInactive();
         IsGameUI = false;
         IstrainingUI = true;
-        SetPlayerGravity(false); // 育成に戻る時は重力をオフにする
+        // SetPlayerGravity(false); // 育成に戻る時は重力をオフにする
         SwitchCameraAsync().Forget();
     }
     // カメラ遷移完了まで待ってからUIとCanMoveを切り替える
@@ -229,23 +229,4 @@ public class GrowPhaseUIController : MonoBehaviour
                 break;
         }
     }
-
-    /// <summary>
-    /// プレイヤーの重力をオン/オフする。
-    /// </summary>
-    /// <param name="enabled">オンにする場合はtrue</param>
-    private void SetPlayerGravity(bool enabled)
-    {
-        if (player == null)
-        {
-            player = GameObject.FindWithTag("Player");
-        }
-        if (player == null) return;
-
-        var rb = player.GetComponent<Rigidbody>();
-        if (rb == null) return;
-
-        rb.useGravity = enabled;
-    }
-
 }

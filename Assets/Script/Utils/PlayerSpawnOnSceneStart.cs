@@ -43,16 +43,13 @@ public class PlayerSpawnOnSceneStart : MonoBehaviour
         }
 
         var rb = player.GetComponent<Rigidbody>();
-        bool previousUseGravity = true;
         RigidbodyConstraints previousConstraints = RigidbodyConstraints.None;
         if (rb != null)
         {
             // 物理系を一時的に停止し、スポーン処理中に押し出しや沈み込みが起きないようにする。
-            previousUseGravity = rb.useGravity;
             previousConstraints = rb.constraints;
             rb.isKinematic = true;
             rb.detectCollisions = false;
-            rb.useGravity = false;
             rb.constraints = RigidbodyConstraints.FreezeAll;
         }
 
@@ -70,7 +67,6 @@ public class PlayerSpawnOnSceneStart : MonoBehaviour
             // 物理を元に戻して通常の挙動へ復帰させる。
             rb.detectCollisions = true;
             rb.isKinematic = false;
-            rb.useGravity = previousUseGravity;
             rb.constraints = previousConstraints;
         }
 
