@@ -95,16 +95,7 @@ public class MutantBossController : MonoBehaviour, IBossController
     /// </summary>
     private void LookAtPlayerXZ()
     {
-        if (player == null) return;
-
-        Vector3 direction = player.position - transform.position;
-        direction.y = 0f; // Y方向無視してXZ平面で回転
-
-        if (direction.sqrMagnitude > 0.001f)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
-        }
+        BossUtilities.FaceTargetYaw(transform, player, 5f);
     }
     public void StartAttackBeam()
     {
