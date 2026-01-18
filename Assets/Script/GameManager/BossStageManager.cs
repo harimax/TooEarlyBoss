@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Invector.vMelee;
 using Invector.vCharacterController;
 using TMPro;
@@ -114,17 +113,18 @@ public class BossStageManager : MonoBehaviour
     {
         // ヒットストップ演出
         Time.timeScale = 0.3f;
-        await UniTask.Delay(1500, ignoreTimeScale: true);
+        await UniTask.Delay(3000, ignoreTimeScale: true);
         // ヒットストップ後はゲーム時間を止める
         Time.timeScale = 0f;
         ClearText.text = "倒したぜ";
         Debug.Log("敵を倒した");
+        IsPlayerMove.GetInstance().CanMove = false;
         ClearButton.SetActive(true);
     }
     private async UniTask GameOverDelay()
     {
         Time.timeScale = 0.3f;
-        await UniTask.Delay(1500, ignoreTimeScale: true);
+        await UniTask.Delay(3000, ignoreTimeScale: true);
         Time.timeScale = 0.0f;
          ClearText.text = "死んだぜ/nどうする？";
         GameOverButtons.SetActive(true);

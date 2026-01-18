@@ -104,7 +104,7 @@ public class PlayerSpawnOnSceneStart : MonoBehaviour
         if (rb == null) return;
 
         // 速度・角速度をゼロにして、慣性による勝手な移動を止める。
-        rb.velocity = Vector3.zero;
+        rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         // Transform の位置を Rigidbody に反映してズレを解消する。
         rb.position = player.transform.position;
