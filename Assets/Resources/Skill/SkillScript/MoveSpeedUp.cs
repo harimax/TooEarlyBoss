@@ -16,6 +16,7 @@ public class MoveSpeedUp : SkillBase
     private float tempWalkSpeed;
     private float tempRunnigSpeed;
     private float tempSprintSpeed;
+    private const string MeshTrailComponentName = "MeshTrailTut";
 
     public override void ApplyEffect(GameObject player)
     {
@@ -43,6 +44,7 @@ public class MoveSpeedUp : SkillBase
         playerComp.freeSpeed.walkSpeed = tempWalkSpeed * 1.3f;
         playerComp.freeSpeed.runningSpeed = tempRunnigSpeed * 1.3f;
         playerComp.freeSpeed.sprintSpeed = tempSprintSpeed * 1.3f;
+        SetMeshTrailEnabled(player, true);
         isEffectApplied = true;
         await FinishSpeedUp(duration, player);
     }
@@ -55,7 +57,38 @@ public class MoveSpeedUp : SkillBase
         playerComp.freeSpeed.walkSpeed = tempWalkSpeed;
         playerComp.freeSpeed.runningSpeed = tempRunnigSpeed;
         playerComp.freeSpeed.sprintSpeed = tempSprintSpeed;
+        SetMeshTrailEnabled(player, false);
         isEffectApplied = false;
         Debug.Log("スピードアップ終わり");
+    }
+
+    private void SetMeshTrailEnabled(GameObject player, bool enabled)
+    {
+        var components = player.GetComponentsInChildren<Component>(true);
+        var updated = false;
+
+        foreach (var component in components)
+        {
+            if (component == null)
+            {
+                continue;
+            }
+
+            if (component.GetType().Name != MeshTrailComponentName)
+            {
+                continue;
+            }
+
+            if (component is Behaviour behaviour)
+            {
+                behaviour.enabled = enabled;
+                updated = true;
+            }
+        }
+
+        if (!updated)
+        {
+            Debug.LogWarning($"{MeshTrailComponentName} が見つかりませんでした。");
+        }
     }
 }
