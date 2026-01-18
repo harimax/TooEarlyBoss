@@ -16,6 +16,8 @@ public class ProcessManager : MonoBehaviour
     private int currentBattleIndex;
     private int totalTurns;
     private int maxCycle;
+    // シーン遷移後にコントローラを再有効化する必要があるかどうか
+    private bool pendingEnableController;
     public int CurrentCycle //外部に公開するゲームサイクル
     {
         get { return currentCycle; }
@@ -43,7 +45,14 @@ public class ProcessManager : MonoBehaviour
         currentBattleIndex = processSetting.baseEnemyCount;
         totalTurns = processSetting.totalTurnsPerCycle;
         Debug.Log($"サイクル{currentCycle}開始" + $"敵の初期数{currentBattleIndex}" + $"ターン数{totalTurns}");
+        // シーン読み込み完了タイミングでプレイヤーコントローラを復帰させるために登録
+        SceneManager.sceneLoaded += HandleSceneLoaded;
+    }
 
+    private void OnDestroy()
+    {
+        // シーンイベントの購読解除（重複実行を防ぐ）
+        SceneManager.sceneLoaded -= HandleSceneLoaded;
     }
     //現在の出現する敵の数を返す関数
     public int GetEnemyCountForCurrentBattle()
@@ -99,6 +108,8 @@ public class ProcessManager : MonoBehaviour
     //修行・戦闘シーンに移る時のメソッド
     private void LoadScene(string sceneName)
     {
+        // シーン遷移直前にコントローラを停止して、移動/補正が走らないようにする
+        DisablePlayerControllerBeforeSceneLoad();
         if (Time.timeScale != 1f)
         {
             Time.timeScale = 1f;
@@ -111,6 +122,39 @@ public class ProcessManager : MonoBehaviour
         {
             SceneManager.LoadScene(sceneName);
         }
+    }
+
+    private void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // 事前に停止したコントローラがある場合のみ復帰処理を行う
+        if (!pendingEnableController) return;
+
+        var player = GameObject.FindWithTag("Player");
+        if (player != null)
+        {
+            var controller = player.GetComponent<Invector.vCharacterController.vThirdPersonController>();
+            if (controller != null)
+            {
+                controller.enabled = true;
+            }
+        }
+        // 復帰処理が完了したのでフラグを下ろす
+        pendingEnableController = false;
+    }
+
+    private void DisablePlayerControllerBeforeSceneLoad()
+    {
+        // 遷移前のプレイヤーを探してコントローラを停止する
+        var player = GameObject.FindWithTag("Player");
+        if (player == null) return;
+
+        var controller = player.GetComponent<Invector.vCharacterController.vThirdPersonController>();
+        if (controller == null) return;
+
+        // コントローラを無効化して入力/接地補正を停止する
+        controller.enabled = false;
+        // 遷移後に再有効化するためのフラグを立てる
+        pendingEnableController = true;
     }
     private void DestroyPlayerAndManagers()
     {
