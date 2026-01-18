@@ -163011,7 +163011,7 @@ GameObject:
   - component: {fileID: 8414081524321841697}
   m_Layer: 9
   m_Name: Boss 1
-  m_TagString: Boss
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -163155,17 +163155,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85562197c1ff70c42b5935094cc76e21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runTime: 5
-  stopTime: 15
-  waypoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   AttackBeam:
   - {fileID: 6988535233687839354}
   - {fileID: 3783694049424848764}

@@ -1697,7 +1697,7 @@ GameObject:
   - component: {fileID: 9036436479755140683}
   m_Layer: 0
   m_Name: RobotBoss
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1801,30 +1801,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TreeBossController
   bulletShooters: {fileID: 2051014643351703789}
   chargeLaser: {fileID: 0}
-  UpperBody: {fileID: 4197539447478954497}
-  Floor: {fileID: 0}
-  target: {fileID: 0}
   groundEnemyManager: {fileID: 0}
-  MOGURA: {fileID: 3280723761466260175}
-  duration: 10
-  upFloorPosArea: {fileID: 0}
-  keyshapeName: keyshape
-  waypoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  waypointThreshold: 0.2
   Barrier: {fileID: 3568281721302510506}
   expandDuration: 1
   holdDuration: 1
   shrinkDuration: 1
   minRadius: 0.1
   maxRadius: 12
+  floorController: {fileID: 0}
 --- !u!1 &6564809016268635641
 GameObject:
   m_ObjectHideFlags: 0

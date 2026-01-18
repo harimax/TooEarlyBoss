@@ -985,7 +985,7 @@ GameObject:
   - component: {fileID: 3122541639505337826}
   m_Layer: 9
   m_Name: Fantasy_Dragon_01
-  m_TagString: Boss
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1203,7 +1203,7 @@ MonoBehaviour:
   throwPoint: {fileID: 2266464177035251728}
   projectileSpeed: 18
   rangedTriggerName: RangedAttack
-  SprintColider: {fileID: 1747137627005146452}
+  sprintCollider: {fileID: 0}
 --- !u!114 &3122541639505337826
 MonoBehaviour:
   m_ObjectHideFlags: 0

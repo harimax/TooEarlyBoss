@@ -29577,7 +29577,7 @@ GameObject:
   - component: {fileID: 5489107096254600713}
   m_Layer: 20
   m_Name: BossDragon
-  m_TagString: Boss
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

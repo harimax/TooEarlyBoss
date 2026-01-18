@@ -25386,7 +25386,7 @@ GameObject:
   - component: {fileID: 2572643880373983945}
   m_Layer: 9
   m_Name: Fantasy_Animal_01
-  m_TagString: Boss
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -25497,7 +25497,7 @@ MonoBehaviour:
   throwPoint: {fileID: 0}
   projectileSpeed: 18
   rangedTriggerName: Ranged
-  SprintColider: {fileID: 7940660835218636306}
+  sprintCollider: {fileID: 0}
 --- !u!114 &361805916227128499
 MonoBehaviour:
   m_ObjectHideFlags: 0

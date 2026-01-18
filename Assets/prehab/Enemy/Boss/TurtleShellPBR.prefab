@@ -208,7 +208,7 @@ GameObject:
   - component: {fileID: 1905015527458388080}
   m_Layer: 0
   m_Name: TurtleShellPBR
-  m_TagString: Boss
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -267,10 +267,10 @@ MonoBehaviour:
   ballPrefab: {fileID: 6326402367420055314, guid: e2bb709173363df4195faa36223594bf, type: 3}
   laser: {fileID: 2837342191824441456}
   rockPrefab: {fileID: 5038779788857181603, guid: c42dfee16b11b3d418e9ff2b3d94cbe2, type: 3}
+  ObjectSpawnPoint: {fileID: 1673146575805378662}
   rockCount: 3
   spawnRadius: 10
   spawnHeight: 30
-  ObjectSpawnPoint: {fileID: 1673146575805378662}
   attackInterval: 5
 --- !u!143 &2097189696879852023
 CharacterController:
