@@ -43,18 +43,25 @@ public class PlayerSpawnOnSceneStart : MonoBehaviour
         }
 
         var rb = player.GetComponent<Rigidbody>();
+        bool previousUseGravity = true;
         RigidbodyConstraints previousConstraints = RigidbodyConstraints.None;
         if (rb != null)
         {
             // 物理系を一時的に停止し、スポーン処理中に押し出しや沈み込みが起きないようにする。
+            previousUseGravity = rb.useGravity;
             previousConstraints = rb.constraints;
             rb.isKinematic = true;
             rb.detectCollisions = false;
+            rb.useGravity = false;
             rb.constraints = RigidbodyConstraints.FreezeAll;
         }
 
         // まずは指定位置に移動してから、地面スナップで正確な高さに合わせる。
         player.transform.position = spawnPosition;
+        // シーン開始時は常に向きを固定する（y軸回転をリセット）。
+        var spawnEuler = player.transform.eulerAngles;
+        spawnEuler.y = 0f;
+        player.transform.rotation = Quaternion.Euler(spawnEuler);
         SnapPlayerToGround(player, spawnPosition);
         // Transform と Physics の同期を即時反映しておく。
         Physics.SyncTransforms();
@@ -67,6 +74,7 @@ public class PlayerSpawnOnSceneStart : MonoBehaviour
             // 物理を元に戻して通常の挙動へ復帰させる。
             rb.detectCollisions = true;
             rb.isKinematic = false;
+            rb.useGravity = previousUseGravity;
             rb.constraints = previousConstraints;
         }
 
@@ -113,6 +121,10 @@ public class PlayerSpawnOnSceneStart : MonoBehaviour
         {
             collider = player.GetComponentInChildren<CapsuleCollider>();
         }
+        if (collider == null)
+        {
+            return;
+        }
 
         // スポーン位置より上からレイを飛ばして、最も近い地面を探す。
         float castHeight = 2f;
@@ -126,10 +138,14 @@ public class PlayerSpawnOnSceneStart : MonoBehaviour
             // 自分自身（または子階層）のコライダーは無視する。
             if (hit.collider == null || hit.collider.transform.IsChildOf(player.transform)) continue;
 
-            // 地面のヒット位置にカプセル半径分の高さを足して、足元が地面に合う位置へ。
-            float halfHeight = collider != null ? collider.bounds.extents.y : 0.5f;
-            var snapped = hit.point + Vector3.up * (halfHeight + 0.02f);
-            player.transform.position = snapped;
+            // カプセルの底面を地面に合わせるため、現在のコライダーの底位置との差分だけ移動する。
+            var colliderTransform = collider.transform;
+            var centerWorld = colliderTransform.TransformPoint(collider.center);
+            float halfHeight = (collider.height * 0.5f) * Mathf.Abs(colliderTransform.lossyScale.y);
+            var bottomWorld = centerWorld + Vector3.down * halfHeight;
+            var targetBottom = hit.point + Vector3.up * 0.02f;
+            var delta = targetBottom - bottomWorld;
+            player.transform.position += delta;
             // スナップ直後の Transform を物理に反映する。
             Physics.SyncTransforms();
             break;
