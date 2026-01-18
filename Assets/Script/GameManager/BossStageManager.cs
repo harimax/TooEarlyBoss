@@ -54,25 +54,6 @@ public class BossStageManager : MonoBehaviour
     {
         // 表示中のボタンを選択状態にして「Aボタン=Submit」で押せるようにする
         UpdateDefaultSelection();
-
-        // ゲームでよくある「Aボタン(Submit)で進む」入力
-        if (!IsSubmitPressed())
-        {
-            return;
-        }
-        // ボス戦開始ボタンが表示されている時はAボタンで開始
-        if (StartButton != null && StartButton.activeSelf && startButtonComponent != null)
-        {
-            // UIのクリック処理をそのまま呼び出す
-            startButtonComponent.onClick.Invoke();
-            return;
-        }
-        // ボス撃破後の次のステージボタンが表示されている時はAボタンで遷移
-        if (ClearButton != null && ClearButton.activeSelf && clearButtonComponent != null)
-        {
-            // UIのクリック処理をそのまま呼び出す
-            clearButtonComponent.onClick.Invoke();
-        }
     }
 
     public void BossStartButton()
@@ -155,6 +136,15 @@ public class BossStageManager : MonoBehaviour
         if (ClearButton != null && ClearButton.activeSelf && clearButtonComponent != null)
         {
             SelectButtonIfNeeded(clearButtonComponent.gameObject);
+        }
+        if (GameOverButtons != null && GameOverButtons.activeSelf)
+        {
+            // GameOverButtons 配下の最初のボタンを選択する
+            var button = GameOverButtons.GetComponentInChildren<Button>(true);
+            if (button != null)
+            {
+                SelectButtonIfNeeded(button.gameObject);
+            }
         }
     }
 
