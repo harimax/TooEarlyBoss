@@ -266,7 +266,7 @@ public class DragonBossController : MonoBehaviour, IBossController
 
         while (t < duration && !ct.IsCancellationRequested)
         {
-            FacePlayerOnlyYaw(turnSpeed);
+            BossUtilities.FaceTargetYaw(transform, player, turnSpeed);
             t += Time.deltaTime;
             await UniTask.Yield(); // フレームごとに更新
         }

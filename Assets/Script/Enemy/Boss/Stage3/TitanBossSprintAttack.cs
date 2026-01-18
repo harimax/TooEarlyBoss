@@ -35,7 +35,7 @@ public class TitanBossSprintAttack : MonoBehaviour
 
         while (t < duration && !ct.IsCancellationRequested)
         {
-            FacePlayerOnlyYaw(turnSpeed);
+            BossUtilities.FaceTargetYaw(transform, player, turnSpeed);
             t += Time.deltaTime;
             await UniTask.Yield();
         }
@@ -95,13 +95,5 @@ public class TitanBossSprintAttack : MonoBehaviour
     public void StopImmediately()
     {
         if (sprintCollider) sprintCollider.enabled = false;
-    }
-
-    /// <summary>
-    /// プレイヤー方向（Yawのみ）に回転させる
-    /// </summary>
-    public void FacePlayerOnlyYaw(float slerpSpeed)
-    {
-        BossUtilities.FaceTargetYaw(transform, player, slerpSpeed);
     }
 }

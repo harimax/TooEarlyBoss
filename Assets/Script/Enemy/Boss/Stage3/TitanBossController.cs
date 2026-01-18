@@ -81,7 +81,7 @@ public class TitanBossController : MonoBehaviour, IBossController
         try
         {
             Debug.Log("クールダウン中...");
-            await UniTask.Delay(3000, cancellationToken: this.GetCancellationTokenOnDestroy());
+            await UniTask.Delay(2000, cancellationToken: this.GetCancellationTokenOnDestroy());
             animator.SetTrigger("FinishBreakTime");
             currentState = TitanBossState.Idle;
         }

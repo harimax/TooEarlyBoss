@@ -40,7 +40,7 @@ public class SmileBossControll : MonoBehaviour,IBossController
         timer -= Time.deltaTime;
         if (currentState == BossState.Idle)
         {
-            LookAtPlayerXZ();
+            BossUtilities.FaceTargetYaw(transform, player, 5f);
         }
         if (timer <= 0f && currentState == BossState.Idle)
         {
@@ -106,7 +106,7 @@ public class SmileBossControll : MonoBehaviour,IBossController
         currentState = BossState.ShotSmile;
         animator.SetTrigger("DashAttack");
 
-        await UniTask.Delay(3000); // 5秒待機
+        await UniTask.Delay(3000); // 3秒待機
 
         currentState = BossState.Idle;
     }
@@ -164,10 +164,6 @@ public class SmileBossControll : MonoBehaviour,IBossController
 
             Instantiate(rockPrefab, spawnPos, Quaternion.identity);
         }
-    }
-    private void LookAtPlayerXZ()
-    {
-        BossUtilities.FaceTargetYaw(transform, player, 5f);
     }
     public void DeadTrigger()
     {

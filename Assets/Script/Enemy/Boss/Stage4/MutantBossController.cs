@@ -49,7 +49,7 @@ public class MutantBossController : MonoBehaviour, IBossController
 
             if (isLooking)
             {
-                LookAtPlayerXZ();
+                BossUtilities.FaceTargetYaw(transform, player, 5f);
             }
         }
     }
@@ -87,13 +87,6 @@ public class MutantBossController : MonoBehaviour, IBossController
         _isPaused = false;
         if (animator != null) animator.enabled = true;
         movement?.Resume();
-    }
-    /// <summary>
-    /// プレイヤーの方を向く    
-    /// </summary>
-    private void LookAtPlayerXZ()
-    {
-        BossUtilities.FaceTargetYaw(transform, player, 5f);
     }
     public void StartAttackBeam()
     {

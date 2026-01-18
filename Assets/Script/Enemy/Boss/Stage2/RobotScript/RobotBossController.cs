@@ -44,7 +44,7 @@ public class RobotBossController : MonoBehaviour, IBossController
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        animator = this.gameObject.GetComponent<Animator>();
+        animator =gameObject.GetComponent<Animator>();
         _ct = this.GetCancellationTokenOnDestroy();
         ejectCollider = Barrier.GetComponent<SphereCollider>();
         robotBossController = this;

@@ -41,7 +41,7 @@ public class TitanBossRangeAttack : MonoBehaviour
             Quaternion rotation = Quaternion.AngleAxis(angle, up);
             Vector3 dir = rotation * baseForward;
 
-            GameObject ball = Instantiate(ballPrefab, this.transform.position, Quaternion.identity);
+            GameObject ball = Instantiate(ballPrefab, transform.position, Quaternion.identity);
             ball.GetComponent<Rigidbody>().linearVelocity = dir.normalized * 10f;
         }
     }
