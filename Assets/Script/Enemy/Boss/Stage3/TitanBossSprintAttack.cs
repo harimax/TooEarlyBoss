@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Game.Boss;
 /**
  * タイタンボスの「突進攻撃」と「向き直り」を担当するクラス
  * - Sprint のアニメーション遷移待ち

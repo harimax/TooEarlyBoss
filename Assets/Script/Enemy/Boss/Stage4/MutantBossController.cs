@@ -1,8 +1,6 @@
 using UnityEngine;
-using UnityEngine.AI;
-using Cysharp.Threading.Tasks;
-using System.Collections;
 using System.Collections.Generic;
+using Game.Boss;
 
 public class MutantBossController : MonoBehaviour, IBossController
 {

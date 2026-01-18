@@ -1,12 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 using Cysharp.Threading.Tasks;
-using System.Threading.Tasks;
 using System.Threading;
-using UnityEngine.AI;
-using Invector;
-using DG.Tweening;
 
 public class RobotBossController : MonoBehaviour, IBossController
 {

@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
-using System.Threading.Tasks;
+using Game.Boss;
 
 public class SmileBossControll : MonoBehaviour,IBossController
 {

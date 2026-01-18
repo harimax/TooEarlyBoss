@@ -1,11 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
 using Cysharp.Threading.Tasks;
 using System;
 using System.Threading;
+using Game.Boss;
 /**
  * タイタンボスの行動全体を制御するクラス
  * - 状態遷移（Idle / AttackXXX / CoolDown / Dead）

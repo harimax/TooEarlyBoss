@@ -1,12 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using Invector;
 using UnityEngine;
-using UnityEngine.AI;
 using Cysharp.Threading.Tasks;
-using System.Threading;
-using System;
-using Cysharp.Threading.Tasks.CompilerServices;
+using Game.Boss;
 
 
 public class PetBossController : MonoBehaviour, IBossController
