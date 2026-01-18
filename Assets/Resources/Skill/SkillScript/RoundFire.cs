@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using Cysharp.Threading.Tasks;
 using Invector.vCharacterController;
+using Invector;
 
 [CreateAssetMenu(menuName = "Skill/RoundFire")]
 public class RoundFire : SkillBase
@@ -15,6 +16,7 @@ public class RoundFire : SkillBase
     {
         var child = player.transform.Find(effectObjectName);
         activeEffect = child.gameObject;
+        ApplySpecialDamage(activeEffect);
     }
     // 条件付きスキルの毎フレーム監視処理（SkillManagerから呼ばれる）
     public override void UpdateConditional(GameObject player)
@@ -44,5 +46,21 @@ public class RoundFire : SkillBase
                             cancellationToken: player.GetCancellationTokenOnDestroy());
 
         activeEffect.SetActive(false);
+    }
+
+    private void ApplySpecialDamage(GameObject effectObject)
+    {
+        if (!PlayerGrowRepository.LoadParameters(out var growth))
+        {
+            return;
+        }
+
+        var damageComponent = effectObject.GetComponentInChildren<vObjectDamage>();
+        if (damageComponent == null)
+        {
+            return;
+        }
+
+        damageComponent.damage.damageValue = Mathf.Ceil(growth.PlayerSpecial / 3f);
     }
 }
