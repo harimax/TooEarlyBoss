@@ -184,8 +184,7 @@ public class TitanBossController : MonoBehaviour, IBossController
     //プレイヤーとの距離を計算
     private float PlayerDistanceCheck()
     {
-        float distance = Vector3.Distance(transform.position, player.position);
-        return distance;
+        return BossUtilities.DistanceToTarget(transform, player);
     }
     //攻撃選択ロジック
     private void SelectJumpAttack()

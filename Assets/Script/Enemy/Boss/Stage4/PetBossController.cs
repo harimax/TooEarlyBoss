@@ -210,12 +210,7 @@ public class PetBossController : MonoBehaviour, IBossController
     /// </summary>
     void FacePlayerOnlyYaw(float slerpSpeed)
     {
-        if (!player) return;
-        Vector3 dir = player.position - transform.position;
-        dir.y = 0f;
-        if (dir.sqrMagnitude < 0.0001f) return;
-        var target = Quaternion.LookRotation(dir.normalized);
-        transform.rotation = Quaternion.Slerp(transform.rotation, target, Time.deltaTime * slerpSpeed);
+        BossUtilities.FaceTargetYaw(transform, player, slerpSpeed);
     }
     /// <summary>
     /// アニメーションイベント：岩を前方へ飛ばす
