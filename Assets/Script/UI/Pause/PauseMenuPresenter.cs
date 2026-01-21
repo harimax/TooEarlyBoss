@@ -14,20 +14,9 @@ public class PauseMenuPresenter : MonoBehaviour
     [Header("Lifetime")]
     [SerializeField] private bool dontDestroyOnLoad = true;
 
-    private static PauseMenuPresenter instance;
-
     private void Awake()
     {
         if (!dontDestroyOnLoad) return;
-
-        if (instance != null && instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     private void OnEnable()
