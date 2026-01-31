@@ -10,17 +10,14 @@ public class PetBossController : MonoBehaviour, IBossController
     [Header("Refs")]
     private Animator animator;
     Transform player;
+        [SerializeField] private PetBossChargeMover chargeMover;
 
     [Header("Flow Timings")]
     [SerializeField] float faceTime = 0.7f;      // ② 向き直り（ため）時間
-    [SerializeField] float maxChargeTime = 4.0f; // ③ 突進の最大継続時間（秒）
     [SerializeField] float restTime = 2.5f;      // ④ 休憩時間（秒）
 
     [Header("Charge Parameters")]
-    [SerializeField] float chargeSpeed = 12.0f;     // 突進速度（m/s）
-    [SerializeField] float overshootDistance = 5.0f;// プレイヤー位置をどれだけ通り過ぎるか（m）
     [SerializeField] float turnSpeed = 10f;         // ②の向き合わせスピード
-    [SerializeField] bool lockYPosition = true;     // 地面がフラットならtrueでY固定
 
     [Header("VFX (Optional)")]
     [SerializeField] GameObject AttackEffect;
@@ -92,40 +89,10 @@ public class PetBossController : MonoBehaviour, IBossController
     {
         phase = BossState.Charge;
 
-        Vector3 startPos = transform.position;
-        Vector3 toPlayer = player.position - startPos;
-        toPlayer.y = 0f;
-
-        Vector3 chargeDir = toPlayer.sqrMagnitude > 0.0001f
-            ? toPlayer.normalized
-            : transform.forward;
-
-        // プレイヤーを overshoot する距離をゴールに
-        float targetDistance = toPlayer.magnitude + Mathf.Max(0f, overshootDistance);
 
         animator?.SetBool("Moveable", true);
-        if (sprintCollider) sprintCollider.enabled = true;
-
-        float traveled = 0f;
-        float elapsed = 0f;
-        float baseY = startPos.y;
-        // 突進移動ループ
-        while (elapsed < maxChargeTime && traveled < targetDistance)
-        {
-            float step = chargeSpeed * Time.deltaTime;
-            transform.position += chargeDir * step;
-            // Y位置固定
-            if (lockYPosition)
-            {
-                var p = transform.position;
-                p.y = baseY;
-                transform.position = p;
-            }
-
-            elapsed += Time.deltaTime;
-            traveled += step;
-            await UniTask.Yield();
-        }
+        await chargeMover.ChargeAsync(player, animator, sprintCollider);
+        
 
         // 突進終了後にカウントアップ
         chargeCount++;
@@ -229,7 +196,7 @@ public class PetBossController : MonoBehaviour, IBossController
         phase = BossState.Dead;
         sprintCollider.enabled = false;
         animator.SetTrigger("Dead");
-        Destroy(gameObject, 1.0f);
+        Destroy(gameObject, 2.0f);
     }
     public void EnableEffect()
     {

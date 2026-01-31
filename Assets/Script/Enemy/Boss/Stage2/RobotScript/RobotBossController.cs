@@ -40,11 +40,13 @@ public class RobotBossController : MonoBehaviour, IBossController
     private bool _isPaused = false;
     //シングルトン的に外部から参照されるインスタンス
     public static RobotBossController robotBossController;
+    /// <summary>シングルトンインスタンス取得。</summary>
+    public static RobotBossController GetInstance() => robotBossController;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        animator =gameObject.GetComponent<Animator>();
+        animator = gameObject.GetComponent<Animator>();
         _ct = this.GetCancellationTokenOnDestroy();
         ejectCollider = Barrier.GetComponent<SphereCollider>();
         robotBossController = this;
@@ -62,8 +64,7 @@ public class RobotBossController : MonoBehaviour, IBossController
         if (groundEnemyManager != null)
             groundEnemyManager.OnGroundEnemyKilled -= OnGroundEnemyKilledHandler;
     }
-    /// <summary>シングルトンインスタンス取得。</summary>
-    public static RobotBossController GetInstance() => robotBossController;
+
     //-----------------------------------------------------------------------------------------------------
     /// <summary>
     /// 吹き飛ばしバリア発動（外部：プレイヤーが一定時間乗った、HPしきい値など）。
@@ -79,7 +80,7 @@ public class RobotBossController : MonoBehaviour, IBossController
         await AnimateRadius(maxRadius, minRadius, shrinkDuration);
         //アイドルに移動する
         ChangeState(BossState.Idle);
-        floorController?.ResetFloor();
+        floorController.ResetFloor();
     }
     //------------------------------------------------------------------------------------------------
 
@@ -162,8 +163,10 @@ public class RobotBossController : MonoBehaviour, IBossController
         bulletShooters.SetActive(false);
         chargeLaser.SetActive(false);
 
+        floorController.ResetFloor();
+
         // 足場を上げる（既に上がっていれば内部でDOTweenが再設定される）
-        floorController?.UpFloor();
+        floorController.UpFloor();
         await UniTask.Delay(10000, cancellationToken: token); // 溜め時間
         if (token.IsCancellationRequested) return;
 
@@ -203,7 +206,7 @@ public class RobotBossController : MonoBehaviour, IBossController
     private void OnGroundEnemyKilledHandler()
     {
         // ここで足場を上げる（上げ終わったら次スポーン許可を返す）
-        floorController?.UpFloor();
+        floorController.UpFloor();
         ChangeState(BossState.ChargeShoot);
     }
 

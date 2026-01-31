@@ -27,6 +27,8 @@ public class DragonBossController : MonoBehaviour, IBossController
     [SerializeField] private float restTime = 3.5f;      //  休憩時間（秒）
     [SerializeField] private float turnSpeed = 10f;         // 向き合わせスピード
     [SerializeField] private GameObject rangeAttackPrefab;
+    [SerializeField] private GameObject closeAttackPrefab;
+    [SerializeField] private Collider chaseAttackcollider;
     private int attackChoicePercent;
     private int closeAttackType;
     private bool _cooling;
@@ -119,6 +121,7 @@ public class DragonBossController : MonoBehaviour, IBossController
         else
         {
             // 回避行動
+
             animator.SetTrigger("IsAvoid");
             currentState = DragonState.Avoid;
         }
@@ -183,6 +186,7 @@ public class DragonBossController : MonoBehaviour, IBossController
             // --- 突進準備 ---
             float elapsed = 0f;
             animator.SetTrigger("IsSprint");
+            chaseAttackcollider.enabled = true;
             while (elapsed < SprintTime && !ct.IsCancellationRequested)
             {
                 elapsed += Time.deltaTime;
@@ -192,6 +196,7 @@ public class DragonBossController : MonoBehaviour, IBossController
             Debug.Log("突進終了", this);
             animator.SetTrigger("FinishSprint");
             await UniTask.Delay(TimeSpan.FromSeconds(restTime), cancellationToken: ct);
+            chaseAttackcollider.enabled = false;
             //ダッシュ終了後に攻撃範囲内なら攻撃
             if (PlayerDistanceCheck() < crowDistance)
             {
@@ -286,6 +291,16 @@ public class DragonBossController : MonoBehaviour, IBossController
     {
         Debug.Log("遠距離攻撃終了", this);
         rangeAttackPrefab.SetActive(false);
+    }
+    public void OnCloseAttackEvent()
+    {
+        Debug.Log("近距離攻撃発動", this);
+        closeAttackPrefab.SetActive(true);
+    }
+    public void OnCloseAttackEndEvent()
+    {
+        Debug.Log("近距離攻撃終了", this);
+        closeAttackPrefab.SetActive(false);
     }
     public void DeadTrigger()
     {

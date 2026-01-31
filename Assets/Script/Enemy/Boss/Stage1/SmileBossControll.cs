@@ -75,7 +75,7 @@ public class SmileBossControll : MonoBehaviour,IBossController
         Debug.Log("弾攻撃");
         currentState = BossState.BallShot;
         animator.SetTrigger("ballAttack");
-        await UniTask.Delay(5000); // 5秒待機
+        await UniTask.Delay(4000); // 4秒待機
 
         currentState = BossState.Idle;
 
@@ -133,7 +133,6 @@ public class SmileBossControll : MonoBehaviour,IBossController
     public async UniTask OnLaserEvent()
     {
         laser.SetActive(true);
-        currentState = BossState.Laser;
         float duration = 5f;
         float elapsed = 0f;
 
