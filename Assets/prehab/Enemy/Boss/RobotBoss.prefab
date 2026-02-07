@@ -1695,6 +1695,10 @@ GameObject:
   - component: {fileID: 4307864298704388174}
   - component: {fileID: 3055538718381066778}
   - component: {fileID: 9036436479755140683}
+  - component: {fileID: 881159359522088524}
+  - component: {fileID: 7441605866669538875}
+  - component: {fileID: 1810574008740923225}
+  - component: {fileID: 2173987026690381174}
   m_Layer: 0
   m_Name: RobotBoss
   m_TagString: Enemy
@@ -1808,7 +1812,75 @@ MonoBehaviour:
   shrinkDuration: 1
   minRadius: 0.1
   maxRadius: 12
-  floorController: {fileID: 0}
+  floorController: {fileID: 1810574008740923225}
+--- !u!114 &881159359522088524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6539884320961332054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1c0c02d5e2afa54bb695df65f60e8b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waypoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  waypointThreshold: 0.5
+  waitSeconds: 5
+--- !u!114 &7441605866669538875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6539884320961332054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2779ff9d3161bc243afc4db06aa50f83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boss: {fileID: 9036436479755140683}
+  patrol: {fileID: 881159359522088524}
+--- !u!114 &1810574008740923225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6539884320961332054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9d1d32c40ff0334c89521952ebcae78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  floor: {fileID: 0}
+  target: {fileID: 0}
+  duration: 10
+  upFloorPosArea: {fileID: 0}
+  keyshapeName: Key
+  groundEnemyManager: {fileID: 0}
+--- !u!114 &2173987026690381174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6539884320961332054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40f173566d8c7ae4f93877a010dccebb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  upperBody: {fileID: 4197539447478954497}
 --- !u!1 &6564809016268635641
 GameObject:
   m_ObjectHideFlags: 0
@@ -2659,11 +2731,11 @@ MonoBehaviour:
   openCloseWindow: 1
   selectedToolbar: 1
   _isDead: 1
-  _currentHealth: 60
+  _currentHealth: 120
   isImmortal: 0
   fillHealthOnStart: 1
   reciveDamage: 0
-  _maxHealth: 60
+  _maxHealth: 120
   _healthRecovery: 0
   _healthRecoveryDelay: 0
   checkHealthEvents: []
@@ -2688,9 +2760,9 @@ MonoBehaviour:
   _onDead:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 9036436479755140683}
-        m_TargetAssemblyTypeName: TreeBossController, Assembly-CSharp
-        m_MethodName: OnDestroyRobotEvent
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: BossStageManager, Assembly-CSharp
+        m_MethodName: DefeatBoss
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2700,9 +2772,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: BossStageManager, Assembly-CSharp
-        m_MethodName: DefeatBoss
+      - m_Target: {fileID: 9036436479755140683}
+        m_TargetAssemblyTypeName: TreeBossController, Assembly-CSharp
+        m_MethodName: DeadTrigger
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

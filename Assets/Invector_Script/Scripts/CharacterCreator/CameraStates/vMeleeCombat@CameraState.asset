@@ -17,7 +17,7 @@ MonoBehaviour:
   - Name: Default
     forward: -1
     right: 0
-    defaultDistance: 9
+    defaultDistance: 4.5
     maxDistance: 8
     minDistance: 0.6
     height: 2.5

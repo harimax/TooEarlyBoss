@@ -223,6 +223,8 @@ GameObject:
   - component: {fileID: 5865003206742609956}
   - component: {fileID: 6341709080482504209}
   - component: {fileID: 7493223639716921688}
+  - component: {fileID: 4334290059869693328}
+  - component: {fileID: 7765508098050836259}
   m_Layer: 5
   m_Name: BattleReturnButton
   m_TagString: Untagged
@@ -278,7 +280,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c34bea79fcbd9d7458e1c3ffa1a76232, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cffd615b7ec5e1742aff0eaafa29d8f5, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -332,6 +334,33 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &4334290059869693328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1659547486831649038}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 1, b: 0.003921569, a: 0.5}
+  m_EffectDistance: {x: 5, y: 5}
+  m_UseGraphicAlpha: 1
+--- !u!114 &7765508098050836259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1659547486831649038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5173b8b707d3ed44aa7cf2931c86db56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2422118961778906349
 GameObject:
   m_ObjectHideFlags: 0
@@ -344,6 +373,8 @@ GameObject:
   - component: {fileID: 7909619526937610980}
   - component: {fileID: 3563274767004190894}
   - component: {fileID: 5584465574528346532}
+  - component: {fileID: 3442768452263781321}
+  - component: {fileID: 5741068705714373331}
   m_Layer: 5
   m_Name: EndGame
   m_TagString: Untagged
@@ -399,7 +430,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c34bea79fcbd9d7458e1c3ffa1a76232, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 895d60163fe683c4da3aa59fa8ff777f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -453,6 +484,33 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3442768452263781321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2422118961778906349}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 1, b: 0.003921569, a: 0.5}
+  m_EffectDistance: {x: 5, y: 5}
+  m_UseGraphicAlpha: 1
+--- !u!114 &5741068705714373331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2422118961778906349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5173b8b707d3ed44aa7cf2931c86db56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3814672227633331871
 GameObject:
   m_ObjectHideFlags: 0
@@ -1550,7 +1608,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "A\u30DC\u30BF\u30F3\u3092\u62BC\u3057\u3066\u30DC\u30B9\u3068\u6226\u3046"
+  m_text: "\u30DC\u30B9\u3068\u6226\u3046 Press  anyButton..."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 865b02bc807f6814ea6710fe43a1b871, type: 2}
   m_sharedMaterial: {fileID: 1247770523683795722, guid: 865b02bc807f6814ea6710fe43a1b871, type: 2}

@@ -818,6 +818,12 @@ PrefabInstance:
       addedObject: {fileID: 1144527678009213631}
     - targetCorrespondingSourceObject: {fileID: 100082, guid: 24c4300f68c986241af51004b72b03f2, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 4451495540162538630}
+    - targetCorrespondingSourceObject: {fileID: 100082, guid: 24c4300f68c986241af51004b72b03f2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 192252542933574850}
+    - targetCorrespondingSourceObject: {fileID: 100082, guid: 24c4300f68c986241af51004b72b03f2, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 8411505560431005167}
     - targetCorrespondingSourceObject: {fileID: 100082, guid: 24c4300f68c986241af51004b72b03f2, type: 3}
       insertIndex: -1
@@ -948,11 +954,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83cdfa7aa2c2e0d4d94d49ab108867ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprintAttack: {fileID: 0}
-  rangedAttack: {fileID: 0}
+  sprintAttack: {fileID: 192252542933574850}
+  rangedAttack: {fileID: 4451495540162538630}
   playerDistance: 7
   jumpAttackProbability: 50
   throwFaceTime: 0.5
+--- !u!114 &4451495540162538630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7742139195743224666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbccac2b1419a4a45991943d95a2612b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ballPrefab: {fileID: 627418490999892953, guid: 0b335e5216049db4e96db24ed27264d2, type: 3}
+  rockPrefab: {fileID: 4128855872640944038, guid: 734661271f1c1074885c8a4239966237, type: 3}
+  shotPos: {fileID: 4881428850450770328}
+  shotSpeed: 15
+  targetTag: Target
+--- !u!114 &192252542933574850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7742139195743224666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f4616ebb9cfbba4e9ab261f7e60f7ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  faceTime: 0.5
+  minSprintTime: 1
+  maxSprintTime: 1.5
+  restTime: 3.5
+  sprintCollider: {fileID: 1822010459237512543}
+  turnSpeed: 10
 --- !u!114 &8411505560431005167
 MonoBehaviour:
   m_ObjectHideFlags: 0

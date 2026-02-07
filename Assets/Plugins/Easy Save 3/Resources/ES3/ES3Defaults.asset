@@ -38,15 +38,26 @@ MonoBehaviour:
     - Assembly-CSharp
     - Assembly-CSharp-firstpass
     - Cinemachine
+    - FastSpringBone10
+    - MToon
     - Painting
     - RAM
     - sc.fae.editor
     - sc.fae.runtime
+    - SpringBoneJobs
+    - UniGLTF
+    - UniGLTF.UniUnlit
+    - UniGLTF.Utils
+    - UniHumanoid
     - UniTask
     - UniTask.Addressables
     - UniTask.DOTween
     - UniTask.Linq
     - UniTask.TextMeshPro
+    - VRM
+    - VRM10
+    - VRM10.MToon10
+    - VrmLib
     showAdvancedSettings: 0
   addMgrToSceneAutomatically: 0
   autoUpdateReferences: 1

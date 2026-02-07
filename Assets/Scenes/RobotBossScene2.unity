@@ -354,85 +354,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6539884320961332054, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
   m_PrefabInstance: {fileID: 8826517362523037229}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &69332704 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9036436479755140683, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-  m_PrefabInstance: {fileID: 8826517362523037229}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 69332703}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce8ec5f9e0f2857439427c6bea489d94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TreeBossController
---- !u!114 &69332705
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 69332703}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40f173566d8c7ae4f93877a010dccebb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  upperBody: {fileID: 8826517362523037230}
---- !u!114 &69332706
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 69332703}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9d1d32c40ff0334c89521952ebcae78, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  floor: {fileID: 894782571}
-  target: {fileID: 1190850780}
-  duration: 10
-  upFloorPosArea: {fileID: 1340748946}
-  keyshapeName: Key
-  groundEnemyManager: {fileID: 776178345}
---- !u!114 &69332707
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 69332703}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2779ff9d3161bc243afc4db06aa50f83, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boss: {fileID: 69332704}
-  patrol: {fileID: 69332708}
---- !u!114 &69332708
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 69332703}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1c0c02d5e2afa54bb695df65f60e8b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  waypoints:
-  - {fileID: 1339195788}
-  - {fileID: 1229778482}
-  - {fileID: 735761923}
-  - {fileID: 1151563603}
-  - {fileID: 2125403886}
-  - {fileID: 83677458}
-  - {fileID: 1938999321}
-  - {fileID: 1828391423}
-  waypointThreshold: 0.5
-  waitSeconds: 5
 --- !u!1 &83677457
 GameObject:
   m_ObjectHideFlags: 0
@@ -27297,50 +27218,58 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1514543271080042221, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      propertyPath: _maxHealth
-      value: 120
-      objectReference: {fileID: 0}
-    - target: {fileID: 1514543271080042221, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      propertyPath: _currentHealth
-      value: 120
-      objectReference: {fileID: 0}
-    - target: {fileID: 1514543271080042221, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      propertyPath: selectedToolbar
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1514543271080042221, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      propertyPath: _onDead.m_PersistentCalls.m_Calls.Array.size
-      value: 2
-      objectReference: {fileID: 0}
+    - target: {fileID: 881159359522088524, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
+      propertyPath: 'waypoints.Array.data[0]'
+      value: 
+      objectReference: {fileID: 1339195788}
+    - target: {fileID: 881159359522088524, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
+      propertyPath: 'waypoints.Array.data[1]'
+      value: 
+      objectReference: {fileID: 1229778482}
+    - target: {fileID: 881159359522088524, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
+      propertyPath: 'waypoints.Array.data[2]'
+      value: 
+      objectReference: {fileID: 735761923}
+    - target: {fileID: 881159359522088524, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
+      propertyPath: 'waypoints.Array.data[3]'
+      value: 
+      objectReference: {fileID: 1151563603}
+    - target: {fileID: 881159359522088524, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
+      propertyPath: 'waypoints.Array.data[4]'
+      value: 
+      objectReference: {fileID: 2125403886}
+    - target: {fileID: 881159359522088524, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
+      propertyPath: 'waypoints.Array.data[5]'
+      value: 
+      objectReference: {fileID: 83677458}
+    - target: {fileID: 881159359522088524, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
+      propertyPath: 'waypoints.Array.data[6]'
+      value: 
+      objectReference: {fileID: 1938999321}
+    - target: {fileID: 881159359522088524, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
+      propertyPath: 'waypoints.Array.data[7]'
+      value: 
+      objectReference: {fileID: 1828391423}
     - target: {fileID: 1514543271080042221, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
       propertyPath: _onDead.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 776178340}
-    - target: {fileID: 1514543271080042221, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      propertyPath: _onDead.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+    - target: {fileID: 1810574008740923225, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
+      propertyPath: floor
       value: 
-      objectReference: {fileID: 69332704}
-    - target: {fileID: 1514543271080042221, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      propertyPath: _onDead.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: DefeatBoss
-      objectReference: {fileID: 0}
-    - target: {fileID: 1514543271080042221, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      propertyPath: _onDead.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: DeadTrigger
-      objectReference: {fileID: 0}
-    - target: {fileID: 1514543271080042221, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      propertyPath: _onDead.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: BossStageManager, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 1514543271080042221, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      propertyPath: _onDead.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
-      value: TreeBossController, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 1514543271080042221, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      propertyPath: _onDead.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 894782571}
+    - target: {fileID: 1810574008740923225, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
+      propertyPath: target
+      value: 
+      objectReference: {fileID: 1190850780}
+    - target: {fileID: 1810574008740923225, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
+      propertyPath: upFloorPosArea
+      value: 
+      objectReference: {fileID: 1340748946}
+    - target: {fileID: 1810574008740923225, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
+      propertyPath: groundEnemyManager
+      value: 
+      objectReference: {fileID: 776178345}
     - target: {fileID: 6147121398923180901, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -27390,83 +27319,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1021400373}
     - target: {fileID: 9036436479755140683, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      propertyPath: Floor
-      value: 
-      objectReference: {fileID: 894782571}
-    - target: {fileID: 9036436479755140683, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      propertyPath: target
-      value: 
-      objectReference: {fileID: 1190850780}
-    - target: {fileID: 9036436479755140683, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
       propertyPath: chargeLaser
       value: 
       objectReference: {fileID: 2073195767}
     - target: {fileID: 9036436479755140683, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      propertyPath: upFloorPosArea
-      value: 
-      objectReference: {fileID: 1340748946}
-    - target: {fileID: 9036436479755140683, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      propertyPath: floorController
-      value: 
-      objectReference: {fileID: 69332706}
-    - target: {fileID: 9036436479755140683, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
       propertyPath: groundEnemyManager
       value: 
       objectReference: {fileID: 776178345}
-    - target: {fileID: 9036436479755140683, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      propertyPath: 'waypoints.Array.data[0]'
-      value: 
-      objectReference: {fileID: 1339195788}
-    - target: {fileID: 9036436479755140683, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      propertyPath: 'waypoints.Array.data[1]'
-      value: 
-      objectReference: {fileID: 1229778482}
-    - target: {fileID: 9036436479755140683, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      propertyPath: 'waypoints.Array.data[2]'
-      value: 
-      objectReference: {fileID: 735761923}
-    - target: {fileID: 9036436479755140683, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      propertyPath: 'waypoints.Array.data[3]'
-      value: 
-      objectReference: {fileID: 1151563603}
-    - target: {fileID: 9036436479755140683, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      propertyPath: 'waypoints.Array.data[4]'
-      value: 
-      objectReference: {fileID: 2125403886}
-    - target: {fileID: 9036436479755140683, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      propertyPath: 'waypoints.Array.data[5]'
-      value: 
-      objectReference: {fileID: 83677458}
-    - target: {fileID: 9036436479755140683, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      propertyPath: 'waypoints.Array.data[6]'
-      value: 
-      objectReference: {fileID: 1938999321}
-    - target: {fileID: 9036436479755140683, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      propertyPath: 'waypoints.Array.data[7]'
-      value: 
-      objectReference: {fileID: 1828391423}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6539884320961332054, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 69332708}
-    - targetCorrespondingSourceObject: {fileID: 6539884320961332054, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 69332707}
-    - targetCorrespondingSourceObject: {fileID: 6539884320961332054, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 69332706}
-    - targetCorrespondingSourceObject: {fileID: 6539884320961332054, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 69332705}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
---- !u!4 &8826517362523037230 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4197539447478954497, guid: f95786e2f671b0e49917df52e92edc0e, type: 3}
-  m_PrefabInstance: {fileID: 8826517362523037229}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -25148,7 +25148,7 @@ MonoBehaviour:
   openCloseWindow: 1
   selectedToolbar: 0
   damage:
-    damageValue: 30
+    damageValue: 5
     staminaBlockCost: 5
     staminaRecoveryDelay: 1
     ignoreDefense: 0
@@ -30321,7 +30321,7 @@ MonoBehaviour:
   openCloseWindow: 1
   selectedToolbar: 0
   damage:
-    damageValue: 30
+    damageValue: 5
     staminaBlockCost: 5
     staminaRecoveryDelay: 1
     ignoreDefense: 0
@@ -69769,7 +69769,7 @@ MonoBehaviour:
   openCloseWindow: 1
   selectedToolbar: 0
   damage:
-    damageValue: 30
+    damageValue: 5
     staminaBlockCost: 5
     staminaRecoveryDelay: 1
     ignoreDefense: 0
@@ -163006,6 +163006,7 @@ GameObject:
   - component: {fileID: 6489561059464362131}
   - component: {fileID: 6454859284782675995}
   - component: {fileID: 6834422252187735483}
+  - component: {fileID: 1245189152159037189}
   - component: {fileID: 7870473313121485343}
   - component: {fileID: 3570938735039238955}
   - component: {fileID: 8414081524321841697}
@@ -163118,13 +163119,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Invector.vHealthController
   openCloseEvents: 0
   openCloseWindow: 1
-  selectedToolbar: 0
+  selectedToolbar: 1
   _isDead: 1
   _currentHealth: 0
   isImmortal: 0
   fillHealthOnStart: 1
   reciveDamage: 0
-  _maxHealth: 100
+  _maxHealth: 200
   _healthRecovery: 0
   _healthRecoveryDelay: 0
   checkHealthEvents: []
@@ -163133,10 +163134,46 @@ MonoBehaviour:
       m_Calls: []
   _onReceiveDamage:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 3570938735039238955}
+        m_TargetAssemblyTypeName: EnemyHP, Assembly-CSharp
+        m_MethodName: UpdateEnemyHP
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   _onDead:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: BossStageManager, Assembly-CSharp
+        m_MethodName: DefeatBoss
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 6834422252187735483}
+        m_TargetAssemblyTypeName: MessengerBossController, Assembly-CSharp
+        m_MethodName: DeadTrigger
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onChangeHealth:
     m_PersistentCalls:
       m_Calls: []
@@ -163163,6 +163200,29 @@ MonoBehaviour:
   - {fileID: 1870452655135361928}
   - {fileID: 6930068864640391863}
   ChargeEffect: {fileID: 3698481239969861491}
+--- !u!114 &1245189152159037189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6830293198810114921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d93f73e23818284da887012cfe8d5ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waypoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  runTime: 5
+  stopTime: 10
 --- !u!114 &7870473313121485343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -168166,7 +168226,7 @@ MonoBehaviour:
   openCloseWindow: 1
   selectedToolbar: 0
   damage:
-    damageValue: 30
+    damageValue: 5
     staminaBlockCost: 5
     staminaRecoveryDelay: 1
     ignoreDefense: 0
@@ -168344,7 +168404,7 @@ MonoBehaviour:
   openCloseWindow: 1
   selectedToolbar: 0
   damage:
-    damageValue: 30
+    damageValue: 5
     staminaBlockCost: 5
     staminaRecoveryDelay: 1
     ignoreDefense: 0
@@ -183358,7 +183418,7 @@ MonoBehaviour:
   openCloseWindow: 1
   selectedToolbar: 0
   damage:
-    damageValue: 30
+    damageValue: 5
     staminaBlockCost: 5
     staminaRecoveryDelay: 1
     ignoreDefense: 0

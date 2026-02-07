@@ -25384,6 +25384,7 @@ GameObject:
   - component: {fileID: 2273673848720247270}
   - component: {fileID: 361805916227128499}
   - component: {fileID: 2572643880373983945}
+  - component: {fileID: 3753048040229085983}
   m_Layer: 9
   m_Name: Fantasy_Animal_01
   m_TagString: Enemy
@@ -25484,20 +25485,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f878562964bb57d4d8da189dccbaf437, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chargeMover: {fileID: 3753048040229085983}
   faceTime: 0.7
-  maxChargeTime: 7
   restTime: 5
-  chargeSpeed: 30
-  overshootDistance: 5
   turnSpeed: 5
-  lockYPosition: 1
   AttackEffect: {fileID: 0}
   chargesBeforeRanged: 3
   rock: {fileID: 0}
   throwPoint: {fileID: 0}
   projectileSpeed: 18
   rangedTriggerName: Ranged
-  sprintCollider: {fileID: 0}
+  sprintCollider: {fileID: 7940660835218636306}
 --- !u!114 &361805916227128499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25555,18 +25553,6 @@ MonoBehaviour:
   _onDead:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MessengerBossController, Assembly-CSharp
-        m_MethodName: DeleteBeam
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 2273673848720247270}
         m_TargetAssemblyTypeName: PetBossController, Assembly-CSharp
         m_MethodName: DeadTrigger
@@ -25598,6 +25584,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hpSlider: {fileID: 8396337183730115483}
+--- !u!114 &3753048040229085983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1904499068425755517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13039b1944874414192ccdb5d9297dcc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chargeSpeed: 12
+  overshootDistance: 5
+  maxChargeTime: 4
+  lockYPosition: 1
 --- !u!1 &2194536218074211956
 GameObject:
   m_ObjectHideFlags: 0
@@ -109910,7 +109912,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.43711, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 771327593976279643}

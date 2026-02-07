@@ -983,6 +983,7 @@ GameObject:
   - component: {fileID: 5047585764769880209}
   - component: {fileID: 3697170275126707182}
   - component: {fileID: 3122541639505337826}
+  - component: {fileID: 3195303618886541713}
   m_Layer: 9
   m_Name: Fantasy_Dragon_01
   m_TagString: Enemy
@@ -1172,7 +1173,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
   m_Height: 1
@@ -1190,20 +1191,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f878562964bb57d4d8da189dccbaf437, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chargeMover: {fileID: 3195303618886541713}
   faceTime: 0.7
-  maxChargeTime: 4
   restTime: 5
-  chargeSpeed: 12
-  overshootDistance: 2
   turnSpeed: 10
-  lockYPosition: 1
   AttackEffect: {fileID: 6513843176764484219}
   chargesBeforeRanged: 1
   rock: {fileID: 5038779788857181603, guid: 8267fd392e4d4334980312857eafadc5, type: 3}
   throwPoint: {fileID: 2266464177035251728}
   projectileSpeed: 18
   rangedTriggerName: RangedAttack
-  sprintCollider: {fileID: 0}
+  sprintCollider: {fileID: 1747137627005146452}
 --- !u!114 &3122541639505337826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1217,6 +1215,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hpSlider: {fileID: 8189016860912772828}
+--- !u!114 &3195303618886541713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4377560527106244069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13039b1944874414192ccdb5d9297dcc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chargeSpeed: 12
+  overshootDistance: 5
+  maxChargeTime: 4
+  lockYPosition: 1
 --- !u!1 &4541447562098761102
 GameObject:
   m_ObjectHideFlags: 0

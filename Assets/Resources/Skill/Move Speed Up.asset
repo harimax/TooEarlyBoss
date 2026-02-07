@@ -15,4 +15,4 @@ MonoBehaviour:
   skillName: "\u79FB\u52D5\u901F\u5EA6\u4E0A\u6607"
   description: "\u52D5\u304D\u304C\u8EFD\u5FEB\u306B\u306A\u308B"
   SpcialSkill: 1
-  duration: 20
+  duration: 10
