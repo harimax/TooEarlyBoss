@@ -485,6 +485,11 @@ namespace Invector.vMelee
         {
             inRecoil = false;
         }
+        //攻撃力を初期値に戻す
+        public void InitAttackParameter()
+        {
+            defaultDamage=new vDamage(10);
+        }
     }
 
     #region Secundary Classes

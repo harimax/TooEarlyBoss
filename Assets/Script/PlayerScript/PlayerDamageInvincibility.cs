@@ -12,6 +12,7 @@ public class PlayerDamageInvincibility : MonoBehaviour
     // 参照キャッシュ
     private vHealthController healthController;
     private CancellationTokenSource invincibilityCts;
+    private Renderer[] renderers;
     private bool wasImmortalBefore;
     private bool isInvincibilityActive;
 
@@ -20,6 +21,8 @@ public class PlayerDamageInvincibility : MonoBehaviour
     {
         // 事前にHealthControllerを取得
         healthController = GetComponent<vHealthController>();
+        // 点滅対象のRendererを取得
+        renderers = GetComponentsInChildren<Renderer>(true);
     }
 
 
@@ -77,6 +80,11 @@ public class PlayerDamageInvincibility : MonoBehaviour
         {
             return;
         }
+        // 既に無敵状態なら何もしない
+        if (healthController.isImmortal)
+        {
+            return;
+        }
 
 
         // 初回の無敵開始時だけ元の状態を記録
@@ -100,6 +108,7 @@ public class PlayerDamageInvincibility : MonoBehaviour
         // 無敵タイマー開始
         invincibilityCts = new CancellationTokenSource();
         StartInvincibilityTimer(invincibilityCts.Token).Forget();
+        StartBlinking(invincibilityCts.Token).Forget();
     }
 
 
@@ -116,6 +125,52 @@ public class PlayerDamageInvincibility : MonoBehaviour
         catch (OperationCanceledException)
         {
             // キャンセル時は何もしない
+        }
+    }
+
+
+    // 点滅の開始
+    private async UniTaskVoid StartBlinking(CancellationToken cancellationToken)
+    {
+
+        if (renderers == null || renderers.Length == 0)
+        {
+            return;
+        }
+
+        var isVisible = true;
+
+        try
+        {
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                isVisible = !isVisible;
+                SetRenderersVisible(isVisible);
+                await UniTask.Delay(TimeSpan.FromSeconds(0.1f), cancellationToken: cancellationToken);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // キャンセル時は何もしない
+        }
+    }
+
+
+    // Rendererの表示状態を切り替え
+    private void SetRenderersVisible(bool isVisible)
+    {
+
+        if (renderers == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            if (renderers[i] != null)
+            {
+                renderers[i].enabled = isVisible;
+            }
         }
     }
 
@@ -143,5 +198,6 @@ public class PlayerDamageInvincibility : MonoBehaviour
         invincibilityCts?.Dispose();
         invincibilityCts = null;
         wasImmortalBefore = false;
+        SetRenderersVisible(true);
     }
 }

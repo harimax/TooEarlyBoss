@@ -39,6 +39,7 @@ public class BattlePlayerController : MonoBehaviour
 
         // 位置を戻す
         player.transform.position = initPosition;
+        player.transform.rotation = new Quaternion(0f, 0f, 0f, 0f);
 
         // 修行 UI に戻す
         if (growUIController != null)

@@ -141,7 +141,7 @@ public class PlayerSpawnOnSceneStart : MonoBehaviour
             // カプセルの底面を地面に合わせるため、現在のコライダーの底位置との差分だけ移動する。
             var colliderTransform = collider.transform;
             var centerWorld = colliderTransform.TransformPoint(collider.center);
-            float halfHeight = (collider.height * 0.5f) * Mathf.Abs(colliderTransform.lossyScale.y);
+            float halfHeight = collider.height * 0.5f * Mathf.Abs(colliderTransform.lossyScale.y);
             var bottomWorld = centerWorld + Vector3.down * halfHeight;
             var targetBottom = hit.point + Vector3.up * 0.02f;
             var delta = targetBottom - bottomWorld;
