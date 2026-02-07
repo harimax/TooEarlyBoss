@@ -26,6 +26,10 @@ public class DragonBossController : MonoBehaviour, IBossController
     [SerializeField] private float maxSprintTime = 1.0f; //  突進の最大継続時間（秒）
     [SerializeField] private float restTime = 3.5f;      //  休憩時間（秒）
     [SerializeField] private float turnSpeed = 10f;         // 向き合わせスピード
+    // ステージ中央の基準位置（空なら復帰処理は行わない）
+    [SerializeField] private Transform stageCenter;
+    // この距離を超えて中央から離れたら、Jump中に中央へ戻す
+    [SerializeField] private float returnToCenterDistance = 25f;
     [SerializeField] private GameObject rangeAttackPrefab;
     private int attackChoicePercent;
     private int closeAttackType;
@@ -241,6 +245,18 @@ public class DragonBossController : MonoBehaviour, IBossController
     {
         BossUtilities.FaceTargetYaw(transform, player, slerpSpeed);
     }
+
+    public bool ShouldReturnToCenter()
+    {
+        // stageCenter が未設定なら復帰判定は無効
+        if (!stageCenter) return false;
+
+        // 現在位置と中央の距離が閾値を超えた時だけ true
+        return Vector3.Distance(transform.position, stageCenter.position) > returnToCenterDistance;
+    }
+
+    // stageCenter が未設定の場合でも null 参照を避けるため現在位置を返す
+    public Vector3 StageCenterPosition => stageCenter ? stageCenter.position : transform.position;
     //攻撃選択ロジック
     private void SelectAttack()
     {
