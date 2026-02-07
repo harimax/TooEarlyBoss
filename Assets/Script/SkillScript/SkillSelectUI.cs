@@ -22,6 +22,7 @@ public class SkillSelectUI : MonoBehaviour
     [Header("Focus")]
     [SerializeField] private Selectable fallbackSelectable; // フォーカスが外れたときの予備選択肢
     bool skillChosen = false;
+    [SerializeField] private int skillChoiceCount = 3; // 選択肢のスキル枚数    
     private void Awake()
     {
         if (skillManager == null)
@@ -64,7 +65,7 @@ public class SkillSelectUI : MonoBehaviour
         var unacquiredSkills = allSkills
         .Where(skill => !skillManager.acquiredSkills.Contains(skill)).ToList();
 
-        int choiceCount = Mathf.Min(4, unacquiredSkills.Count); // ← 修正ポイント
+        int choiceCount = Mathf.Min(skillChoiceCount, unacquiredSkills.Count); // ← 修正ポイント
 
         //まだ獲得していないスキルからランダムに4つ選ぶ
         var selectedSkills = unacquiredSkills.OrderBy(x => UnityEngine.Random.value).Take(choiceCount).ToList();
@@ -77,7 +78,7 @@ public class SkillSelectUI : MonoBehaviour
         {
             CreateSkillCard(skill);
         }
-        // 最初のスキルカードにフォーカスを移動
+        // 最初のボタンにフォーカスを移動
         FocusFirstSkillButton().Forget();
     }
     /// <summary>
@@ -135,7 +136,9 @@ public class SkillSelectUI : MonoBehaviour
     /// <returns></returns>
     private async UniTaskVoid FocusFirstSkillButton()
     {
+        Debug.Log("FocusFirstSkillButton called");
         if (EventSystem.current == null) return;
+        Debug.Log("EventSystem.current is valid");
 
         // LayoutGroup / Instantiate 完了待ち
         await UniTask.Yield(PlayerLoopTiming.PostLateUpdate);

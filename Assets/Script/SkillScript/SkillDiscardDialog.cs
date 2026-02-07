@@ -4,6 +4,9 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.EventSystems;
+using Cysharp.Threading.Tasks;
+using System.Linq;
 
 
 public class SkillDiscardDialog : MonoBehaviour
@@ -31,5 +34,30 @@ public class SkillDiscardDialog : MonoBehaviour
                 Destroy(gameObject);
             });
         }
+        // 最初のボタンにフォーカスを移動
+        FocusFirstDiscardButton().Forget();
+    }
+    /// <summary>
+    /// 削除スキルUIの最初の選択肢にフォーカスを移動する
+    /// </summary>
+    /// <returns></returns>
+    private async UniTaskVoid FocusFirstDiscardButton()
+    {
+        if (EventSystem.current == null) return;
+
+        await UniTask.Yield(PlayerLoopTiming.PostLateUpdate);
+
+        var buttons = contentParent.GetComponentsInChildren<Button>(true);
+        var first = buttons
+            .Select(button => (Selectable)button)
+            .FirstOrDefault(button =>
+                button != null &&
+                button.IsInteractable() &&
+                button.gameObject.activeInHierarchy);
+
+        if (first == null) return;
+
+        EventSystem.current.SetSelectedGameObject(null);
+        first.Select();
     }
 }
