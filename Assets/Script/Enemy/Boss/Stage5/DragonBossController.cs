@@ -125,7 +125,12 @@ public class DragonBossController : MonoBehaviour, IBossController
         else
         {
             // 回避行動
-
+            if (ShouldReturnToCenter())
+            {
+                animator.SetTrigger("IsAvoidJump");
+                currentState = DragonState.Avoid;
+                return;
+            }
             animator.SetTrigger("IsAvoid");
             currentState = DragonState.Avoid;
         }

@@ -10,7 +10,6 @@ public class DragonReturnToCenterJumpBehaviour : StateMachineBehaviour
     [SerializeField] private float turnSpeed = 10f;
 
     // OnStateEnter で復帰が必要か判定して、Update で使い回す
-    private bool shouldReturnToCenter;
     // 毎フレーム transform 取得しないためのキャッシュ
     private Transform cachedTransform;
 
@@ -20,46 +19,34 @@ public class DragonReturnToCenterJumpBehaviour : StateMachineBehaviour
         if (boss == null)
         {
             // 参照取得失敗時は安全側で処理しない
-            shouldReturnToCenter = false;
             cachedTransform = null;
             return;
         }
 
         // ステート開始時に「戻す必要があるか」を確定しておく
-        shouldReturnToCenter = boss.ShouldReturnToCenter();
         cachedTransform = boss.transform;
     }
 
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        shouldReturnToCenter = false;
         cachedTransform = null;
     }
 
     public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         // 戻す必要がない、または参照がない場合は何もしない
-        if (!shouldReturnToCenter || cachedTransform == null) return;
+        if (cachedTransform == null) return;
 
         var boss = animator.GetComponentInParent<DragonBossController>();
+        var bossAnimator = animator.GetComponentInParent<Animator>();
         if (boss == null) return;
 
         Vector3 targetPosition = boss.StageCenterPosition;
-        Vector3 currentPosition = cachedTransform.position;
-        // 既に到着しているなら移動終了
-        if (Vector3.Distance(currentPosition, targetPosition) <= arriveDistance) return;
+        bossAnimator.MatchTarget(targetPosition, Quaternion.identity, AvatarTarget.RightFoot, new MatchTargetWeightMask(Vector3.one, 0f), 0.12f,
+            0.73f
+);
 
-        // Y回転のみで中央方向へ向ける
-        Vector3 direction = targetPosition - currentPosition;
-        direction.y = 0f;
-        if (direction.sqrMagnitude > 0.001f)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            cachedTransform.rotation = Quaternion.Slerp(cachedTransform.rotation, targetRotation, Time.deltaTime * turnSpeed);
-        }
 
-        // ジャンプステート中に中央へ向かって等速で位置補正
-        Vector3 nextPosition = Vector3.MoveTowards(currentPosition, targetPosition, moveSpeed * Time.deltaTime);
-        cachedTransform.position = nextPosition;
+        Debug.Log("中央へ戻るジャンプ移動中...");
     }
 }

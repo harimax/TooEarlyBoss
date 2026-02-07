@@ -25,8 +25,6 @@ public class BattleManager : MonoBehaviour
     void Awake()
     {
         battleUIController.ResetText();
-        //ゲームマネージャーから各種のコンポーネントを取得
-        vPersonController = player.GetComponent<vThirdPersonController>();
     }
 
     /// <summary>
@@ -47,7 +45,6 @@ public class BattleManager : MonoBehaviour
         {
             return;
         }
-
         // 念のため同じリスナーを削除してから再登録する
         vPersonController.onDead.RemoveListener(HandlePlayerDead);
         vPersonController.onDead.AddListener(HandlePlayerDead);
@@ -63,6 +60,7 @@ public class BattleManager : MonoBehaviour
         {
             return;
         }
+
         vPersonController.onDead.RemoveListener(HandlePlayerDead);
         isPlayerDeathListenerRegistered = false;
     }

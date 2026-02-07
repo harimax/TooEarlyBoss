@@ -84,8 +84,6 @@ public class ProcessManager : MonoBehaviour
     {
         fade = FindAnyObjectByType<Fade>();
 
-        currentBattleIndex = 1;
-
         Debug.Log($"サイクル{currentCycle}再開");
         LoadScene(mainScene);
     }
@@ -146,6 +144,7 @@ public class ProcessManager : MonoBehaviour
     {
         // 遷移前のプレイヤーを探してコントローラを停止する
         var player = GameObject.FindWithTag("Player");
+        var capsuleCollider = player.GetComponent<CapsuleCollider>();
         if (player == null) return;
 
         var controller = player.GetComponent<Invector.vCharacterController.vThirdPersonController>();
@@ -155,6 +154,10 @@ public class ProcessManager : MonoBehaviour
         controller.enabled = false;
         // 遷移後に再有効化するためのフラグを立てる
         pendingEnableController = true;
+        if (capsuleCollider.enabled==false)
+        {
+            capsuleCollider.enabled = true;
+        }
     }
     private void DestroyPlayerAndManagers()
     {
