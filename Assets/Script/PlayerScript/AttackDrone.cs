@@ -6,7 +6,7 @@ public class AttackDrone : MonoBehaviour
 {
     [SerializeField] private GameObject projectilePrefab;
     [SerializeField] private Transform firePoint; // 弾の発射位置
-    [SerializeField] private float fireCooldown = 1f;
+    [SerializeField] private float fireCooldown = 3f;
 
     private float lastFireTime = -Mathf.Infinity;
 
@@ -28,6 +28,16 @@ public class AttackDrone : MonoBehaviour
 
         // 弾を生成
         GameObject projectileObj = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
+
+        //特殊パラメータの攻撃力を弾に割り当てる
+        var damageComponent = projectileObj.GetComponentInChildren<Invector.vObjectDamage>();
+        if (damageComponent != null)
+        {
+            if (PlayerGrowRepository.LoadParameters(out var growth))
+            {
+                damageComponent.damage.damageValue = Mathf.Ceil(growth.PlayerSpecial / 2f);
+            }
+        }
 
         // 弾に方向を教える
         Vector3 direction = (target.position - firePoint.position).normalized;

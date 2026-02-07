@@ -25,7 +25,7 @@ public class MoveSpeedUp : SkillBase
     // 条件付きスキルの毎フレーム監視処理（SkillManagerから呼ばれる）
     public override void UpdateConditional(GameObject player)
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        if (IsActivationInputPressed(player))
         {
             if (!isEffectApplied)
             {

@@ -21,10 +21,8 @@ public class RoundFire : SkillBase
     // 条件付きスキルの毎フレーム監視処理（SkillManagerから呼ばれる）
     public override void UpdateConditional(GameObject player)
     {
-         var vInput=player.GetComponent<vThirdPersonInput>();
         // 発動キーが押されたら
-        // if (Input.GetKeyDown(KeyCode.F))
-        if(vInput.skill1Input.GetButtonDown())
+        if (IsActivationInputPressed(player))
         {
             Debug.Log("炎スキル発動");
             // すでにエフェクトが存在しない場合のみ発動

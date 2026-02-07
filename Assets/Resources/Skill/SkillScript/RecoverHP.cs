@@ -22,7 +22,7 @@ public class RecoverHP : SkillBase
     {
         var hp = player.GetComponent<vThirdPersonController>();
         // 発動キーが押されたら
-        if (Input.GetKeyDown(KeyCode.H) && !isActive && hp.currentHealth < hp.maxHealth)
+        if (IsActivationInputPressed(player) && !isActive && hp.currentHealth < hp.maxHealth)
         {
             isActive = true;
             timer = duration;
