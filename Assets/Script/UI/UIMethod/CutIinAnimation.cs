@@ -1,6 +1,7 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,7 @@ public class CutIinAnimation : MonoBehaviour
     [Header("References")]
     [SerializeField] private Image cutInImage;
     [SerializeField] private GameObject cutInPanel;
+    [SerializeField] private TextMeshProUGUI eventNameText;
     [Header("Timing")]
     [SerializeField] private float inDuration = 0.35f;
     [SerializeField] private float holdDuration = 0.6f;
@@ -33,17 +35,11 @@ public class CutIinAnimation : MonoBehaviour
     }
 
     /// <summary>
-    /// UIボタンから呼ぶ用（InspectorでOnClickにこのメソッドを登録）
+    /// トレーニングイベントの種類に応じたカットイン演出を再生する
     /// </summary>
-    public void PlayFromButton()
+    public async UniTask Play(TrainingEvent.TrainingEventType eventType)
     {
-        Play().Forget();
-    }
-    /// <summary>
-    /// 外部からも呼べる再生API
-    /// </summary>
-    public async UniTask Play()
-    {
+        SetEventText(eventType);
         // 連打されたら前の演出を止める
         CancelCurrent();
 
@@ -98,5 +94,27 @@ public class CutIinAnimation : MonoBehaviour
         // Panel OFF（終了）
         cutInPanel.SetActive(false);
         rect.anchoredPosition = _baseAnchoredPos; // 初期位置に戻す
+    }
+    /// <summary>   
+    /// イベントタイプに応じたテキストをセットする
+    /// </summary>
+    private void SetEventText(TrainingEvent.TrainingEventType eventType)
+    {
+        if (eventNameText == null)
+        {
+            return;
+        }
+
+        eventNameText.text = eventType switch
+        {
+            TrainingEvent.TrainingEventType.Fail => "トレーニング失敗…",
+            TrainingEvent.TrainingEventType.KakuhenStart => "確変突入！",
+            TrainingEvent.TrainingEventType.FailUpStart => "失敗率アップ！",
+            TrainingEvent.TrainingEventType.RandomStatUp => "ランダム能力アップ！",
+            TrainingEvent.TrainingEventType.AllStatUp => "全能力アップ！",
+            TrainingEvent.TrainingEventType.EventKakuhenStart => "イベント確変！",
+            TrainingEvent.TrainingEventType.TrainingBoostStart => "次回育成ブースト！",
+            _ => "イベント発生！"
+        };
     }
 }

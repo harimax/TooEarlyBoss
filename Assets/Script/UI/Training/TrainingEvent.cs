@@ -47,7 +47,7 @@ public class TrainingEvent : MonoBehaviour
     {
         None,           // イベントなし（通常）
         Fail,           // 失敗（上昇なし）
-        KakuhenStart,   // 確変開始
+        KakuhenStart,   // 確変開始(育成値が2倍)
         FailUpStart,    // 失敗率UP開始
         RandomStatUp,   // ランダム能力UP
         AllStatUp,      // 全能力UP
@@ -202,25 +202,23 @@ public class TrainingEvent : MonoBehaviour
     {
         if (kakuhenRemain <= 0) return add;
 
-        int health = Mathf.RoundToInt(add.PlayerHealth * kakuhenMultiplier);
         return new PlayerGrowParameters(
-            add.PlayerPower * kakuhenMultiplier,
-            health,
-            add.PlayerStamina * kakuhenMultiplier,
-            add.PlayerSpecial * kakuhenMultiplier
+            Mathf.RoundToInt(add.PlayerPower * kakuhenMultiplier),
+            Mathf.RoundToInt(add.PlayerHealth * kakuhenMultiplier),
+            Mathf.RoundToInt(add.PlayerStamina * kakuhenMultiplier),
+            Mathf.RoundToInt(add.PlayerSpecial * kakuhenMultiplier)
         );
     }
     /// <summary>
-    /// 育成二倍（実仕様：1.5倍）など、任意倍率を増分に適用する
+    /// 育成1.5倍（実仕様：1.5倍）など、任意倍率を増分に適用する
     /// </summary>
     private PlayerGrowParameters Multiply(PlayerGrowParameters add, float mul)
     {
-        int health = Mathf.RoundToInt(add.PlayerHealth * mul);
         return new PlayerGrowParameters(
-            add.PlayerPower * mul,
-            health,
-            add.PlayerStamina * mul,
-            add.PlayerSpecial * mul
+        Mathf.RoundToInt(add.PlayerHealth * mul),
+        Mathf.RoundToInt(add.PlayerPower * mul),
+        Mathf.RoundToInt(add.PlayerStamina * mul),
+        Mathf.RoundToInt(add.PlayerSpecial * mul)
         );
     }
 

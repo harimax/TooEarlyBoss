@@ -41,6 +41,7 @@ public class TrianingButton : MonoBehaviour
     private int turnNumber;
     // 一時表示のキャンセル用トークン
     private CancellationTokenSource increaseDisplayCts;
+    private bool isTrainingInProgress;
     /// <summary>
     /// 現在の残りターン数（読み取り専用）
     /// </summary>
@@ -112,7 +113,7 @@ public class TrianingButton : MonoBehaviour
             power: increaseParameter(minIncrease, maxIncrease),
             health: 0,
             stamina: 0, special: 0);
-        ApprlyingTraining(add);
+        ApprlyingTraining(add).Forget();
     }
     //体力ボタンを押下して体力がアップ
     public void TrainingHealth()
@@ -121,7 +122,7 @@ public class TrianingButton : MonoBehaviour
             power: 0,
             health: increaseParameter(minIncrease, maxIncrease),
             stamina: 0, special: 0);
-        ApprlyingTraining(add);
+        ApprlyingTraining(add).Forget();
     }
 
     //スタミナボタンを押下してスタミナがアップ
@@ -131,16 +132,16 @@ public class TrianingButton : MonoBehaviour
             power: 0,
             health: 0,
             stamina: increaseParameter(minIncrease, maxIncrease), special: 0);
-        ApprlyingTraining(add);
+        ApprlyingTraining(add).Forget();
     }
-    //ラッキーボタンを押下してラッキーがアップ
+    //スペシャルボタンを押下してスペシャルがアップ
     public void TrainingSpcial()
     {
         var add = new PlayerGrowParameters(
             power: 0,
             health: 0,
             stamina: 0, special: increaseParameter(minIncrease, maxIncrease));
-        ApprlyingTraining(add);
+        ApprlyingTraining(add).Forget();
     }
 
     //上昇値を決めるメソッド
@@ -153,33 +154,45 @@ public class TrianingButton : MonoBehaviour
     /// 渡された増分パラメータをcurrentParamsに加算し、
     /// ターン消費・保存・UI更新を一括でする
     /// </summary>
-    private void ApprlyingTraining(PlayerGrowParameters addParams)
+    private async UniTask ApprlyingTraining(PlayerGrowParameters addParams)
     {
         //ターンが残っていなければ処理しない
         if (turnNumber <= 0)
         {
             return;
         }
-        var (finalAdd, eventType) = TrainingEvent.Apply(addParams);
-
-        //イベント演出を再生
-        if(eventType != TrainingEvent.TrainingEventType.None)
+        // すでに育成処理が走っているなら二重で走らないようにする
+        if (isTrainingInProgress)
         {
-            cutInAnimation.PlayFromButton();
+            return;
         }
+        isTrainingInProgress = true;
+        try
+        {
+            var (finalAdd, eventType) = TrainingEvent.Apply(addParams);
 
-        // 成長パラメータを加算して新インスタンスに差し替え
-        currentParams = currentParams.AddParameters(finalAdd);
-        // ミラー用の public フィールドに反映
-        SyncFieldsFromParams();
-        // ターンを1減らす
-        DecreaseTurn();
-        // 成長パラメータを保存
-        PlayerGrowRepository.SaveParameters(currentParams);
-        // UI更新
-        ShowIncrease(finalAdd);
-        UpdateUI();
-        
+            //イベント演出を再生
+            if (eventType != TrainingEvent.TrainingEventType.None && cutInAnimation != null)
+            {
+                await cutInAnimation.Play(eventType);
+            }
+
+            // 成長パラメータを加算して新インスタンスに差し替え
+            currentParams = currentParams.AddParameters(finalAdd);
+            // ミラー用の public フィールドに反映
+            SyncFieldsFromParams();
+            // ターンを1減らす
+            DecreaseTurn();
+            // 成長パラメータを保存
+            PlayerGrowRepository.SaveParameters(currentParams);
+            // UI更新
+            ShowIncrease(finalAdd);
+            UpdateUI();
+        }
+        finally
+        {
+            isTrainingInProgress = false;
+        }
     }
     //UIの更新
     public void UpdateUI()
