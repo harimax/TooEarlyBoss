@@ -7,10 +7,18 @@ using UnityEngine.UI;
 
 public class CutIinAnimation : MonoBehaviour
 {
+    [System.Serializable]
+    private struct EventSpriteEntry
+    {
+        public TrainingEvent.TrainingEventType eventType;
+        public Sprite sprite;
+    }
     [Header("References")]
     [SerializeField] private Image cutInImage;
     [SerializeField] private GameObject cutInPanel;
     [SerializeField] private TextMeshProUGUI eventNameText;
+    [SerializeField] private EventSpriteEntry[] eventSpriteTable; // イベントタイプに応じたスプライトを設定
+    [SerializeField] private Sprite defaultEventSprite;
     [Header("Timing")]
     [SerializeField] private float inDuration = 0.35f;
     [SerializeField] private float holdDuration = 0.6f;
@@ -39,6 +47,7 @@ public class CutIinAnimation : MonoBehaviour
     /// </summary>
     public async UniTask Play(TrainingEvent.TrainingEventType eventType)
     {
+        SetEventSprite(eventType);
         SetEventText(eventType);
         // 連打されたら前の演出を止める
         CancelCurrent();
@@ -116,5 +125,33 @@ public class CutIinAnimation : MonoBehaviour
             TrainingEvent.TrainingEventType.TrainingBoostStart => "次回育成ブースト！",
             _ => "イベント発生！"
         };
+    }
+
+    /// <summary>
+    /// イベントタイプに応じたスプライトをセットする
+    /// </summary>
+    private void SetEventSprite(TrainingEvent.TrainingEventType eventType)
+    {
+        if (cutInImage == null)
+        {
+            return;
+        }
+
+        Sprite selectedSprite = defaultEventSprite;
+        foreach (var entry in eventSpriteTable)
+        {
+            if (entry.eventType != eventType) continue;
+
+            if (entry.sprite != null)
+            {
+                selectedSprite = entry.sprite;
+            }
+            break;
+        }
+
+        if (selectedSprite != null)
+        {
+            cutInImage.sprite = selectedSprite;
+        }
     }
 }
