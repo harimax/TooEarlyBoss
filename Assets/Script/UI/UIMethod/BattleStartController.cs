@@ -25,11 +25,46 @@ public class BattleStartController : MonoBehaviour
     {
         //プレイヤーの情報取得
         var player = GameObject.FindWithTag("Player");
+        if (player != null)
+        {
+            Debug.Log($"[StartBattle] FindWithTag Player = {player.name}");
+            Debug.Log($"[StartBattle] hierarchy path = {GetHierarchyPath(player.transform)}");
+        }
         playerController = player.GetComponent<vThirdPersonController>();
         meleeManager = player.GetComponent<vMeleeManager>();
         skillManager = player.GetComponent<SkillManager>();
         //敵を生成するコンポーネントを取得
         enemyGenerator = gameObject.GetComponent<EnemyGenerator>();
+
+        if (playerController == null)
+        {
+            Debug.LogError("[StartBattle] vThirdPersonController が見つかりません");
+
+        }
+
+        if (meleeManager == null)
+        {
+            Debug.LogError("[StartBattle] vMeleeManager が見つかりません");
+
+        }
+
+        if (skillManager == null)
+        {
+            Debug.LogError("[StartBattle] SkillManager が見つかりません");
+
+        }
+
+        if (enemyGenerator == null)
+        {
+            Debug.LogError("[StartBattle] EnemyGenerator が見つかりません");
+
+        }
+
+        if (battleManager == null)
+        {
+            Debug.LogError("[StartBattle] battleManager が未設定です");
+
+        }
 
         // -------------------------------
         // ① 育成パラメータを取得
@@ -43,7 +78,7 @@ public class BattleStartController : MonoBehaviour
         //修行したパラメータを加算させる
         playerController.AddMaxStamina(growth.PlayerStamina);
         playerController.AddMaxHealth(growth.PlayerHealth);
-        meleeManager.defaultDamage.damageValue = Mathf.RoundToInt(growth.PlayerPower)/2 + meleeManager.defaultDamage.damageValue;
+        meleeManager.defaultDamage.damageValue = Mathf.RoundToInt(growth.PlayerPower) / 2 + meleeManager.defaultDamage.damageValue;
         meleeManager.Init();
 
         // 行動可能状態に
@@ -52,6 +87,16 @@ public class BattleStartController : MonoBehaviour
         skillManager.ActivePassiveSkill();//スキルを発動させる
         enemyGenerator.GenerateEnemy();//敵を出現させる
         battleManager.StartMission();//ミッション開始メソッドが呼ばれる
+    }
+    private string GetHierarchyPath(Transform current)
+    {
+        string path = current.name;
+        while (current.parent != null)
+        {
+            current = current.parent;
+            path = current.name + "/" + path;
+        }
+        return path;
     }
 
 }

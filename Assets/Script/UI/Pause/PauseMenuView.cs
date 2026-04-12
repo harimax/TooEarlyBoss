@@ -69,7 +69,7 @@ public class PauseMenuView : MonoBehaviour
             statusText.text = "ステータス情報がありません";
             return;
         }
-
+        //　StringBuilderを使ってステータス情報を整形
         var builder = new StringBuilder();
         builder.AppendLine("ステータス");
         builder.AppendLine($"Power : {growth.PlayerPower}");
@@ -94,7 +94,7 @@ public class PauseMenuView : MonoBehaviour
             skillText.text = $"取得スキル\n{EmptySkillLabel}";
             return;
         }
-
+        //　StringBuilderを使ってステータス情報を整形   
         var builder = new StringBuilder();
         builder.AppendLine("取得スキル");
 
@@ -118,5 +118,6 @@ public class PauseMenuView : MonoBehaviour
         if (player == null) return;
 
         skillManager = player.GetComponent<SkillManager>();
+        
     }
 }

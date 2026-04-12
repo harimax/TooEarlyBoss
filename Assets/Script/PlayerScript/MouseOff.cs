@@ -22,7 +22,7 @@ public class Mouse_off : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
+        // Cursor.visible = true;
+        // Cursor.lockState = CursorLockMode.None;
     }
 }

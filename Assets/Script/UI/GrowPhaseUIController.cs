@@ -31,7 +31,6 @@ public class GrowPhaseUIController : MonoBehaviour
 
     // Priorityは「絶対値」で固定
     private const int PRI_LOW = 0;
-    private const int PRI_MID = 10;
     private const int PRI_HIGH = 20;
 
     private CameraMode _mode;

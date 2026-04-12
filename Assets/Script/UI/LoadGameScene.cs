@@ -20,8 +20,6 @@ public class LoadGameScene : MonoBehaviour
     private SkillManager skillManager;
     public async void OnClickStartButton()
     {
-
-
         // プレイヤー情報取得 & ステータス適用
         if (!TryGetPlayerComponents()) return;
         ApplyPlayerTrainingStats();

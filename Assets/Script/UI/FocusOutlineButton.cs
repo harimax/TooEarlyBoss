@@ -5,8 +5,8 @@ public class FocusOutlineButton : MonoBehaviour, ISelectHandler, IDeselectHandle
 {
     private Outline outline;
     // Unity Editor上で「Reset」が呼ばれるタイミングで実行されるメソッド
-    // ・コンポーネントを追加した直後
-    // ・Inspectorの三点メニューからResetした時 など
+    // コンポーネントを追加した直後
+    // Inspectorの三点メニューからResetした時 など
     private void Reset()
     {
         // 同じGameObjectについているOutlineを自動取得して
@@ -19,7 +19,6 @@ public class FocusOutlineButton : MonoBehaviour, ISelectHandler, IDeselectHandle
         if (outline == null) outline = GetComponent<Outline>();
 
         // Outlineが存在する場合は、最初は非表示（無効）にしておく
-        // → 何も選択されていない/通常状態では枠を出さない
         if (outline != null) outline.enabled = false; // 初期は消す
     }
     // EventSystemによって「このUIが選択された」ときに呼ばれる（ゲームパッド/キーボードのフォーカス移動など）

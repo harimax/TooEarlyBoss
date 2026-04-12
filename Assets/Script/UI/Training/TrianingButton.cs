@@ -67,6 +67,7 @@ public class TrianingButton : MonoBehaviour
         {
             // 値オブジェクトを生成
             currentParams = new PlayerGrowParameters(1f, 1, 1f, 1f);
+            PlayerGrowRepository.SaveParameters(currentParams);
         }
         else
         {
