@@ -13,7 +13,9 @@
 /Assets/**/bin/
 /Assets/**/obj/
 /Assets/MyImage
-
+/Assets/Controller Tester/
+/Assets/Controller Tester.meta
+/Assets/_Recovery/
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
