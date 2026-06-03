@@ -98,7 +98,7 @@ public class DragonBossController : MonoBehaviour, IBossController
     /// </summary>
     private void HandleCloseRangeBehaviour()
     {
-        // まずプレイヤー方向に向き直る（ため）
+        // 近距離では攻撃と回避をランダムに分ける。遠距離攻撃フラグが立っている場合だけブレスを優先する。
         FacePlayerForSeconds(faceTime, turnSpeed).Forget();
 
         // 近距離攻撃 or 回避をランダムで決定
@@ -141,7 +141,7 @@ public class DragonBossController : MonoBehaviour, IBossController
     /// </summary>
     private void HandleLongRangeBehaviour()
     {
-        // isRangeAttack が true なら遠距離ブレス、false なら突進
+        // 遠距離では、直前に選ばれた攻撃タイプに応じてブレスか突進を開始する。
         if (isRangeAttack)
         {
             FacePlayerForSeconds(faceTime, turnSpeed).Forget();
@@ -185,7 +185,7 @@ public class DragonBossController : MonoBehaviour, IBossController
 
         while (!ct.IsCancellationRequested)
         {
-            //向く（ため）
+            // 突進前に向きを合わせ、一定時間だけ当たり判定を有効にして前進アニメを走らせる。
             FacePlayerForSeconds(faceTime, turnSpeed, ct).Forget();
 
             if (ct.IsCancellationRequested) break;
@@ -270,7 +270,7 @@ public class DragonBossController : MonoBehaviour, IBossController
     //攻撃選択ロジック
     private void SelectAttack()
     {
-        //プレイヤーとの位置が遠ければ遠距離攻撃率が高くなる
+        // プレイヤーが遠いほど遠距離攻撃を選びやすくする。
         if (PlayerDistanceCheck() > playerDistance)
         {
             attackChoicePercent = 60;

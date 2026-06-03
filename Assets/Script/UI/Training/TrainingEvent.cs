@@ -68,7 +68,7 @@ public class TrainingEvent : MonoBehaviour
     /// </summary>
     public (PlayerGrowParameters addParams, TrainingEventType eventType) Apply(PlayerGrowParameters baseAdd)
     {
-        // 前回の「育成二倍」が残っているなら、今回の結果に1.5倍をかける準備
+        // 前回のイベントで予約された育成倍率は、この育成結果にだけ適用する。
         bool applyBoostThisTime = nextTrainingBoost;
 
         if (applyBoostThisTime)
@@ -92,10 +92,10 @@ public class TrainingEvent : MonoBehaviour
         }
 
         //イベント処理---------------------------------------------------
-        //イベント確変の適用（eventTriggerRate自体は変更しない）
         float currentTriggerRate = eventTriggerRate;
         if (eventKakuhenRemain > 0)
         {
+            // イベント確変中はイベント発生率だけを上げ、元の設定値は変更しない。
             currentTriggerRate *= 2f;
         }
         currentTriggerRate = Mathf.Clamp01(currentTriggerRate);
@@ -156,6 +156,7 @@ public class TrainingEvent : MonoBehaviour
     // =====================
     private TrainingEventType RollWeightedEvent()
     {
+        // acc に確率を積み上げ、乱数が最初に下回ったイベントを採用する。
         float r = Random.value; // 0.0〜1.0未満
         float acc = 0f;
 
@@ -186,6 +187,7 @@ public class TrainingEvent : MonoBehaviour
     /// </summary>
     private PlayerGrowParameters BounsApply(PlayerGrowParameters add, bool applyBoostThisTime)
     {
+        // 確変倍率と次回育成ブーストをまとめて反映し、最後に継続ターンを1つ消費する。
         var kakuhenAdd = ApplyKakuhen(add);
         if (applyBoostThisTime)
         {

@@ -90,7 +90,7 @@ public class DashEnemy : MobEnemy
 
         player = other.transform;
 
-        // すでに進行中 or クールダウン中は無視
+        // ダッシュ中やクールダウン中は、同じ検知で攻撃を重ねて起動しない。
         if (isBusy || Time.time < nextDashReadyTime) return;
         if (State == StateEnum.Die || State == StateEnum.Damage) return;
 
@@ -131,7 +131,7 @@ public class DashEnemy : MobEnemy
         isBusy = true;
         var ct = this.GetCancellationTokenOnDestroy();
 
-        // 予備動作
+        // 予備動作が終わってから実際のダッシュに入ることで、見た目と当たり判定のタイミングを合わせる。
         State = StateEnum.Attack;
         if (agent) agent.isStopped = true;
         if (!string.IsNullOrEmpty(windupTrigger)) animator.SetTrigger(windupTrigger);
@@ -155,6 +155,7 @@ public class DashEnemy : MobEnemy
         // 任意：近距離なら噛みつき
         if (enableFollowUpBite && player != null && UnityEngine.Random.value < biteChance)
         {
+            // 追撃は水平距離だけで判定し、高低差で外れにくくする。
             float dist = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z),
                                           new Vector3(player.position.x, 0, player.position.z));
             if (dist <= biteRange && !string.IsNullOrEmpty(biteTrigger))
@@ -234,6 +235,7 @@ public class DashEnemy : MobEnemy
         while (elapsed < dashDuration && !ct.IsCancellationRequested &&
                State != StateEnum.Die && State != StateEnum.Damage)
         {
+            // 出始めだけプレイヤー方向を追い直し、その後は直線的に突進する。
             if (elapsed < softHomingTime) dir = DirToPlayerXZOrForward();
 
             transform.position += dir * (dashSpeed * Time.deltaTime);
@@ -266,7 +268,7 @@ public class DashEnemy : MobEnemy
     {
         int target = Animator.StringToHash(stateName);
 
-        // そのステートに入るまで待つ（トランジション中も抜ける）
+        // まず対象ステートへ入るのを待ち、その後 normalizedTime で終了を待つ。
         while (!ct.IsCancellationRequested)
         {
             var st = anim.GetCurrentAnimatorStateInfo(layer);

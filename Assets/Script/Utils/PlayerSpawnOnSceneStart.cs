@@ -26,7 +26,7 @@ public class PlayerSpawnOnSceneStart : MonoBehaviour
 
     private async UniTaskVoid RespawnPlayerAsync(GameObject player, Vector3 spawnPosition)
     {
-        // 位置移動の前に制御系を止めて、スポーン直後の押し出し・補正を防ぐ。
+        // ワープ中は移動制御と物理を一時停止し、前シーンの速度や接地補正が混ざらないようにする。
         // ここで "controller 側の地面補正" と "カプセル形状" を一旦安定化させる。
         var controller = player.GetComponent<Invector.vCharacterController.vThirdPersonController>();
         if (controller != null)
@@ -63,7 +63,7 @@ public class PlayerSpawnOnSceneStart : MonoBehaviour
         spawnEuler.y = 0f;
         player.transform.rotation = Quaternion.Euler(spawnEuler);
         SnapPlayerToGround(player, spawnPosition);
-        // Transform と Physics の同期を即時反映しておく。
+        // Transform を直接動かした直後に、Raycast や Rigidbody 側へ位置を反映する。
         Physics.SyncTransforms();
 
         // 1フレーム待って物理状態を安定させる
@@ -115,7 +115,7 @@ public class PlayerSpawnOnSceneStart : MonoBehaviour
 
     private void SnapPlayerToGround(GameObject player, Vector3 spawnPosition)
     {
-        // スナップ時の高さ計算に使うカプセルコライダーを取得する。
+        // StartPoint の高さに依存せず、真下の地面にカプセル底面を合わせる。
         var collider = player.GetComponent<CapsuleCollider>();
         if (collider == null)
         {
@@ -135,7 +135,7 @@ public class PlayerSpawnOnSceneStart : MonoBehaviour
         for (int i = 0; i < hits.Length; i++)
         {
             var hit = hits[i];
-            // 自分自身（または子階層）のコライダーは無視する。
+            // 自分自身のコライダーに当たった結果は、接地先として扱わない。
             if (hit.collider == null || hit.collider.transform.IsChildOf(player.transform)) continue;
 
             // カプセルの底面を地面に合わせるため、現在のコライダーの底位置との差分だけ移動する。
