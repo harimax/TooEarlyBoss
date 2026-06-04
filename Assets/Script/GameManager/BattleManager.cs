@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
+using System.Threading;
 using UnityEngine;
 using Invector.vCharacterController;
 using TMPro;
@@ -99,7 +101,17 @@ public class BattleManager : MonoBehaviour
         battleUIController.ShowClear();
         //クリアするときにスロー演出
         Time.timeScale = 0.5f;
-        await UniTask.Delay(2000);
+        try
+        {
+            // シーン遷移や破棄が起きた場合、待機後に古いUIを触らないようキャンセルする。
+            await UniTask.Delay(2000, cancellationToken: this.GetCancellationTokenOnDestroy());
+        }
+        catch (OperationCanceledException)
+        {
+            Time.timeScale = 1.0f;
+            return;
+        }
+
         Time.timeScale = 1.0f;
         isMissionActive = false;
         UnsubscribePlayerDeathEvent();
@@ -122,7 +134,7 @@ public class BattleManager : MonoBehaviour
         {
             Destroy(enemy);
         }
-        await WaitForAnimationEndAsync(); // アニメーション終了後に実行
+        await WaitForAnimationEndAsync(this.GetCancellationTokenOnDestroy()); // アニメーション終了後に実行
     }
     /// <summary>
     /// 敵を倒した際に呼び出されるメソッド mobEnemyのonDieをから呼び出される
@@ -136,9 +148,18 @@ public class BattleManager : MonoBehaviour
             ClearMission().Forget(); // 成功
         }
     }
-    private async UniTask WaitForAnimationEndAsync()
+    private async UniTask WaitForAnimationEndAsync(CancellationToken cancellationToken)
     {
-        await UniTask.Delay(2500);
+        try
+        {
+            // 失敗演出の待機中にこのManagerが消えたら、復帰処理は行わない。
+            await UniTask.Delay(2500, cancellationToken: cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+
         battlePlayerController.ResetPlayerToInitialPosition();
         battleUIController.ResetText();
     }

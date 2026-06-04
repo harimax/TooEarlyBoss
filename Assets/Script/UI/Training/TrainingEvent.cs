@@ -216,11 +216,12 @@ public class TrainingEvent : MonoBehaviour
     /// </summary>
     private PlayerGrowParameters Multiply(PlayerGrowParameters add, float mul)
     {
+        // PlayerGrowParameters のコンストラクタ順（power, health, stamina, special）に合わせて倍率をかける。
         return new PlayerGrowParameters(
-        Mathf.RoundToInt(add.PlayerHealth * mul),
-        Mathf.RoundToInt(add.PlayerPower * mul),
-        Mathf.RoundToInt(add.PlayerStamina * mul),
-        Mathf.RoundToInt(add.PlayerSpecial * mul)
+            Mathf.RoundToInt(add.PlayerPower * mul),
+            Mathf.RoundToInt(add.PlayerHealth * mul),
+            Mathf.RoundToInt(add.PlayerStamina * mul),
+            Mathf.RoundToInt(add.PlayerSpecial * mul)
         );
     }
 

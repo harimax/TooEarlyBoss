@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
-using NUnit.Framework;
 public class SkillManager : MonoBehaviour
 {
     public static SkillManager Instance { get; private set; }

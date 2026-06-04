@@ -8,12 +8,26 @@ using Invector.vMelee;
 [CreateAssetMenu(menuName = "Skill/DamageNegateTwice")]
 public class DamageNegateTwice : SkillBase
 {
-    public static int remainingBlocks; // 無効化できる残りの回数（初期は2回）
-    public static bool noDamage = false;
+    // ダメージを無効化する残り回数は、プレイヤー側のコンポーネントに持たせる。
+    [SerializeField] private int blockCount = 2;
+
     public override void ApplyEffect(GameObject player)
     {
-        remainingBlocks = 2;//フレーム的に2回呼ばれるから2の倍数でするとよい
-        noDamage = true;
+        if (!player)
+        {
+            return;
+        }
+
+        var invincibility = player.GetComponent<PlayerDamageInvincibility>();
+        if (invincibility == null)
+        {
+            // 効果の実処理が無い状態で取得済みに見えるのを避けるため、警告だけ出して終了する。
+            Debug.LogWarning("DamageNegateTwice requires PlayerDamageInvincibility on the player.", player);
+            return;
+        }
+
+        // ScriptableObject に状態を残さず、現在のプレイヤーへ無効化回数を加算する。
+        invincibility.AddDamageNegationBlocks(blockCount);
         Debug.Log("ダメージ無効スキル適応");
     }
 }

@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
 using UnityEngine.EventSystems;
+using System;
 
 public class BossStageManager : MonoBehaviour
 {
@@ -94,7 +95,16 @@ public class BossStageManager : MonoBehaviour
     {
         // ヒットストップ演出
         Time.timeScale = 0.3f;
-        await UniTask.Delay(3000, ignoreTimeScale: true);
+        try
+        {
+            // 演出待機中にシーンが変わった場合、破棄済みUIへの反映を止める。
+            await UniTask.Delay(3000, ignoreTimeScale: true, cancellationToken: this.GetCancellationTokenOnDestroy());
+        }
+        catch (OperationCanceledException)
+        {
+            Time.timeScale = 1f;
+            return;
+        }
         // ヒットストップ後はゲーム時間を止める
         Time.timeScale = 0f;
         ClearText.text = "倒したぜ";
@@ -105,7 +115,16 @@ public class BossStageManager : MonoBehaviour
     private async UniTask GameOverDelay()
     {
         Time.timeScale = 0.3f;
-        await UniTask.Delay(3000, ignoreTimeScale: true);
+        try
+        {
+            // GameOver表示前にManagerが破棄された場合、後続のUI更新を行わない。
+            await UniTask.Delay(3000, ignoreTimeScale: true, cancellationToken: this.GetCancellationTokenOnDestroy());
+        }
+        catch (OperationCanceledException)
+        {
+            Time.timeScale = 1f;
+            return;
+        }
         Time.timeScale = 0.0f;
          ClearText.text = "死んだぜ/nどうする？";
         GameOverButtons.SetActive(true);

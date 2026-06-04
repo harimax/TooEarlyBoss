@@ -15,6 +15,7 @@ public class PlayerDamageInvincibility : MonoBehaviour
     private Renderer[] renderers;
     private bool wasImmortalBefore;
     private bool isInvincibilityActive;
+    private int remainingDamageNegations;
 
     // 初期化処理
     private void Awake()
@@ -40,6 +41,7 @@ public class PlayerDamageInvincibility : MonoBehaviour
         // ダメージイベントを登録
         if (healthController != null)
         {
+            healthController.onStartReceiveDamage.AddListener(OnStartReceiveDamage);
             healthController.onReceiveDamage.AddListener(OnDamageInvincible);
         }
         else
@@ -56,6 +58,7 @@ public class PlayerDamageInvincibility : MonoBehaviour
         // リスナー解除
         if (healthController != null)
         {
+            healthController.onStartReceiveDamage.RemoveListener(OnStartReceiveDamage);
             healthController.onReceiveDamage.RemoveListener(OnDamageInvincible);
         }
 
@@ -109,6 +112,25 @@ public class PlayerDamageInvincibility : MonoBehaviour
         invincibilityCts = new CancellationTokenSource();
         StartInvincibilityTimer(invincibilityCts.Token).Forget();
         StartBlinking(invincibilityCts.Token).Forget();
+    }
+
+    public void AddDamageNegationBlocks(int blockCount)
+    {
+        // スキルを複数回得た場合は、残り無効化回数を上乗せする。
+        remainingDamageNegations += Mathf.Max(0, blockCount);
+    }
+
+    private void OnStartReceiveDamage(vDamage damage)
+    {
+        if (remainingDamageNegations <= 0 || damage == null || damage.damageValue <= 0)
+        {
+            return;
+        }
+
+        // vHealthController がHPを減らす前にダメージ値を0へ変更する。
+        remainingDamageNegations--;
+        damage.damageValue = 0;
+        damage.hitReaction = false;
     }
 
 

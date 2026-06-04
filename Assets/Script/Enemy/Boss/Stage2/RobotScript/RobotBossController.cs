@@ -61,6 +61,15 @@ public class RobotBossController : MonoBehaviour, IBossController
 
     private void OnDestroy()
     {
+        // 破棄後に状態ループの遅延処理が続かないよう、現在の状態タスクを止める。
+        cts?.Cancel();
+        cts?.Dispose();
+        // static 参照が破棄済みインスタンスを指し続けないようにする。
+        if (robotBossController == this)
+        {
+            robotBossController = null;
+        }
+
         if (groundEnemyManager != null)
             groundEnemyManager.OnGroundEnemyKilled -= OnGroundEnemyKilledHandler;
     }
@@ -142,7 +151,7 @@ public class RobotBossController : MonoBehaviour, IBossController
             ChangeState(BossState.Shooting);
     }
     /// <summary>
-    /// Shooting状態：弾発射オブジェクトON → 7秒後に ChargeShoot
+    /// Shooting状態：弾を撃ちながら地上敵の撃破イベントを待つ
     /// </summary>  
     private async UniTask ShootingState(CancellationToken token)
     {
@@ -152,8 +161,8 @@ public class RobotBossController : MonoBehaviour, IBossController
         // ★ Shooting開始時に、地上敵を1体だけ湧かせる（既に居れば何もしない）
         groundEnemyManager?.SpawnOnceIfNone().Forget();
 
-        // Debug.Log("Shooting 開始");
-        await UniTask.Delay(7000, cancellationToken: token); // 7秒後に遷移
+        // 地上敵が倒されると OnGroundEnemyKilledHandler から ChargeShoot へ遷移する。
+        await UniTask.Delay(7000, cancellationToken: token);
     }
     /// <summary>
     /// ChargeShoot状態：5秒後にレーザー発射 → Shootingへ

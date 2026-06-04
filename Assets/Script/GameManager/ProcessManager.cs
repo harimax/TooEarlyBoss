@@ -144,9 +144,10 @@ public class ProcessManager : MonoBehaviour
     {
         // 遷移前のプレイヤーを探してコントローラを停止する
         var player = GameObject.FindWithTag("Player");
-        var capsuleCollider = player.GetComponent<CapsuleCollider>();
+        // Player が存在しないシーンでは、遷移前停止処理自体を行わない。
         if (player == null) return;
 
+        var capsuleCollider = player.GetComponent<CapsuleCollider>();
         var controller = player.GetComponent<Invector.vCharacterController.vThirdPersonController>();
         if (controller == null) return;
 
@@ -154,7 +155,8 @@ public class ProcessManager : MonoBehaviour
         controller.enabled = false;
         // 遷移後に再有効化するためのフラグを立てる
         pendingEnableController = true;
-        if (capsuleCollider.enabled==false)
+        // 遷移後の復帰時に接地判定が欠けないよう、無効化されていたカプセルだけ戻す。
+        if (capsuleCollider != null && capsuleCollider.enabled == false)
         {
             capsuleCollider.enabled = true;
         }

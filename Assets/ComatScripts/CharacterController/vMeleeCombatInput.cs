@@ -358,22 +358,9 @@ namespace Invector.vCharacterController
                 cc.currentStaminaRecoveryDelay = damage.staminaRecoveryDelay;
                 cc.currentStamina -= damage.staminaBlockCost;
             }
-            // apply damage
-            //ダメージ無効状態のときの処理
-            if (DamageNegateTwice.noDamage == true)
-            {
-                Debug.Log("ダメージ無効！！！！");
-                damage.damageValue = 0;
-                DamageNegateTwice.remainingBlocks--;
-            }
             damage.hitReaction = !isBlocking || damage.ignoreDefense;
-            // Debug.Log(DamageNegateTwice.remainingBlocks);
+            // スキルによるダメージ無効化は、TakeDamage 内の onStartReceiveDamage で処理する。
             cc.TakeDamage(damage);
-            //ダメージ無効の回数が0になればスキルは切れる
-            if (DamageNegateTwice.remainingBlocks <= 0)
-            {
-                DamageNegateTwice.noDamage = false;
-            }
         }
 
         public virtual vICharacter character
