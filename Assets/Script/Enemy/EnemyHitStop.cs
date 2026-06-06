@@ -1,49 +1,36 @@
-using UnityEngine;
-using Cysharp.Threading.Tasks;
-using System.Threading.Tasks;
-using System.Threading;
 using Invector;
-using UnityEngine.PlayerLoop;
-using Invector.vCharacterController;
 using Invector.vMelee;
+using UnityEngine;
 
-public class EnemyHitStop : MonoBehaviour
+public class EnemyHitStop : AnimatorHitStop
 {
-    private Animator animator;
-    [SerializeField] int hitStopTime = 50;
     private vHealthController healthController;
-    // 多重実行防止
-    private bool isHitStopping;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    private void Start()
     {
-        animator = GetComponent<Animator>();
         healthController = GetComponent<vHealthController>();
-        healthController.onReceiveDamage.AddListener(DamagehitStop);
-        var damageComponents = GetComponentInChildren<vObjectDamage>();
-        if (damageComponents != null)
+
+        // 敵は被ダメージ時と攻撃ヒット時の両方で、共通のAnimator停止処理を呼び出す。
+        if (healthController != null)
         {
-            damageComponents.onHit.AddListener(AttackHitStop);
+            healthController.onReceiveDamage.AddListener(DamageHitStop);
+        }
+
+        // 攻撃判定を持たない敵もいるため、存在する場合だけヒットイベントを購読する。
+        var damageComponent = GetComponentInChildren<vObjectDamage>();
+        if (damageComponent != null)
+        {
+            damageComponent.onHit.AddListener(AttackHitStop);
         }
     }
-    //攻撃が当たったときのhitStop
-    private void DamagehitStop(vDamage damage)
-    {
-        hitStop().Forget();
 
+    private void DamageHitStop(vDamage damage)
+    {
+        PlayHitStop();
     }
-    //被弾時当たったときのhitStop
+
     private void AttackHitStop(Collider other)
     {
-        hitStop().Forget();
-    }
-    private async UniTask hitStop()
-    {
-        if (isHitStopping) return; // 多重発火を抑制（必要ならキューや最大値合成に変更）
-        isHitStopping = true;
-        animator.speed = 0;
-        await UniTask.Delay(hitStopTime);
-        animator.speed = 1;
-        isHitStopping = false;
+        PlayHitStop();
     }
 }
