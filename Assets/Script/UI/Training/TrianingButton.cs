@@ -244,7 +244,7 @@ public class TrianingButton : MonoBehaviour
         // ターン表示 UI がある画面だけ残りターンを描画
         if (turn != null)
         {
-            turn.text = $"Remaining:{CurrentTurn} turns";
+            turn.text = $"残り:{CurrentTurn} ターン";
         }
 
         SetButtonsInteractable();

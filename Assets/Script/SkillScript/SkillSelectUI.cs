@@ -63,7 +63,7 @@ public class SkillSelectUI : MonoBehaviour
 
         //既に獲得しているスキルは表示対象外にする
         var unacquiredSkills = allSkills
-        .Where(skill => !skillManager.acquiredSkills.Contains(skill)).ToList();
+        .Where(skill => !skillManager.HasSkill(skill)).ToList();
 
         int choiceCount = Mathf.Min(skillChoiceCount, unacquiredSkills.Count); // ← 修正ポイント
 

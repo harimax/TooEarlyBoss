@@ -89,7 +89,7 @@ public class PauseMenuView : MonoBehaviour
 
         EnsureSkillManager();
 
-        if (skillManager == null || skillManager.acquiredSkills == null || skillManager.acquiredSkills.Count == 0)
+        if (skillManager == null || skillManager.AcquiredSkills == null || skillManager.AcquiredSkills.Count == 0)
         {
             skillText.text = $"取得スキル\n{EmptySkillLabel}";
             return;
@@ -98,7 +98,7 @@ public class PauseMenuView : MonoBehaviour
         var builder = new StringBuilder();
         builder.AppendLine("取得スキル");
 
-        foreach (var skill in skillManager.acquiredSkills)
+        foreach (var skill in skillManager.AcquiredSkills)
         {
             if (skill == null) continue;
             builder.AppendLine($"・{skill.skillName}");
