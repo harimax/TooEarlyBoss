@@ -64,7 +64,11 @@ public class BattlePlayerController : MonoBehaviour
     /// </summary>
     public void DisableMovePlayer()
     {
-        IsPlayerMove.GetInstance().CanMove = false;
+        var moveState = IsPlayerMove.GetInstance();
+        if (moveState != null)
+        {
+            moveState.Block(PlayerMoveBlockReason.Training);
+        }
     }
     /// <summary>
     //プレイヤーのRigidBodyで移動を止める

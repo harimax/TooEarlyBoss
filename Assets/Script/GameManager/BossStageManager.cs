@@ -1,13 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Invector.vMelee;
 using Invector.vCharacterController;
 using TMPro;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
-using UnityEngine.EventSystems;
-using System;
 
 public class BossStageManager : MonoBehaviour
 {
@@ -30,15 +25,9 @@ public class BossStageManager : MonoBehaviour
         ClearText.text = "";
         bossController = Boss.GetComponent<IBossController>();
         bossController.PauseBoss();
-        // UIボタンを取得して、Aボタン(Submit)で押せるように準備する
-        if (StartButton != null)
-        {
-            startButtonComponent = StartButton.GetComponentInChildren<Button>(true);
-        }
-        if (ClearButton != null)
-        {
-            clearButtonComponent = ClearButton.GetComponentInChildren<Button>(true);
-        }
+        // UI 選択処理は共通 Utility に集約
+        startButtonComponent = UISelectionUtility.FindFirstButton(StartButton);
+        clearButtonComponent = UISelectionUtility.FindFirstButton(ClearButton);
         //ステージ4のペットボスも取得して一時停止
         if (petBoss.Length > 0)
         {
@@ -59,10 +48,20 @@ public class BossStageManager : MonoBehaviour
 
     public void BossStartButton()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
+        Transform playerTransform = PlayerLocator.FindTransform();
+        if (playerTransform == null)
+        {
+            return;
+        }
+
+        player = playerTransform.gameObject;
         var skillManager = player.GetComponent<SkillManager>();
 
-        IsPlayerMove.GetInstance().CanMove = true;
+        var moveState = IsPlayerMove.GetInstance();
+        if (moveState != null)
+        {
+            moveState.ClearAllBlocks();
+        }
         StartButton.SetActive(false);
         BossCamera.SetActive(false);
         bossController.ResumeBoss();
@@ -93,89 +92,68 @@ public class BossStageManager : MonoBehaviour
     }
     private async UniTask DefeatBossDelay()
     {
-        // ヒットストップ演出
-        Time.timeScale = 0.3f;
-        try
+        // スロー演出中に破棄された場合は後続 UI 反映を止める
+        bool completed = await TimeScaleDelayUtility.WaitWithTemporaryScaleAsync(
+            0.3f,
+            3000,
+            this.GetCancellationTokenOnDestroy());
+
+        if (!completed)
         {
-            // 演出待機中にシーンが変わった場合、破棄済みUIへの反映を止める。
-            await UniTask.Delay(3000, ignoreTimeScale: true, cancellationToken: this.GetCancellationTokenOnDestroy());
-        }
-        catch (OperationCanceledException)
-        {
-            Time.timeScale = 1f;
             return;
         }
+
         // ヒットストップ後はゲーム時間を止める
         Time.timeScale = 0f;
         ClearText.text = "倒したぜ";
         Debug.Log("敵を倒した");
-        IsPlayerMove.GetInstance().CanMove = false;
+        var moveState = IsPlayerMove.GetInstance();
+        if (moveState != null)
+        {
+            moveState.Block(PlayerMoveBlockReason.BossClear);
+        }
         ClearButton.SetActive(true);
     }
     private async UniTask GameOverDelay()
     {
-        Time.timeScale = 0.3f;
-        try
+        // GameOver表示前にManagerが破棄された場合、後続のUI更新を行わない
+        bool completed = await TimeScaleDelayUtility.WaitWithTemporaryScaleAsync(
+            0.3f,
+            3000,
+            this.GetCancellationTokenOnDestroy());
+
+        if (!completed)
         {
-            // GameOver表示前にManagerが破棄された場合、後続のUI更新を行わない。
-            await UniTask.Delay(3000, ignoreTimeScale: true, cancellationToken: this.GetCancellationTokenOnDestroy());
-        }
-        catch (OperationCanceledException)
-        {
-            Time.timeScale = 1f;
             return;
         }
+
         Time.timeScale = 0.0f;
          ClearText.text = "死んだぜ/nどうする？";
         GameOverButtons.SetActive(true);
     }
 
-    private bool IsSubmitPressed()
-    {
-        // InputManagerのSubmitはゲームパッドAボタンと紐づいていることが多い
-        return Input.GetButtonDown("Submit") || Input.GetKeyDown(KeyCode.JoystickButton0);
-    }
-
     private void UpdateDefaultSelection()
     {
-        // EventSystem が無い場合は何もしない
-        if (EventSystem.current == null)
-        {
-            return;
-        }
-
         // ボス戦開始ボタンが表示中なら、そのボタンを優先して選択
-        if (StartButton != null && StartButton.activeSelf && startButtonComponent != null)
+        if (UISelectionUtility.SelectButtonIfRootActive(StartButton, startButtonComponent, ref lastSelected))
         {
-            SelectButtonIfNeeded(startButtonComponent.gameObject);
             return;
         }
 
         // クリア後の次のステージボタンが表示中なら、そのボタンを選択
-        if (ClearButton != null && ClearButton.activeSelf && clearButtonComponent != null)
-        {
-            SelectButtonIfNeeded(clearButtonComponent.gameObject);
-        }
-        if (GameOverButtons != null && GameOverButtons.activeSelf)
-        {
-            // GameOverButtons 配下の最初のボタンを選択する
-            var button = GameOverButtons.GetComponentInChildren<Button>(true);
-            if (button != null)
-            {
-                SelectButtonIfNeeded(button.gameObject);
-            }
-        }
-    }
-
-    private void SelectButtonIfNeeded(GameObject target)
-    {
-        // 既に選択されている場合は何もしない
-        if (lastSelected == target)
+        if (UISelectionUtility.SelectButtonIfRootActive(ClearButton, clearButtonComponent, ref lastSelected))
         {
             return;
         }
 
-        lastSelected = target;
-        EventSystem.current.SetSelectedGameObject(target);
+        if (GameOverButtons != null && GameOverButtons.activeSelf)
+        {
+            // GameOverButtons 配下の最初のボタンを選択する
+            var button = UISelectionUtility.FindFirstButton(GameOverButtons);
+            if (button != null)
+            {
+                UISelectionUtility.SelectIfNeeded(button.gameObject, ref lastSelected);
+            }
+        }
     }
 }

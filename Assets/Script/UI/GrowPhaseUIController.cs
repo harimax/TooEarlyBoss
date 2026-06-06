@@ -55,6 +55,8 @@ public class GrowPhaseUIController : MonoBehaviour
         {
             player = GameObject.FindWithTag("Player");
         }
+
+        BlockPlayerForTrainingMode();
     }
 
     /// <summary>
@@ -95,6 +97,7 @@ public class GrowPhaseUIController : MonoBehaviour
     public void ReturntTrainingButton()
     {
         SetAllUIInactive();
+        BlockPlayerForTrainingMode();
         pendingUI = PendingUI.Training;
         cameraController.SetMode(GrowPhaseCameraMode.Training);
         SwitchCameraAsync().Forget();
@@ -144,5 +147,20 @@ public class GrowPhaseUIController : MonoBehaviour
         {
             ui.SetActive(active);
         }
+    }
+
+    /// <summary>
+    /// 育成モード中はプレイヤー操作を止め、戦闘開始時だけ解除できる状態にする。
+    /// </summary>
+    private static void BlockPlayerForTrainingMode()
+    {
+        var moveState = IsPlayerMove.GetInstance();
+        if (moveState == null)
+        {
+            return;
+        }
+
+        // 育成 UI 操作中にプレイヤー入力が通らないよう Training 理由を付与
+        moveState.Block(PlayerMoveBlockReason.Training);
     }
 }

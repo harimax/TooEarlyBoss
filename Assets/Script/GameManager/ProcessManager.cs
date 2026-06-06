@@ -108,6 +108,7 @@ public class ProcessManager : MonoBehaviour
     {
         // シーン遷移直前にコントローラを停止して、移動/補正が走らないようにする
         DisablePlayerControllerBeforeSceneLoad();
+        ReleaseBattleResultMoveBlocks();
         if (Time.timeScale != 1f)
         {
             Time.timeScale = 1f;
@@ -161,6 +162,21 @@ public class ProcessManager : MonoBehaviour
             capsuleCollider.enabled = true;
         }
     }
+
+    private void ReleaseBattleResultMoveBlocks()
+    {
+        var moveState = IsPlayerMove.GetInstance();
+        if (moveState == null)
+        {
+            return;
+        }
+
+        // ボス撃破やゲームオーバー表示用の停止理由は、次シーンへ持ち越さない
+        moveState.Unblock(PlayerMoveBlockReason.BossClear);
+        moveState.Unblock(PlayerMoveBlockReason.GameOver);
+        moveState.Unblock(PlayerMoveBlockReason.BattleFinished);
+    }
+
     private void DestroyPlayerAndManagers()
     {
         // プレイヤー破壊

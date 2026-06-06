@@ -71,7 +71,7 @@ namespace Invector.vCharacterController
 
         protected override void FixedUpdate()
         {
-            if (IsPlayerMove.GetInstance().CanMove == true)
+            if (CanProcessPlayerInput())
             {
                 base.FixedUpdate();
             }
@@ -88,7 +88,7 @@ namespace Invector.vCharacterController
 
             if (MeleeAttackConditions() && !lockMeleeInput)
             {
-                if (IsPlayerMove.GetInstance().CanMove == true)
+                if (CanProcessPlayerInput())
                 {
                     MeleeWeakAttackInput();
                     MeleeStrongAttackInput();
@@ -97,7 +97,7 @@ namespace Invector.vCharacterController
             }
             else
             {
-                if (IsPlayerMove.GetInstance().CanMove == true)
+                if (CanProcessPlayerInput())
                 {
                     ResetAttackTriggers();
                     isBlocking = false;
@@ -106,6 +106,16 @@ namespace Invector.vCharacterController
         }
 
         #region MeleeCombat Input Methods
+
+        /// <summary>
+        /// プレイヤー移動管理の状態から、入力処理を進めてよいか判定。
+        /// 管理インスタンス未生成時は、入力側だけで停止し続けないよう許可扱い。
+        /// </summary>
+        private bool CanProcessPlayerInput()
+        {
+            var moveState = IsPlayerMove.GetInstance();
+            return moveState == null || moveState.CanMove;
+        }
 
         /// <summary>
         /// WEAK ATK INPUT

@@ -81,8 +81,12 @@ public class BattleStartController : MonoBehaviour
         meleeManager.defaultDamage.damageValue = Mathf.RoundToInt(growth.PlayerPower) / 2 + meleeManager.defaultDamage.damageValue;
         meleeManager.Init();
 
-        // 行動可能状態に
-        IsPlayerMove.GetInstance().CanMove = true;
+        // 戦闘開始時は育成・準備由来の移動停止をまとめて解除
+        var moveState = IsPlayerMove.GetInstance();
+        if (moveState != null)
+        {
+            moveState.ClearAllBlocks();
+        }
 
         skillManager.ActivePassiveSkill();//スキルを発動させる
         enemyGenerator.GenerateEnemy();//敵を出現させる
