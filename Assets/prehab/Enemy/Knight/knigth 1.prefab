@@ -3793,7 +3793,7 @@ MonoBehaviour:
   Damagecollider: {fileID: 4385124033782790640}
   chasecollider: {fileID: 487984626516832025}
   Damagecooldown: 2
-  Reaction_Pro: 0
+  Reaction_Pro: 0.5
   patrolRadius: 10
   time: 2
 --- !u!114 &7577358866695723042
@@ -3810,7 +3810,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   openCloseEvents: 0
   openCloseWindow: 1
-  selectedToolbar: 0
+  selectedToolbar: 1
   _isDead: 0
   _currentHealth: 300
   isImmortal: 0
@@ -3886,7 +3886,8 @@ MonoBehaviour:
   openCloseEvents: 0
   openCloseWindow: 1
   selectedToolbar: 0
-  defaultDamageEffects: []
+  defaultDamageEffects:
+  - {fileID: 7450026286034035301, guid: c642937febca0bd4bb89968a84551601, type: 3}
   customDamageEffects: []
 --- !u!136 &7411224178382548718
 CapsuleCollider:
