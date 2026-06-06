@@ -1,231 +1,148 @@
-
-using UnityEngine;
-using Cinemachine;
 using Cysharp.Threading.Tasks;
-using System;
-using UnityEngine.EventSystems;
+using UnityEngine;
 using UnityEngine.UI;
+
+/// <summary>
+/// 育成フェーズの画面遷移、UI 表示、バトル開始操作を担当。
+/// カメラ切替は <see cref="GrowPhaseCameraController"/>、UI フォーカスは <see cref="UIFocusSelector"/> に委譲。
+/// </summary>
 public class GrowPhaseUIController : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private GameObject playerCameraObject;//Invectorのやつをアタッチ
+    [SerializeField] private GameObject playerCameraObject;
     [SerializeField] private GameObject trainingCameraObject;
-    [SerializeField] private GameObject BattlePrepareCameraObject;//Brainのやつをアタッチ
+    [SerializeField] private GameObject BattlePrepareCameraObject;
     [SerializeField] private GameObject trainingUI;
     [SerializeField] private GameObject gameUI;
-    [SerializeField] private GameObject brainCameraObject;//Brainのやつをアタッチ
+    [SerializeField] private GameObject brainCameraObject;
     [SerializeField] private Transform battleStartPoint;
     [SerializeField] private GameObject player;
     [SerializeField] private BattleStartController battleStartController;
-    [Header("Camera Objects")]
-    private CinemachineVirtualCamera trainingCameraVirtual;
-    private CinemachineVirtualCamera mainCameraVirtual;
-    private CinemachineVirtualCamera battlePrepareCameraVirtual;
-    private CinemachineBrain brainCamera;
-    [Header("UI")]
-    private bool IsGameUI;
-    private bool IstrainingUI;
+
     [Header("UI Focus")]
-    [SerializeField] private Selectable trainingDefaultSelectable; // 例：Attackボタン
-    [SerializeField] private Selectable gameDefaultSelectable;     // GameUI側の最初ボタン
+    [SerializeField] private Selectable trainingDefaultSelectable;
+    [SerializeField] private Selectable gameDefaultSelectable;
 
-    // Priorityは「絶対値」で固定
-    private const int PRI_LOW = 0;
-    private const int PRI_HIGH = 20;
+    private GrowPhaseCameraController cameraController;
+    private PendingUI pendingUI;
 
-    private CameraMode _mode;
-
-    private enum CameraMode
+    /// <summary>
+    /// カメラ切替完了後に表示する UI 種別。
+    /// </summary>
+    private enum PendingUI
     {
-        Training,       // 育成カメラ
-        BattlePrepare,  // 戦闘準備カメラ
-        Follow          // 戦闘中（プレイヤー追従カメラ）
+        None,
+        Training,
+        Game
     }
 
-
+    /// <summary>
+    /// 初期表示と、カメラ制御用サービスの準備を実行。
+    /// </summary>
     private void Awake()
     {
+        cameraController = new GrowPhaseCameraController(
+            playerCameraObject,
+            trainingCameraObject,
+            BattlePrepareCameraObject,
+            brainCameraObject);
+
         SetAllUIInactive();
-        CacheCameraReferences();//カメラやBrainの参照を1度だけキャッシュ
-        trainingUI?.SetActive(true); // 初期状態が修行UIなら
-        // SetPlayerGravity(false); // 育成中は重力をオフにする
-        // Inspector 未設定時の保険
+        SetUIActive(trainingUI, true);
+
+        // Inspector 未設定時だけタグ検索でプレイヤーを補完
         if (player == null)
         {
             player = GameObject.FindWithTag("Player");
         }
-
     }
 
     /// <summary>
-    /// 戦闘準備モードへ移行する
+    /// 戦闘準備画面へ遷移。
     /// </summary>
     public void PrepareMissionButton()
     {
         SetAllUIInactive();
-        SetCameraMode(CameraMode.BattlePrepare);
-        IsGameUI = true;
-        IstrainingUI = false;
-        // SetPlayerGravity(false); // 戦闘開始前は重力を切って育成待機状態にする
+        pendingUI = PendingUI.Game;
+        cameraController.SetMode(GrowPhaseCameraMode.BattlePrepare);
         SwitchCameraAsync().Forget();
     }
+
     /// <summary>
-    /// ミッション開始ボタン
+    /// 戦闘開始位置へプレイヤーを移動し、バトル開始処理を呼び出し。
     /// </summary>
     public void StartMissionButton()
     {
-        // UI非表示
         SetAllUIInactive();
-        SetCameraMode(CameraMode.Follow);
-        // SetPlayerGravity(true); // バトル開始時は重力をオンにする
-        player.transform.position = battleStartPoint.position;
-        battleStartController.StartBattle();//バトル開始メソッドを呼び出す
+        pendingUI = PendingUI.None;
+        cameraController.SetMode(GrowPhaseCameraMode.Follow);
+
+        if (player != null && battleStartPoint != null)
+        {
+            player.transform.position = battleStartPoint.position;
+        }
+
+        // バトル開始演出や敵起動は専用コンポーネントへ委譲
+        if (battleStartController != null)
+        {
+            battleStartController.StartBattle();
+        }
     }
 
     /// <summary>
-    /// 修行モードに戻るボタン
+    /// 育成画面へ戻る。
     /// </summary>
     public void ReturntTrainingButton()
     {
-        SetCameraMode(CameraMode.Training);
         SetAllUIInactive();
-        IsGameUI = false;
-        IstrainingUI = true;
-        // SetPlayerGravity(false); // 育成に戻る時は重力をオフにする
+        pendingUI = PendingUI.Training;
+        cameraController.SetMode(GrowPhaseCameraMode.Training);
         SwitchCameraAsync().Forget();
     }
-    // カメラ遷移完了まで待ってからUIとCanMoveを切り替える
+
+    /// <summary>
+    /// カメラブレンド完了後、遷移先 UI を表示して既定フォーカスを設定。
+    /// </summary>
     private async UniTask SwitchCameraAsync()
     {
-        // カメラの優先度変更反映待ち（1フレーム待つ）
-        await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate);
+        await cameraController.WaitForBlendAsync(this.GetCancellationTokenOnDestroy());
 
-        // ブレンド完了待ち
-        await UniTask.WaitUntil(() => !brainCamera.IsBlending);
-        //戦闘シーンの際はGameUIを起動
-        if (IsGameUI)
+        switch (pendingUI)
         {
-            gameUI.SetActive(true);
-            IsGameUI = false;
-            await SelectUIFocusAsync(gameDefaultSelectable);
-        }
-        //修行シーンの際はtrainingUIを起動
-        if (IstrainingUI)
-        {
-            trainingUI.SetActive(true);
-            IstrainingUI = false;
-            await SelectTrainingUIFocusAsync();
+            case PendingUI.Game:
+                SetUIActive(gameUI, true);
+                pendingUI = PendingUI.None;
+                await UIFocusSelector.SelectAsync(gameDefaultSelectable, this.GetCancellationTokenOnDestroy());
+                break;
+
+            case PendingUI.Training:
+                SetUIActive(trainingUI, true);
+                pendingUI = PendingUI.None;
+                await UIFocusSelector.SelectAsync(trainingDefaultSelectable, this.GetCancellationTokenOnDestroy());
+                break;
         }
     }
 
     /// <summary>
-    /// UIをすべて非表示にする
+    /// 育成 UI と戦闘準備 UI をまとめて非表示。
     /// </summary>
     private void SetAllUIInactive()
     {
-        if (trainingUI) trainingUI.SetActive(false);
-        if (gameUI) gameUI.SetActive(false);
+        SetUIActive(trainingUI, false);
+        SetUIActive(gameUI, false);
     }
+
     /// <summary>
-    /// カメラやBrainの参照を1度だけキャッシュ
+    /// UI 参照が設定済みの場合だけ表示状態を変更。
     /// </summary>
-    private void CacheCameraReferences()
+    /// <param name="ui">表示状態を変更する UI オブジェクト。</param>
+    /// <param name="active">表示する場合は true。</param>
+    private static void SetUIActive(GameObject ui, bool active)
     {
-        // メインカメラ
-        if (playerCameraObject == null)
+        // シーン差分で UI が未設定でも遷移処理を止めない
+        if (ui != null)
         {
-            playerCameraObject = GameObject.FindWithTag("MainCamera");
-        }
-        if (playerCameraObject != null)
-        {
-            mainCameraVirtual = playerCameraObject.GetComponent<CinemachineVirtualCamera>();
-        }
-
-        // 修行カメラ
-        if (trainingCameraObject != null)
-        {
-            trainingCameraVirtual = trainingCameraObject.GetComponentInChildren<CinemachineVirtualCamera>();
-            Debug.Log(trainingCameraVirtual);
-        }
-        // 戦闘準備カメラ
-        if (BattlePrepareCameraObject != null)
-        {
-            battlePrepareCameraVirtual = BattlePrepareCameraObject.GetComponent<CinemachineVirtualCamera>();
-        }
-
-        // Brain
-        if (brainCameraObject == null && Camera.main != null)
-        {
-            brainCameraObject = Camera.main.gameObject;
-        }
-        if (brainCameraObject != null)
-        {
-            brainCamera = brainCameraObject.GetComponent<CinemachineBrain>();
-        }
-    }
-    /// <summary>
-    /// 修行UIのデフォルト選択肢にフォーカスを移動する
-    /// </summary>
-    private async UniTask SelectTrainingUIFocusAsync()
-    {
-        // EventSystemや参照が無いなら何もしない
-        if (EventSystem.current == null || trainingDefaultSelectable == null) return;
-
-        // UIの有効化＆レイアウト反映を待つ（これが超重要）
-        await UniTask.Yield(PlayerLoopTiming.PostLateUpdate);
-
-        // もし対象ボタンが非表示/非活性なら選択できないのでガード
-        if (!trainingDefaultSelectable.gameObject.activeInHierarchy) return;
-        if (!trainingDefaultSelectable.IsInteractable()) return;
-
-        // 既存選択を一度クリアしてからSelect（これが安定）
-        EventSystem.current.SetSelectedGameObject(null);
-        trainingDefaultSelectable.Select();
-    }
-    /// <summary>
-    /// 指定UIのデフォルト選択肢にフォーカスを移動する
-    /// </summary>
-    private async UniTask SelectUIFocusAsync(Selectable target)
-    {
-        if (EventSystem.current == null || target == null) return;
-
-        // SetActive(true) 直後はレイアウト更新中のことがあるので、UI反映を待つ
-        await UniTask.Yield(PlayerLoopTiming.PostLateUpdate);
-
-        // 選択可能状態チェック
-        if (!target.gameObject.activeInHierarchy) return;
-        if (!target.IsInteractable()) return;
-
-        // 既存選択をクリアしてからSelect（安定）
-        EventSystem.current.SetSelectedGameObject(null);
-        target.Select();
-    }
-    /// <summary>
-    /// カメラモードを設定する
-    /// </summary>
-    /// <param name="mode"></param>
-    private void SetCameraMode(CameraMode mode)
-    {
-        _mode = mode;
-
-        // 毎回3台すべてを確定させる（ここが重要）
-        trainingCameraVirtual.Priority = PRI_LOW;
-        battlePrepareCameraVirtual.Priority = PRI_LOW;
-        mainCameraVirtual.Priority = PRI_LOW;
-
-        switch (mode)
-        {
-            case CameraMode.Training:
-                trainingCameraVirtual.Priority = PRI_HIGH;
-                break;
-
-            case CameraMode.BattlePrepare:
-                battlePrepareCameraVirtual.Priority = PRI_HIGH;
-                break;
-
-            case CameraMode.Follow:
-                mainCameraVirtual.Priority = PRI_HIGH; // プレイヤー追従のvcamをこれに
-                break;
+            ui.SetActive(active);
         }
     }
 }
