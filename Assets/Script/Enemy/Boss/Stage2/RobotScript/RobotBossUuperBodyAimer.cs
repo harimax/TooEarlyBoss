@@ -10,7 +10,7 @@ public class RobotBossUuperBodyAimer : MonoBehaviour
     private Transform player;
     private void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        player = PlayerLocator.FindTransform();
 
         if (upperBody == null)
         {

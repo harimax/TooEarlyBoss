@@ -18,7 +18,7 @@ public class MutantBossController : MonoBehaviour, IBossController
     {
         movement = GetComponent<MutantBossMovementController>();
         animator = GetComponent<Animator>();
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        player = PlayerLocator.FindTransform();
 
         // 最初は「停止中はプレイヤーの方を見る」状態にしておく
         isLooking = true;

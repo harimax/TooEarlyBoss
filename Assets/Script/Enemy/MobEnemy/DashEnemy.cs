@@ -63,7 +63,8 @@ public class DashEnemy : MobEnemy
         agent = GetComponent<NavMeshAgent>();
         _status = GetComponent<MobEnemy>();
         vHealthController = GetComponent<vHealthController>();
-        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        // 初期状態でも追尾方向を計算できるよう、共通のPlayer取得経路から参照を持っておく。
+        player = PlayerLocator.FindTransform();
 
         // 敵の初期位置を記録
         initialPosition = transform.position;
@@ -86,9 +87,8 @@ public class DashEnemy : MobEnemy
     /// </summary>
     public void OnDetectObjectChase(Collider other)
     {
-        if (!other.CompareTag("Player")) return;
-
-        player = other.transform;
+        // Player検知時は最新のTransformに差し替え、ダッシュ中の誘導や追撃判定に使う。
+        if (!PlayerLocator.TryGetTransformFromCollider(other, out player)) return;
 
         // ダッシュ中やクールダウン中は、同じ検知で攻撃を重ねて起動しない。
         if (isBusy || Time.time < nextDashReadyTime) return;
@@ -241,6 +241,7 @@ public class DashEnemy : MobEnemy
     /// <summary>XZ 平面のプレイヤー方向（いなければ正面）</summary>
     private Vector3 DirToPlayerXZOrForward()
     {
+        // Playerが未取得または消滅済みなら、現在向いている方向へ直進して処理を継続する。
         if (player == null)
             return new Vector3(transform.forward.x, 0f, transform.forward.z).normalized;
 

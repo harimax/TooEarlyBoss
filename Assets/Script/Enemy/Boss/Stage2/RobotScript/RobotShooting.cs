@@ -16,8 +16,7 @@ public class RobotShooting : MonoBehaviour
     private Transform player;
     void Start()
     {
-        var player = GameObject.FindGameObjectWithTag("Player");
-        if (player) this.player = player.transform;
+        player = PlayerLocator.FindTransform();
         BallShotAsync().Forget();   // ← 実行
     }
     /// <summary>

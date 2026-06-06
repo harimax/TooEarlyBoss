@@ -26,7 +26,7 @@ public class SmileBossControll : MonoBehaviour,IBossController
     {
         currentState = BossState.Idle;
         timer = attackInterval;
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        player = PlayerLocator.FindTransform();
         animator = gameObject.GetComponent<Animator>();
     }
 

@@ -1,7 +1,6 @@
-
-using UnityEngine;
-using Cysharp.Threading.Tasks;
 using System;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
 
 public class EnemyAtaackGAN : MonoBehaviour
 {
@@ -10,18 +9,22 @@ public class EnemyAtaackGAN : MonoBehaviour
     [SerializeField] private float shotSpeed;
     [SerializeField] protected float attackcooldown;
     [SerializeField] private GameObject ParentObj;
-    AudioSource BulletSound;
-    private Vector3 childPosition;
-    private bool isOnCooldown = false; // クールダウン中かどうかのフラグ
     public string targetTag = "Target";
-    void Start()
+
+    private AudioSource bulletSound;
+    private Vector3 childPosition;
+    private bool isOnCooldown;
+
+    private void Start()
     {
-        BulletSound = GetComponent<AudioSource>();
+        bulletSound = GetComponent<AudioSource>();
     }
+
     public void OnAttackGANEnter(Collider collider)
     {
         OnAttackGAN(collider).Forget();
     }
+
     public void OnShotEvent()
     {
         Shot().Forget();
@@ -30,60 +33,67 @@ public class EnemyAtaackGAN : MonoBehaviour
     //プレイヤーが範囲内に入れば起動するメソッド-------------------------------------
     private async UniTask OnAttackGAN(Collider collider)
     {
-        if(collider.tag=="Player")
+        // Player以外のColliderでは照準・発射処理を進めない。
+        if (!PlayerLocator.TryGetTransformFromCollider(collider, out var player))
         {
-            Transform parentObject = collider.transform;
-            // 子オブジェクトの数だけループ(指定のタグを見つければループ停止)
-            foreach (Transform child in parentObject)
-            {
-                if (child.CompareTag(targetTag))
-                {
-                    // ターゲットの子オブジェクトの位置を取得
-                    childPosition = child.position;
-                    break;
-                }
-            }
-            Vector3 directionToTarget = collider.transform.position - transform.position;
-            Quaternion lookRotation = Quaternion.LookRotation(directionToTarget);
-            ParentObj.transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
-            
-            if(isOnCooldown==false) await Shot();
+            return;
+        }
+
+        // 弾の狙い先はPlayer本体ではなく、Player配下のTargetタグ位置を優先してキャッシュする。
+        CacheTargetPosition(player);
+
+        Vector3 directionToTarget = player.position - transform.position;
+        Quaternion lookRotation = Quaternion.LookRotation(directionToTarget);
+        ParentObj.transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
+
+        // クールダウン中は同じTrigger滞在で弾が連射されないようにする。
+        if (!isOnCooldown)
+        {
+            await Shot();
         }
     }
     //弾の発射--------------------------------------------------------------------------
     public async UniTask Shot()
     {
-        Debug.Log("発射");
-        isOnCooldown = true; //弾を打てる状態になる
+        Debug.Log("Fire");
+        isOnCooldown = true;
         preliminaryEffect.SetActive(true);
+
+        // 予備動作エフェクトを見せてから、キャッシュ済みTarget方向へ発射する。
         await UniTask.Delay(TimeSpan.FromSeconds(attackcooldown));
-        var direction=(Targetpos()-gameObject.transform.position).normalized;
-        var shot=Instantiate(GANObj.gameObject,this.gameObject.transform.position,this.gameObject.transform.rotation);
-        shot.GetComponent<Rigidbody>().linearVelocity = direction* shotSpeed;
-        //オーディオリスナーが格納されているなら音を鳴らす
-        if(BulletSound!=null)
+
+        Vector3 direction = (Targetpos() - transform.position).normalized;
+        GameObject shot = Instantiate(GANObj.gameObject, transform.position, transform.rotation);
+        shot.GetComponent<Rigidbody>().linearVelocity = direction * shotSpeed;
+
+        if (bulletSound != null)
         {
-            BulletSound.Play();
+            bulletSound.Play();
         }
+
         preliminaryEffect.SetActive(false);
         await UniTask.Delay(TimeSpan.FromSeconds(attackcooldown));
-        isOnCooldown = false; //弾を打てない状態にする
-        Destroy(shot,3.0f);
+        isOnCooldown = false;
+        Destroy(shot, 3.0f);
     }
-    //プレイヤーの位置を取得する------------------------------------------------------
+
     private Vector3 Targetpos()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        Transform parentObject = player.transform;
-        foreach (Transform child in parentObject)
-            {
-                if (child.CompareTag(targetTag))
-                {
-                    // ターゲットの子オブジェクトの位置を取得
-                    childPosition = child.position;
-                    break;
-                }
-            }
+        // 発射直前にPlayer/Target位置を取り直し、古い座標に撃ち続けないようにする。
+        if (PlayerLocator.TryFindTransform(out var player))
+        {
+            CacheTargetPosition(player);
+        }
+
         return childPosition;
     }
- }
+
+    private void CacheTargetPosition(Transform player)
+    {
+        // Target子オブジェクトが見つからない場合は、前回キャッシュした座標を維持する。
+        if (PlayerLocator.TryFindChildWithTag(player, targetTag, out var target))
+        {
+            childPosition = target.position;
+        }
+    }
+}

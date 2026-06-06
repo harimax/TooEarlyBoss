@@ -36,7 +36,7 @@ public class PetBossController : MonoBehaviour, IBossController
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        player = PlayerLocator.FindTransform();
         if (!animator) animator = GetComponent<Animator>();
         if (rock) isRockAttack = true;
         Debug.Log(rock, this);

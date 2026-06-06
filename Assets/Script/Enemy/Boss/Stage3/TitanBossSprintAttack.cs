@@ -23,7 +23,7 @@ public class TitanBossSprintAttack : MonoBehaviour
 
     void Awake()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        player = PlayerLocator.FindTransform();
         animator = gameObject.GetComponent<Animator>();
     }
     /// <summary>

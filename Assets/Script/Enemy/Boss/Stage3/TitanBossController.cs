@@ -38,7 +38,7 @@ public class TitanBossController : MonoBehaviour, IBossController
     // Start is called before the first frame update
     void Awake()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        player = PlayerLocator.FindTransform();
         animator = gameObject.GetComponent<Animator>();
     }
     private void OnDestroy()

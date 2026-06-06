@@ -20,7 +20,7 @@ public class TitanBossRangeAttack : MonoBehaviour
 
     private void Awake()
     {
-        player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        player = PlayerLocator.FindTransform();
         CacheTargetPoint();
     }
 
@@ -85,15 +85,10 @@ public class TitanBossRangeAttack : MonoBehaviour
     /// </summary>
     private void CacheTargetPoint()
     {
-        if (!player) return;
-
-        foreach (Transform child in player)
+        // Player配下のTarget探索はPlayerLocatorに寄せ、同じ探索処理を各攻撃クラスへ増やさない。
+        if (PlayerLocator.TryFindChildWithTag(player, targetTag, out var target))
         {
-            if (child.CompareTag(targetTag))
-            {
-                targetPoint = child;
-                break;
-            }
+            targetPoint = target;
         }
     }
 }

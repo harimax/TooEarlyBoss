@@ -44,7 +44,7 @@ public class DragonBossController : MonoBehaviour, IBossController
     void Start()
     {
         animator = GetComponent<Animator>();
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        player = PlayerLocator.FindTransform();
     }
     private void OnDestroy()
     {
