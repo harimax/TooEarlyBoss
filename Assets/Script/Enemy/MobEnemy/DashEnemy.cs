@@ -100,28 +100,21 @@ public class DashEnemy : MobEnemy
 
     //ダメージリアクション関数継承
     // ダメージリアクション処理
-    public new void DamageReaction()
+    public override void DamageReaction()
     {
-        if (vHealthController.currentHealth > 0)
-        {
-            // ランダムでリアクション発生
-            if (UnityEngine.Random.value < Reaction_Pro)
+        // ダッシュ敵だけのヒットストップと死亡時コライダー停止を、共通処理へ差し込む。
+        ResolveDamageReaction(
+            vHealthController,
+            Reaction_Pro,
+            2f,
+            () =>
             {
-                base.DamageReaction();
-                // 攻撃コライダーなどを一時無効にするクールダウン
-                DamagecooldownCoroutine = Cooldown();  // UniTaskで処理を実行
+                DamagecooldownCoroutine = Cooldown();
 
-                // 現在ステートがダメージなら、ヒットストップ発生
                 if (_status.State == StateEnum.Damage)
-                    HitStopcooldownCoroutine = HitStop(0.2f);  // UniTaskで処理を実行
-            }
-        }
-        // 体力が0以下でまだ死亡状態になっていない場合
-        else if (_status.State != StateEnum.Die)
-        {
-            base.OnDie(); // 基底クラスの死亡処理を実行
-            DestroyCoroutine(2f).Forget(); // 4秒後にオブジェクト削除
-        }
+                    HitStopcooldownCoroutine = HitStop(0.2f);
+            },
+            () => AttackRangecollider.enabled = Damagecollider.enabled = chasecollider.enabled = false);
     }
     /// <summary>
     /// 検知後の一連（予備動作→ダッシュ→リカバー→（任意）噛みつき）
@@ -175,13 +168,6 @@ public class DashEnemy : MobEnemy
     public void ChangePatrol()
     {
         ReturnToNormal();
-    }
-    //死亡コルーチン
-    private async UniTaskVoid DestroyCoroutine(float time)
-    {
-         AttackRangecollider.enabled = Damagecollider.enabled = chasecollider.enabled = false;
-        await UniTask.Delay((int)(time * 1000)); // 秒からミリ秒に変換;
-        Destroy(gameObject);
     }
     public async UniTask HitStop(float stoptime)
     {

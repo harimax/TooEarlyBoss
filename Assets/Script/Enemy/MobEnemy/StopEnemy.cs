@@ -25,30 +25,14 @@ public class StopEnemy : MobEnemy
         vHealthController = GetComponent<vHealthController>();
     }
     //ダメージリアクション関数継承
-    public new void DamageReaction()
+    public override void DamageReaction()
     {
-        if (vHealthController.currentHealth > 0)
-        {
-            // ランダムでリアクション発生
-            if (Random.value < Reaction_Pro)
-            {
-                base.DamageReaction();
-                // 攻撃コライダーなどを一時無効にするクールダウン
-                DamagecooldownCoroutine = Cooldown();  // UniTaskで処理を実行
-            }
-        }
-        // 体力が0以下でまだ死亡状態になっていない場合
-        else if (_status.State != StateEnum.Die)
-        {
-            base.OnDie(); // 基底クラスの死亡処理を実行
-            DestroyCoroutine(1.5f).Forget(); // 4秒後にオブジェクト削除
-        }
-    }
-    //死亡コルーチン--------------------------------------------------
-    private async UniTask DestroyCoroutine(float time)
-    {
-        await UniTask.Delay((int)(time*1000));
-        Destroy(gameObject);
+        // 固定砲台型の敵は、共通のHP/死亡判定にクールダウン開始だけを渡す。
+        ResolveDamageReaction(
+            vHealthController,
+            Reaction_Pro,
+            1.5f,
+            () => DamagecooldownCoroutine = Cooldown());
     }
     //ダメージ受けたらクールダウンする
     public async UniTask Cooldown()

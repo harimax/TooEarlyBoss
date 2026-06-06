@@ -4,6 +4,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Threading.Tasks;
+using System;
+using Invector;
 
 public class MobEnemy : MonoBehaviour
 {
@@ -57,8 +59,13 @@ public class MobEnemy : MonoBehaviour
         canAttack = true;
         Debug.Log("IDLEに戻ります");
     }
-    //ダメージリアクション処理
+    // 派生クラスから直接呼ばれても通常のダメージリアクションだけを再生する。
     public virtual void DamageReaction()
+    {
+        PlayDamageReaction();
+    }
+
+    protected void PlayDamageReaction()
     {
         if (State == StateEnum.Die)
             return;
@@ -67,6 +74,49 @@ public class MobEnemy : MonoBehaviour
         canAttack = false;  // ダメージ中は攻撃無効
         animator.SetTrigger("Damage");
         WaitForDamageRecovery().Forget(); // UniTaskで処理を実行
+    }
+
+    // HP判定、リアクション抽選、死亡時の遅延破棄をまとめた被ダメージ共通処理。
+    // 派生クラス固有のクールダウンやコライダー停止はコールバックで差し込む。
+    protected bool ResolveDamageReaction(
+        vHealthController healthController,
+        float reactionProbability,
+        float destroyDelaySeconds,
+        Action onReaction = null,
+        Action beforeDestroy = null)
+    {
+        if (healthController == null)
+        {
+            return false;
+        }
+
+        if (healthController.currentHealth > 0)
+        {
+            if (UnityEngine.Random.value < reactionProbability)
+            {
+                PlayDamageReaction();
+                onReaction?.Invoke();
+            }
+
+            return false;
+        }
+
+        if (State == StateEnum.Die)
+        {
+            return true;
+        }
+
+        OnDie();
+        DestroyAfterDelay(destroyDelaySeconds, beforeDestroy).Forget();
+        return true;
+    }
+
+    // 死亡直後に無効化したい処理を実行してから、演出用の待ち時間後に敵を消す。
+    protected async UniTaskVoid DestroyAfterDelay(float delaySeconds, Action beforeDestroy = null)
+    {
+        beforeDestroy?.Invoke();
+        await UniTask.Delay((int)(delaySeconds * 1000));
+        Destroy(gameObject);
     }
     // ダメージ後に一定時間待って通常状態に戻す処理
     private async UniTask WaitForDamageRecovery()

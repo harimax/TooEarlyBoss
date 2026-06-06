@@ -44,24 +44,14 @@ public class ChaseEnemy : MobEnemy
     }
     //ダメージリアクション関数継承
     // ダメージリアクション処理
-    public new void DamageReaction()
+    public override void DamageReaction()
     {
-        if (vHealthController.currentHealth > 0)
-        {
-            // ランダムでリアクション発生
-            if (Random.value < Reaction_Pro)
-            {
-                base.DamageReaction();
-                // 攻撃コライダーなどを一時無効にするクールダウン
-                DamagecooldownCoroutine = Cooldown();  // UniTaskで処理を実行
-            }
-        }
-        // 体力が0以下でまだ死亡状態になっていない場合
-        else if (_status.State != StateEnum.Die)
-        {
-            base.OnDie(); // 基底クラスの死亡処理を実行
-            DestroyCoroutine(2.0f).Forget(); 
-        }
+        // 共通のHP/死亡判定に、ChaseEnemy固有のクールダウン開始だけを渡す。
+        ResolveDamageReaction(
+            vHealthController,
+            Reaction_Pro,
+            2.0f,
+            () => DamagecooldownCoroutine = Cooldown());
     }
 
     //範囲に入れば追跡するメソッド
@@ -96,12 +86,6 @@ public class ChaseEnemy : MobEnemy
     public void ChangePatrol()
     {
         ReturnToNormal();
-    }
-    //死亡コルーチン
-    private async UniTask DestroyCoroutine(float time)
-    {
-        await UniTask.Delay((int)(time*1000));
-        Destroy(gameObject);
     }
     //攻撃を受けると追跡・攻撃・当たりのコライダーを一時的に非表示
     public async UniTask Cooldown()
